@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.google.android.material.textfield.TextInputLayout
 import kotlinx.android.synthetic.main.activity_main.*
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -23,7 +24,7 @@ class MainActivity : AppCompatActivity() {
     private var userOneName: String = DEFAULT_USERNAME
     private var userTwoName: String = DEFAULT_USERNAME
 
-    private val chatList: MutableList<Chat> = mutableListOf()
+    private var chatList: ArrayList<Chat> = ArrayList()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -141,6 +142,20 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        if (chatList.isNotEmpty())
+            outState.putParcelableArrayList(CHATS_KEY, chatList)
+        super.onSaveInstanceState(outState)
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        savedInstanceState.getParcelableArrayList<Chat>(CHATS_KEY)?.run {
+            chatList = this
+            setAdapter()
+        }
+    }
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.main_menu, menu)
         return super.onCreateOptionsMenu(menu)
@@ -165,5 +180,9 @@ class MainActivity : AppCompatActivity() {
 
     private fun scrollToLatestText() {
         chat_recycler_view.layoutManager?.scrollToPosition(chatList.size - 1)
+    }
+
+    companion object {
+        const val CHATS_KEY = "chats"
     }
 }

@@ -13,14 +13,4 @@
  **/
 package com.github.odaridavid.talkself
 
-import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
 
-@Parcelize
-data class Chat(
-    val id: Long,
-    val userId: Int,
-    val username: String,
-    val text: String,
-    val timeSent: Long
-) : Parcelable
