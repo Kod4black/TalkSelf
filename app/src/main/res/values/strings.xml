@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Talk Self</string>
+    <string name="you">You</string>
+    <string name="title_create_usernames">Create Usernames</string>
+    <string name="create">Create</string>
+    <string name="hint_enter_second_username">Enter Second Username</string>
+    <string name="hint_enter_first_username">Enter First Username</string>
+    <string name="switch_user">Switch User</string>
+</resources>
