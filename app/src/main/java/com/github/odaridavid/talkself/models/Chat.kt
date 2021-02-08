@@ -11,6 +11,17 @@
  * the License.
  *
  **/
-package com.github.odaridavid.talkself
+package com.github.odaridavid.talkself.models
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 
+@Parcelize
+data class Chat(
+    val id: Long,
+    val userId: Int,
+    val username: String,
+    val message: String,
+    val timeSent: Long
+) : Parcelable {
+}

@@ -11,6 +11,6 @@
  * the License.
  *
  **/
-package com.github.odaridavid.talkself
+package com.github.odaridavid.talkself.ui.activities
 
-data class User(val id: Int, val name: String)
+
