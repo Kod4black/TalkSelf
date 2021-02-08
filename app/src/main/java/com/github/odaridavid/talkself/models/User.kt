@@ -11,17 +11,6 @@
  * the License.
  *
  **/
-package com.github.odaridavid.talkself
+package com.github.odaridavid.talkself.models
 
-
-const val TALK_SELF_APP_SP = "talk_self_pref"
-
-const val USER_ONE_ID_PREF_KEY = "user_one_id"
-const val USER_TWO_ID_PREF_KEY = "user_two_id"
-const val USER_ONE_NAME_PREF_KEY = "user_one_name"
-const val USER_TWO_NAME_PREF_KEY = "user_two_name"
-const val INVALID_DEFAULT_ID = -1
-const val DEFAULT_USERNAME = "Anonymous"
-
-const val USER_ONE_ID = 1
-const val USER_TWO_ID = 2
+data class User(val id: Int, val name: String)

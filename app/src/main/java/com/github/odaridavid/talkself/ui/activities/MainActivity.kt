@@ -1,5 +1,6 @@
-package com.github.odaridavid.talkself
+package com.github.odaridavid.talkself.ui.activities
 
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.Menu
@@ -8,6 +9,11 @@ import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import com.github.odaridavid.talkself.*
+import com.github.odaridavid.talkself.models.Chat
+import com.github.odaridavid.talkself.models.User
+import com.github.odaridavid.talkself.ui.adapter.ChatAdapter
+import com.github.odaridavid.talkself.utils.*
 import com.google.android.material.textfield.TextInputLayout
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
@@ -168,6 +174,13 @@ class MainActivity : AppCompatActivity() {
                 clearEditText()
                 setAdapter()
                 scrollToLatestText()
+                true
+            }
+
+            R.id.action_prefs -> {
+                Intent(this,SettingsActivity::class.java).apply {
+                    startActivity(this)
+                }
                 true
             }
             else -> super.onOptionsItemSelected(item)

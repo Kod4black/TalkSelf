@@ -11,16 +11,20 @@
  * the License.
  *
  **/
-package com.github.odaridavid.talkself
+package com.github.odaridavid.talkself.utils
 
-import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
 
-@Parcelize
-data class Chat(
-    val id: Long,
-    val userId: Int,
-    val username: String,
-    val text: String,
-    val timeSent: Long
-) : Parcelable
+const val TALK_SELF_APP_SP = "talk_self_pref"
+
+const val USER_ONE_ID_PREF_KEY = "user_one_id"
+const val USER_TWO_ID_PREF_KEY = "user_two_id"
+const val USER_ONE_NAME_PREF_KEY = "user_one_name"
+const val USER_TWO_NAME_PREF_KEY = "user_two_name"
+const val INVALID_DEFAULT_ID = -1
+const val DEFAULT_USERNAME = "Anonymous"
+
+const val USER_ONE_ID = 1
+const val USER_TWO_ID = 2
+
+const val VIEW_TYPE_MESSAGE_SENT = 1
+const val VIEW_TYPE_MESSAGE_RECEIVED = 2
