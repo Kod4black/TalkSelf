@@ -72,9 +72,11 @@ class ChatAdapter(private val currentUser: User) : ListAdapter<Chat, RecyclerVie
         RecyclerView.ViewHolder(itemView) {
         var messageText: TextView = itemView.findViewById<View>(R.id.text_gchat_message_me) as TextView
         var timeText: TextView = itemView.findViewById(R.id.text_gchat_timestamp_me) as TextView
+        var nameText: TextView = itemView.findViewById(R.id.text_gchat_user_me) as TextView
 
         fun bind(message: Chat) {
             messageText.text = message.message
+            nameText.text = message.username
 
             // Format the stored timestamp into a readable String using method.
             timeText.text = Utils.formatMillisecondsToTime(message.timeSent);

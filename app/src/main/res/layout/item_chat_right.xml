@@ -7,6 +7,17 @@
     android:layout_marginEnd="8dp"
     android:layout_marginTop="16dp">
 
+    <TextView
+        android:id="@+id/text_gchat_user_me"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:text="Karis"
+        app:layout_constraintBottom_toTopOf="@+id/card_gchat_message_me"
+        app:layout_constraintStart_toStartOf="@+id/card_gchat_message_me"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <androidx.cardview.widget.CardView
         android:id="@+id/card_gchat_message_me"
         android:layout_width="wrap_content"
