@@ -1,4 +1,4 @@
-package com.github.odaridavid.talkself.ui.adapter;
+ package com.github.odaridavid.talkself.ui.adapter;
 
 import android.view.LayoutInflater
 import android.view.View
