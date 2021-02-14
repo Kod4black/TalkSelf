@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -13,12 +14,15 @@ import com.github.odaridavid.talkself.*
 import com.github.odaridavid.talkself.models.Chat
 import com.github.odaridavid.talkself.models.User
 import com.github.odaridavid.talkself.ui.adapter.ChatAdapter
+import com.github.odaridavid.talkself.ui.viewmodel.MainActivityViewModel
 import com.github.odaridavid.talkself.utils.*
 import com.google.android.material.textfield.TextInputLayout
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
+
+    private val viewmodel by viewModels<MainActivityViewModel>()
 
     private lateinit var userOne: User
     private lateinit var userTwo: User
@@ -132,6 +136,7 @@ class MainActivity : AppCompatActivity() {
 
 
     fun sendText(view: View) {
+
         if (message_edit_text.text.toString().trim().isNotBlank()) {
             val text = message_edit_text.text.toString()
             val chat = Chat(
@@ -145,6 +150,7 @@ class MainActivity : AppCompatActivity() {
             clearEditText()
             setAdapter()
             scrollToLatestText()
+
         }
     }
 

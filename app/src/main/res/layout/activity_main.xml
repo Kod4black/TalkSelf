@@ -23,19 +23,21 @@
         android:id="@+id/message_edit_text"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:background="#f4f5f5"
-        android:hint="Enter Message"
-        android:inputType="text|textMultiLine|textLongMessage"
-        android:maxHeight="150dp"
-        android:minHeight="56dp"
-        android:padding="8dp"
-        android:scrollbars="vertical"
-        android:textColorHint="#000000"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/edit_text_bg"
+        android:drawablePadding="16dp"
+        android:ems="10"
+        android:hint="Type a message"
+        android:inputType="textPersonName"
+        android:padding="15dp"
+        android:textColor="#C1000000"
+        android:textColorHint="#C1000000"
         app:layout_constrainedWidth="true"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/send_text_button"
         app:layout_constraintEnd_toStartOf="@+id/send_text_button"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/send_text_button" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/send_text_button"
@@ -47,6 +49,7 @@
         app:elevation="8dp"
         app:fabSize="normal"
         android:onClick="sendText"
+        app:tint="@color/colorAccent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
