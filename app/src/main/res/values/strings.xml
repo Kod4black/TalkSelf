@@ -6,4 +6,19 @@
     <string name="hint_enter_second_username">Enter Second Username</string>
     <string name="hint_enter_first_username">Enter First Username</string>
     <string name="switch_user">Switch User</string>
+    <string name="title_activity_settings2">SettingsActivity2</string>
+
+    <!-- Preference Titles -->
+    <string name="usernames_header">Usernames</string>
+    <string name="theme_header">Theme</string>
+
+    <!-- Messages Preferences -->
+    <string name="username_one">Username 1</string>
+    <string name="username_two">Username 2</string>
+    <string name="reply_title">Default reply action</string>
+
+    <!-- Sync Preferences -->
+    <string name="theme_title">Dark Theme</string>
+
+    <string name="attachment_summary_off">Only download attachments when manually requested</string>
 </resources>
