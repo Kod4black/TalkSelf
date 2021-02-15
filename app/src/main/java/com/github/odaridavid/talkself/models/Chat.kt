@@ -13,15 +13,49 @@
  **/
 package com.github.odaridavid.talkself.models
 
+import android.os.Parcel
 import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 
-@Parcelize
+@Entity(tableName = "chat")
 data class Chat(
+    @PrimaryKey
     val id: Long,
     val userId: Int,
-    val username: String,
-    val message: String,
+    val username: String?,
+    val message: String?,
     val timeSent: Long
 ) : Parcelable {
+    constructor(parcel: Parcel) : this(
+        parcel.readLong(),
+        parcel.readInt(),
+        parcel.readString(),
+        parcel.readString(),
+        parcel.readLong()
+    ) {
+    }
+
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeLong(id)
+        parcel.writeInt(userId)
+        parcel.writeString(username)
+        parcel.writeString(message)
+        parcel.writeLong(timeSent)
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    companion object CREATOR : Parcelable.Creator<Chat> {
+        override fun createFromParcel(parcel: Parcel): Chat {
+            return Chat(parcel)
+        }
+
+        override fun newArray(size: Int): Array<Chat?> {
+            return arrayOfNulls(size)
+        }
+    }
+
 }

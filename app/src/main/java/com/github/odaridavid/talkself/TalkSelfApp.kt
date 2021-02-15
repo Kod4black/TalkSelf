@@ -17,8 +17,9 @@ import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
 import com.github.odaridavid.talkself.utils.*
+import dagger.hilt.android.HiltAndroidApp
 
-
+@HiltAndroidApp
 class TalkSelfApp : Application() {
 
     lateinit var sharedPref: SharedPreferences
