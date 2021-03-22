@@ -16,8 +16,4 @@
     <item
         android:id="@+id/action_prefs"
         android:title="Preferences" />
-    <item
-        android:id="@+id/action_switch_user"
-        android:title="@string/switch_user"
-        app:showAsAction="always" />
 </menu>

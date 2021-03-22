@@ -57,7 +57,7 @@ class ChatAdapter() : ListAdapter<Chat, RecyclerView.ViewHolder>(
         fun bind(message: Chat) {
             messageText.text = message.message
             // Format the stored timestamp into a readable String using method.
-            timeText.text = Utils.formatMillisecondsToTime(message.timeSent)
+            timeText.text = message.timesent?.let { Utils.formatMillisecondsToTime(it) }
             nameText.text = message.username
 
         }
@@ -80,7 +80,7 @@ class ChatAdapter() : ListAdapter<Chat, RecyclerView.ViewHolder>(
             nameText.text = message.username
 
             // Format the stored timestamp into a readable String using method.
-            timeText.text = Utils.formatMillisecondsToTime(message.timeSent);
+            timeText.text = message.timesent?.let { Utils.formatMillisecondsToTime(it) };
         }
 
     }

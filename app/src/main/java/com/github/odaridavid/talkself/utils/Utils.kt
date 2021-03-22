@@ -15,6 +15,13 @@ class Utils {
             return format.format(createdAt)
         }
 
+        @SuppressLint("SimpleDateFormat")
+        fun formatMillisecondsToDate(createdAt: Long): String {
+            val format: DateFormat = SimpleDateFormat("mm dd,YYYY")
+            format.timeZone = TimeZone.getDefault()
+            return format.format(createdAt)
+        }
+
     }
 
 }
