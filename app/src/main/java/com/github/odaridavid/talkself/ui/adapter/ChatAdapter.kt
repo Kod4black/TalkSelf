@@ -87,8 +87,8 @@ class ChatAdapter() : ListAdapter<Chat, RecyclerView.ViewHolder>(
 
 
     override fun getItemViewType(position: Int): Int {
-        val (_, userId) = getItem(position)
-        return if (userId == currentUser?.id) {
+        val chat = getItem(position)
+        return if (chat.userid == currentUser?.id) {
             // If the current user is the sender of the message
             VIEW_TYPE_MESSAGE_SENT
         } else {

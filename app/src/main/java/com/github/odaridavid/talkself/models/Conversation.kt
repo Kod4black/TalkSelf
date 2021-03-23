@@ -7,10 +7,13 @@ import kotlinx.android.parcel.Parcelize
 
 @Entity(tableName = "conversation")
 @Parcelize
-data class Conversation (
-    @PrimaryKey(autoGenerate = false)
-    var id : Int,
+data class Conversation(
+    @PrimaryKey(autoGenerate = true)
+    var id: Int? = null,
     val timeCreated: Long? = null,
-    var lastMessage : String? = null,
+) : Parcelable {
+
     var lastUserId: Int? = null
-) : Parcelable
+    var lastMessage: String? = null
+
+}

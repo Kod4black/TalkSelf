@@ -22,11 +22,12 @@ import java.util.*
 @Entity(tableName = "chat")
 @Parcelize
 data class Chat(
-    @PrimaryKey(autoGenerate = true)
-    val id: Long,
     val userid: Int? = Random().nextInt(),
     val username: String? = null,
     val message: String? = null,
     val timesent: Long? = null,
     val conservationid : Int? = null
-    ) : Parcelable
+    ) : Parcelable{
+    @PrimaryKey(autoGenerate = true)
+    var id: Int? = null
+    }

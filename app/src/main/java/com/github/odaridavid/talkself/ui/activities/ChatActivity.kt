@@ -1,10 +1,6 @@
 package com.github.odaridavid.talkself.ui.activities
 
-import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
@@ -27,37 +23,45 @@ class ChatActivity : AppCompatActivity() {
 
     private val viewmodel by viewModels<ChatActivityViewModel>()
 
-    private  var conversationid : Int? = null
+    var conversation: Conversation? = null
 
-    private lateinit var currentUser: User
+    private  var currentUser: User? = null
 
     private lateinit var adapter: ChatAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
+        conversation = intent.getParcelableExtra<Conversation>("conversation")
+
         adapter = ChatAdapter()
         chat_recycler_view.adapter = adapter
-        val conversation: Conversation = intent.getIntExtra("")
 
         floatingActionButtonexchange.setOnClickListener {
             refresh()
         }
 
-        viewmodel.chatList.observe(this, {
 
-        })
-
-        viewmodel.users(conversationid!!).observe(this,{
-            if (it.size <= 2){
+        viewmodel.users(conversation?.id!!).observe(this, {
+            if (it.size < 2){
                 val view = getView()
 
                 val firstView = view.findViewById<TextInputLayout>(R.id.first_username_view)
 
                 showSetUsernameDialog(view, firstView)
             }else{
+                if (currentUser == null){
+                    currentUser = it[0]
+                }
                 initViewModel()
             }
+        })
+
+        viewmodel.chats(conversation!!.id!!).observe(this, {
+            if (currentUser != null){
+                adapter.currentUser = currentUser
+            }
+            adapter.submitList(it)
         })
     }
 
@@ -68,8 +72,10 @@ class ChatActivity : AppCompatActivity() {
     }
 
     private fun initViewModel() {
-        viewmodel.chatList.observe(this, {
-            adapter.currentUser = currentUser
+        viewmodel.chats(conversation!!.id!!).observe(this, {
+            if (currentUser != null){
+                adapter.currentUser = currentUser
+            }
             adapter.submitList(it)
         })
     }
@@ -97,6 +103,7 @@ class ChatActivity : AppCompatActivity() {
 
         dialog.setOnShowListener {
             val positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
+
             positiveButton.setTextColor(
                 ContextCompat.getColor(
                     this@ChatActivity,
@@ -107,8 +114,8 @@ class ChatActivity : AppCompatActivity() {
             positiveButton.setOnClickListener {
                 val Username = first.editText?.text.toString().trim()
                 if (Username.isNotBlank()) {
-
-
+                    var user = User(Username, conversation?.id)
+                    viewmodel.addUser(user)
                     initViewModel()
                     dialog.dismiss()
                 } else {
@@ -125,11 +132,11 @@ class ChatActivity : AppCompatActivity() {
         if (message_edit_text.text.toString().trim().isNotBlank()) {
             val text = message_edit_text.text.toString()
             val chat = Chat(
-                (0..Long.MAX_VALUE).random(),
-                currentUser.id,
-                currentUser.name,
+                currentUser?.id,
+                currentUser?.name,
                 text,
-                System.currentTimeMillis()
+                System.currentTimeMillis(),
+                conversation?.id
             )
             viewmodel.addText(chat)
             clearEditText()
