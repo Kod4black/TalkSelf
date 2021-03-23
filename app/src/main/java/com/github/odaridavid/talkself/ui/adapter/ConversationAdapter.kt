@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -35,15 +34,15 @@ import com.github.odaridavid.talkself.utils.Utils
     }
 
      class ViewHolder (itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var dateText: TextView = itemView.findViewById<View>(R.id.conversation_date) as TextView
+        var lastman: TextView = itemView.findViewById<View>(R.id.conversation_last_man) as TextView
         var timeText: TextView = itemView.findViewById<View>(R.id.conversation_time) as TextView
         var messageText: TextView = itemView.findViewById<View>(R.id.text_chat_last_message) as TextView
 
 
         fun bind(message: Conversation) {
             messageText.text = message.lastMessage
-            dateText.text = Utils.formatMillisecondsToTime(message.timeCreated!!)
-            timeText.text = Utils.formatMillisecondsToDate(message.timeCreated)
+            lastman.text = message.lastUser
+            timeText.text = Utils.formatMillisecondsToDate(message.timeCreated!!)
 
         }
 

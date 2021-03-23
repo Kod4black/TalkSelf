@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.odaridavid.talkself.models.Chat
+import com.github.odaridavid.talkself.models.Conversation
 import com.github.odaridavid.talkself.models.User
 import com.github.odaridavid.talkself.repository.MainRepository
 import com.github.odaridavid.talkself.utils.Coroutines
@@ -26,6 +27,12 @@ class ChatActivityViewModel @ViewModelInject constructor(private val mainReposit
     fun addUser(user: User){
         Coroutines.io {
             mainRepository.addUser(user)
+        }
+    }
+
+    fun updateConversation(conversation: Conversation?) {
+        Coroutines.io {
+            mainRepository.addconversation(conversation!!)
         }
     }
 

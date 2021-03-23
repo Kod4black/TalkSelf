@@ -26,4 +26,9 @@ class MainRepository @Inject constructor(private val chatDao: ChatDao) {
         chatDao.makeConversation(conversation )
     }
 
+    suspend fun deleteConversation(conversation: Conversation){
+        chatDao.deleteConversation(conversation)
+        chatDao.deleteChats(conversation.id!!)
+    }
+
 }

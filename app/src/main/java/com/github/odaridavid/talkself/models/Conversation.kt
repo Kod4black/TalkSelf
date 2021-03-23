@@ -10,10 +10,11 @@ import kotlinx.android.parcel.Parcelize
 data class Conversation(
     @PrimaryKey(autoGenerate = true)
     var id: Int? = null,
-    val timeCreated: Long? = null,
+    var timeCreated: Long? = null,
 ) : Parcelable {
 
-    var lastUserId: Int? = null
+    var lastUser: String? = null
     var lastMessage: String? = null
+    var lasttimemessage: Long? = null
 
 }

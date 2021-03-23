@@ -29,6 +29,8 @@ class ChatActivity : AppCompatActivity() {
 
     private lateinit var adapter: ChatAdapter
 
+    private var users = mutableListOf<User>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
@@ -41,15 +43,28 @@ class ChatActivity : AppCompatActivity() {
             refresh()
         }
 
+        floatingActionButtonexchange.setOnClickListener {
+            if (currentUser == users[0]){
+                currentUser = users[1]
+            }else{
+                currentUser = users[0]
+            }
+            adapter.currentUser = currentUser
+            adapter.notifyDataSetChanged()
+        }
+
 
         viewmodel.users(conversation?.id!!).observe(this, {
             if (it.size < 2){
                 val view = getView()
 
                 val firstView = view.findViewById<TextInputLayout>(R.id.first_username_view)
+                val secondView = view.findViewById<TextInputLayout>(R.id.second_username_view)
 
-                showSetUsernameDialog(view, firstView)
+                showSetUsernameDialog(view, firstView,secondView)
+
             }else{
+                users = it as MutableList<User>
                 if (currentUser == null){
                     currentUser = it[0]
                 }
@@ -93,6 +108,7 @@ class ChatActivity : AppCompatActivity() {
     private fun showSetUsernameDialog(
         view: View?,
         first: TextInputLayout,
+        second: TextInputLayout
     ) {
         val dialog = AlertDialog.Builder(this@ChatActivity)
             .setTitle(getString(R.string.title_create_usernames))
@@ -112,14 +128,20 @@ class ChatActivity : AppCompatActivity() {
             )
 
             positiveButton.setOnClickListener {
-                val Username = first.editText?.text.toString().trim()
-                if (Username.isNotBlank()) {
-                    var user = User(Username, conversation?.id)
-                    viewmodel.addUser(user)
+                val firstUsername = first.editText?.text.toString().trim()
+                val secondUsername = second.editText?.text.toString().trim()
+                if (firstUsername.isNotBlank() && secondUsername.isNotBlank()) {
+
+                    viewmodel.addUser(User(firstUsername, conversation?.id))
+                    viewmodel.addUser(User(secondUsername, conversation?.id))
+
                     initViewModel()
                     dialog.dismiss()
                 } else {
-                    first.error = "Invalid Username.Should Contain Characters"
+                    if (firstUsername.isBlank())
+                        first.error = "Invalid Username.Should Contain Characters"
+                    if (secondUsername.isBlank())
+                        second.error = "Invalid Username.Should Contain Characters"
                 }
             }
         }
@@ -139,6 +161,10 @@ class ChatActivity : AppCompatActivity() {
                 conversation?.id
             )
             viewmodel.addText(chat)
+            conversation?.lastUser = currentUser?.name
+            conversation?.lastMessage = text
+            conversation?.lasttimemessage = System.currentTimeMillis()
+            viewmodel.updateConversation(conversation)
             clearEditText()
             scrollToLatestText()
 

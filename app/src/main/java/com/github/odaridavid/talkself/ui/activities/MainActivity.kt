@@ -29,6 +29,7 @@ class MainActivity : AppCompatActivity() {
         conversationadapter = ConversationAdapter()
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = conversationadapter
+
         viewmodel.conversation.observe(this,{
             conversationadapter.submitList(it)
         })

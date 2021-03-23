@@ -15,4 +15,10 @@ class MainActivityViewModel @ViewModelInject constructor(private val mainReposit
          }
     }
 
+    fun deleteConversation(conversation: Conversation){
+        Coroutines.io {
+            mainRepository.deleteConversation(conversation)
+        }
+    }
+
 }

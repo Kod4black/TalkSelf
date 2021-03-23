@@ -1,4 +1,4 @@
-gitpackage com.github.odaridavid.talkself.utils
+package com.github.odaridavid.talkself.utils
 
 import android.annotation.SuppressLint
 import java.text.DateFormat
@@ -17,7 +17,7 @@ class Utils {
 
         @SuppressLint("SimpleDateFormat")
         fun formatMillisecondsToDate(createdAt: Long): String {
-            val format: DateFormat = SimpleDateFormat("MMMM dd, yyyy")
+            val format: DateFormat = SimpleDateFormat("MMMM dd, yyyy HH:mm a")
             format.timeZone = TimeZone.getDefault()
             return format.format(createdAt)
         }
