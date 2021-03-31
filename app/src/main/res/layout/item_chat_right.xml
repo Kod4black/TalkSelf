@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginEnd="8dp"
-    android:layout_marginTop="16dp">
+    android:layout_marginEnd="8dp">
 
     <TextView
         android:id="@+id/text_gchat_user_me"
@@ -13,7 +12,10 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
+        android:fontFamily="sans-serif"
         android:text="Karis"
+        android:textColor="@color/colorGrey"
+        android:textSize="12sp"
         app:layout_constraintBottom_toTopOf="@+id/card_gchat_message_me"
         app:layout_constraintStart_toStartOf="@+id/card_gchat_message_me"
         app:layout_constraintTop_toTopOf="parent" />
@@ -42,13 +44,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
+                android:fontFamily="sans-serif"
                 android:maxWidth="260dp"
                 android:paddingLeft="12dp"
                 android:paddingTop="8dp"
                 android:paddingRight="12dp"
                 android:text="This is a Message"
-                android:textColor="#ffffff"
-                android:textSize="16sp" />
+                android:textColor="#ffffff" />
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>

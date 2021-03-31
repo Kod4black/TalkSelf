@@ -15,9 +15,11 @@ import com.github.odaridavid.talkself.models.User
 import com.github.odaridavid.talkself.utils.Utils
 
 
-class ChatAdapter(private val currentUser: User) : ListAdapter<Chat, RecyclerView.ViewHolder>(
+class ChatAdapter() : ListAdapter<Chat, RecyclerView.ViewHolder>(
     ChatDiffUtil
 ) {
+
+    var currentUser: User? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         var view = View(parent.context)
@@ -54,9 +56,8 @@ class ChatAdapter(private val currentUser: User) : ListAdapter<Chat, RecyclerVie
         var nameText: TextView
         fun bind(message: Chat) {
             messageText.text = message.message
-
             // Format the stored timestamp into a readable String using method.
-            timeText.text = Utils.formatMillisecondsToTime(message.timeSent)
+            timeText.text = message.timesent?.let { Utils.formatMillisecondsToTime(it) }
             nameText.text = message.username
 
         }
@@ -79,15 +80,15 @@ class ChatAdapter(private val currentUser: User) : ListAdapter<Chat, RecyclerVie
             nameText.text = message.username
 
             // Format the stored timestamp into a readable String using method.
-            timeText.text = Utils.formatMillisecondsToTime(message.timeSent);
+            timeText.text = message.timesent?.let { Utils.formatMillisecondsToTime(it) };
         }
 
     }
 
 
     override fun getItemViewType(position: Int): Int {
-        val (_, userId) = getItem(position)
-        return if (userId == currentUser.id) {
+        val chat = getItem(position)
+        return if (chat.userid == currentUser?.id) {
             // If the current user is the sender of the message
             VIEW_TYPE_MESSAGE_SENT
         } else {

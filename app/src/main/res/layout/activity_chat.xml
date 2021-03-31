@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorBlack"
+    tools:context=".ui.activities.ChatActivity">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/chat_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constrainedHeight="true"
+        app:layout_constraintBottom_toTopOf="@+id/message_edit_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:itemCount="5" />
+
+    <EditText
+        android:id="@+id/message_edit_text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/edit_text_bg"
+        android:drawablePadding="16dp"
+        android:ems="10"
+        android:fontFamily="@font/poppins"
+        android:hint="Type a message"
+        android:inputType="textPersonName"
+        android:padding="15dp"
+        android:textColor="#C1000000"
+        android:textColorHint="#C1000000"
+        app:layout_constrainedWidth="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/floatingActionButtonexchange"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/floatingActionButtonexchange"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        app:backgroundTint="@android:color/white"
+        app:elevation="8dp"
+        android:layout_margin="5dp"
+        app:layout_constraintBottom_toBottomOf="@+id/message_edit_text"
+        app:layout_constraintEnd_toStartOf="@+id/send_text_button"
+        app:layout_constraintTop_toTopOf="@+id/message_edit_text"
+        app:srcCompat="@drawable/ic_exchange" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/send_text_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="sendText"
+        android:src="@drawable/ic_baseline_send_24"
+        app:backgroundTint="@android:color/white"
+        app:elevation="8dp"
+        app:fabSize="normal"
+        android:layout_margin="5dp"
+        app:layout_constraintBottom_toBottomOf="@+id/floatingActionButtonexchange"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/floatingActionButtonexchange" />
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -14,14 +14,20 @@
 package com.github.odaridavid.talkself.models
 
 import android.os.Parcelable
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import kotlinx.android.parcel.Parcelize
+import java.util.*
 
+@Entity(tableName = "chat")
 @Parcelize
 data class Chat(
-    val id: Long,
-    val userId: Int,
-    val username: String,
-    val message: String,
-    val timeSent: Long
-) : Parcelable {
-}
+    val userid: Int? = Random().nextInt(),
+    val username: String? = null,
+    val message: String? = null,
+    val timesent: Long? = null,
+    val conservationid : Int? = null
+    ) : Parcelable{
+    @PrimaryKey(autoGenerate = true)
+    var id: Int? = null
+    }
