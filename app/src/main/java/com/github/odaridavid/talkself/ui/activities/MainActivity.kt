@@ -39,8 +39,10 @@ class MainActivity : AppCompatActivity() {
         viewmodel.conversation.observe(this,{
             if (it.isNullOrEmpty()){
                 textView_Info.text = "You currently have no existing conversations"
+                imageView_empty.visibility = View.VISIBLE
             }else {
                 textView_Info.text = "Swipe a conversation Left or Right to delete it"
+                imageView_empty.visibility = View.GONE
             }
             conversationadapter.submitList(it)
         })
