@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorBlack"
     tools:context=".ui.activities.ChatActivity">
 
     <androidx.recyclerview.widget.RecyclerView
@@ -24,15 +25,16 @@
         android:id="@+id/message_edit_text"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_margin="5dp"
         android:layout_marginStart="16dp"
         android:layout_marginBottom="8dp"
         android:background="@drawable/edit_text_bg"
         android:drawablePadding="16dp"
         android:ems="10"
+        android:fontFamily="@font/poppins"
         android:hint="Type a message"
         android:inputType="textPersonName"
         android:padding="15dp"
-        android:layout_margin="5dp"
         android:textColor="#C1000000"
         android:textColorHint="#C1000000"
         app:layout_constrainedWidth="true"

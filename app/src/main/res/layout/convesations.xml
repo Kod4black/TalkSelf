@@ -5,19 +5,22 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="5dp"
+    app:cardCornerRadius="15dp"
     app:cardMaxElevation="5dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp">
+        android:layout_height="match_parent"
+        android:background="@color/colorPrimary">
 
         <TextView
             android:id="@+id/conversation_last_man"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:layout_margin="8dp"
+            android:fontFamily="@font/poppins"
             android:text="karis"
+            android:textColor="@color/colorGrey"
             android:textSize="12sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
@@ -28,7 +31,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
+            android:fontFamily="@font/poppins"
             android:text="Jan 10, 2019  10:15 am"
+            android:textColor="@color/colorGrey"
             android:textSize="12sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
@@ -55,6 +60,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
+                    android:fontFamily="sans-serif"
                     android:maxWidth="260dp"
                     android:paddingLeft="12dp"
                     android:paddingTop="5dp"

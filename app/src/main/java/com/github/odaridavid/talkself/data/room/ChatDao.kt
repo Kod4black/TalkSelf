@@ -18,8 +18,11 @@ interface ChatDao {
     @Query("SELECT * FROM chat WHERE conservationid=:conversationId order by timeSent asc")
     fun getChats(conversationId: Int): LiveData<List<Chat>>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun makeConversation(conversation: Conversation)
+
+    @Update
+    suspend fun updateConversation(conversation : Conversation)
 
     @Query("SELECT * FROM conversation order by timeCreated asc")
     fun getAllConversations(): LiveData<List<Conversation>>

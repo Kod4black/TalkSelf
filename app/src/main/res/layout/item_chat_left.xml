@@ -22,7 +22,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
+        android:fontFamily="sans-serif"
         android:text="John Grady Cole"
+        android:textColor="@color/colorGrey"
         android:textSize="12sp"
         app:layout_constraintStart_toEndOf="@+id/image_gchat_profile_other"
         app:layout_constraintTop_toTopOf="parent" />
@@ -50,6 +52,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
+                android:fontFamily="sans-serif"
                 android:maxWidth="260dp"
                 android:paddingLeft="12dp"
                 android:paddingTop="8dp"

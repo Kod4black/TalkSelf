@@ -48,6 +48,10 @@ import com.github.odaridavid.talkself.utils.Utils
 
     }
 
+     fun getItemat(position: Int): Conversation {
+         return getItem(position)
+     }
+
     companion object {
         val ConversationDiffUtil = object : DiffUtil.ItemCallback<Conversation>() {
             override fun areItemsTheSame(oldItem: Conversation, newItem: Conversation): Boolean {

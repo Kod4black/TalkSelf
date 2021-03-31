@@ -1,5 +1,6 @@
 package com.github.odaridavid.talkself.ui.activities
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
@@ -40,17 +41,12 @@ class ChatActivity : AppCompatActivity() {
         chat_recycler_view.adapter = adapter
 
         floatingActionButtonexchange.setOnClickListener {
-            refresh()
-        }
-
-        floatingActionButtonexchange.setOnClickListener {
             if (currentUser == users[0]){
                 currentUser = users[1]
             }else{
                 currentUser = users[0]
             }
-            adapter.currentUser = currentUser
-            adapter.notifyDataSetChanged()
+            viewmodel.currentuser.postValue(currentUser!!.name)
         }
 
 
@@ -67,30 +63,28 @@ class ChatActivity : AppCompatActivity() {
                 users = it as MutableList<User>
                 if (currentUser == null){
                     currentUser = it[0]
+                    adapter.currentUser = currentUser
                 }
+                viewmodel.currentuser.postValue(currentUser?.name)
                 initViewModel()
             }
         })
 
         viewmodel.chats(conversation!!.id!!).observe(this, {
-            if (currentUser != null){
-                adapter.currentUser = currentUser
-            }
             adapter.submitList(it)
         })
-    }
 
-    private fun refresh() {
-        adapter.notifyDataSetChanged()
-        clearEditText()
-        scrollToLatestText()
+        viewmodel.currentuser.observe(this, {
+            if (it.isNullOrBlank()){
+                supportActionBar?.title = "New Chat";
+            }
+            supportActionBar?.title = "Chatting as $it";
+        })
+
     }
 
     private fun initViewModel() {
         viewmodel.chats(conversation!!.id!!).observe(this, {
-            if (currentUser != null){
-                adapter.currentUser = currentUser
-            }
             adapter.submitList(it)
         })
     }
@@ -115,10 +109,12 @@ class ChatActivity : AppCompatActivity() {
             .setView(view)
             .setCancelable(false)
             .setPositiveButton(getString(R.string.create), null)
+            .setNegativeButton("Dismiss",null)
             .create()
 
         dialog.setOnShowListener {
             val positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
+            val negativeButton = dialog.getButton(AlertDialog.BUTTON_NEGATIVE)
 
             positiveButton.setTextColor(
                 ContextCompat.getColor(
@@ -127,11 +123,24 @@ class ChatActivity : AppCompatActivity() {
                 )
             )
 
+            negativeButton.setTextColor(
+                ContextCompat.getColor(
+                    this@ChatActivity,
+                    android.R.color.black
+                )
+            )
+
+            negativeButton.setOnClickListener {
+                dialog.dismiss()
+                finish()
+            }
+
             positiveButton.setOnClickListener {
                 val firstUsername = first.editText?.text.toString().trim()
                 val secondUsername = second.editText?.text.toString().trim()
                 if (firstUsername.isNotBlank() && secondUsername.isNotBlank()) {
 
+                    viewmodel.makeconversation(conversation!!)
                     viewmodel.addUser(User(firstUsername, conversation?.id))
                     viewmodel.addUser(User(secondUsername, conversation?.id))
 
@@ -150,7 +159,6 @@ class ChatActivity : AppCompatActivity() {
 
 
     fun sendText(view: View) {
-
         if (message_edit_text.text.toString().trim().isNotBlank()) {
             val text = message_edit_text.text.toString()
             val chat = Chat(
@@ -167,7 +175,6 @@ class ChatActivity : AppCompatActivity() {
             viewmodel.updateConversation(conversation)
             clearEditText()
             scrollToLatestText()
-
         }
     }
 
@@ -187,4 +194,5 @@ class ChatActivity : AppCompatActivity() {
     companion object {
         const val CHATS_KEY = "chats"
     }
+
 }
