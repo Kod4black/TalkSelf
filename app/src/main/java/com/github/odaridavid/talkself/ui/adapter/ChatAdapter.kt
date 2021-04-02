@@ -38,12 +38,19 @@ class ChatAdapter() : ListAdapter<Chat, RecyclerView.ViewHolder>(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val message = getItem(position)
+        val previousmessage = if (position >= 1) getItem(position - 1) else null
+
 
         when (holder.itemViewType) {
             VIEW_TYPE_MESSAGE_SENT -> (holder as SentMessageHolder).bind(
+                previousmessage,
                 message
             )
+
+
+
             VIEW_TYPE_MESSAGE_RECEIVED -> (holder as ReceivedMessageHolder).bind(
+                previousmessage,
                 message
             )
         }
@@ -51,15 +58,19 @@ class ChatAdapter() : ListAdapter<Chat, RecyclerView.ViewHolder>(
 
     private class ReceivedMessageHolder internal constructor(itemView: View) :
         RecyclerView.ViewHolder(itemView) {
+
         var messageText: TextView
         var timeText: TextView
         var nameText: TextView
-        fun bind(message: Chat) {
+
+        fun bind(previousmessage: Chat?, message: Chat) {
             messageText.text = message.message
             // Format the stored timestamp into a readable String using method.
             timeText.text = message.timesent?.let { Utils.formatMillisecondsToTime(it) }
             nameText.text = message.username
-
+            if (previousmessage != null && previousmessage.userid == message.userid){
+                nameText.visibility = View.GONE
+            }
         }
 
         init {
@@ -69,18 +80,22 @@ class ChatAdapter() : ListAdapter<Chat, RecyclerView.ViewHolder>(
         }
     }
 
-    private class SentMessageHolder internal constructor(itemView: View) :
+    private class SentMessageHolder  constructor(itemView: View) :
         RecyclerView.ViewHolder(itemView) {
         var messageText: TextView = itemView.findViewById<View>(R.id.text_gchat_message_me) as TextView
         var timeText: TextView = itemView.findViewById(R.id.text_gchat_timestamp_me) as TextView
         var nameText: TextView = itemView.findViewById(R.id.text_gchat_user_me) as TextView
 
-        fun bind(message: Chat) {
+        fun bind(previousmessage: Chat?, message: Chat) {
+
             messageText.text = message.message
             nameText.text = message.username
-
             // Format the stored timestamp into a readable String using method.
-            timeText.text = message.timesent?.let { Utils.formatMillisecondsToTime(it) };
+            timeText.text = message.timesent?.let { Utils.formatMillisecondsToTime(it) }
+
+            if (previousmessage != null && previousmessage.userid == message.userid){
+                nameText.visibility = View.GONE
+            }
         }
 
     }
@@ -95,6 +110,10 @@ class ChatAdapter() : ListAdapter<Chat, RecyclerView.ViewHolder>(
             // If some other user sent the message
             VIEW_TYPE_MESSAGE_RECEIVED
         }
+    }
+
+    fun getItemat(position: Int): Chat {
+        return getItem(position)
     }
 
     companion object {

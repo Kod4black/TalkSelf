@@ -24,14 +24,13 @@
         android:id="@+id/card_gchat_message_me"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
         app:cardBackgroundColor="#774df2"
         app:cardCornerRadius="12dp"
         app:cardElevation="0dp"
         app:cardPreventCornerOverlap="false"
         app:cardUseCompatPadding="true"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/text_gchat_user_me">
 
         <LinearLayout
             android:id="@+id/layout_gchat_container_me"

@@ -22,8 +22,8 @@ import java.util.*
 @Entity(tableName = "chat")
 @Parcelize
 data class Chat(
-    val userid: Int? = Random().nextInt(),
-    val username: String? = null,
+    var userid: Int? = Random().nextInt(),
+    var username: String? = null,
     val message: String? = null,
     val timesent: Long? = null,
     val conservationid : Int? = null

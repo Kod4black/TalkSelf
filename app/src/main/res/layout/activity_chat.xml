@@ -7,6 +7,17 @@
     android:background="@color/colorBlack"
     tools:context=".ui.activities.ChatActivity">
 
+    <include
+        android:id="@+id/layout_nomessage"
+        layout="@layout/layout_nomessage"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/chat_recycler_view"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/chat_recycler_view" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/chat_recycler_view"
         android:layout_width="match_parent"
