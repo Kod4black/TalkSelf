@@ -18,7 +18,7 @@ interface ChatDao {
     @Query("SELECT * FROM chat WHERE conservationid=:conversationId order by timeSent asc")
     fun getChats(conversationId: Int): LiveData<List<Chat>>
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun makeConversation(conversation: Conversation)
 
     @Update
@@ -41,5 +41,8 @@ interface ChatDao {
 
     @Query("Delete  FROM chat WHERE conservationid=:conversationId")
     fun deleteChats(conversationId: Int)
+
+    @Update
+    fun updateChat(chat: Chat)
 
 }

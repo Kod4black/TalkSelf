@@ -51,4 +51,10 @@ class ChatActivityViewModel @ViewModelInject constructor(private val mainReposit
         }
     }
 
+    fun updatechat(chat : Chat){
+        Coroutines.io{
+            mainRepository.updateChat(chat)
+        }
+    }
+
 }

@@ -4,6 +4,7 @@ import com.github.odaridavid.talkself.data.room.ChatDao
 import com.github.odaridavid.talkself.models.Chat
 import com.github.odaridavid.talkself.models.Conversation
 import com.github.odaridavid.talkself.models.User
+import com.github.odaridavid.talkself.utils.Coroutines
 import javax.inject.Inject
 
 class MainRepository @Inject constructor(private val chatDao: ChatDao) {
@@ -30,9 +31,19 @@ class MainRepository @Inject constructor(private val chatDao: ChatDao) {
         chatDao.updateConversation(conversation )
     }
 
-    suspend fun deleteConversation(conversation: Conversation){
-        chatDao.deleteConversation(conversation)
+     suspend fun deleteConversation(conversation: Conversation){
+         Coroutines.io {
+             chatDao.deleteConversation(conversation)
+         }
+    }
+
+    fun deleteChats(conversation: Conversation){
         chatDao.deleteChats(conversation.id!!)
     }
+
+    fun updateChat(chat: Chat) {
+        chatDao.updateChat(chat)
+    }
+
 
 }
