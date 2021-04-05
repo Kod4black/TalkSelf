@@ -18,7 +18,7 @@ import com.github.odaridavid.talkself.ui.viewmodel.MainActivityViewModel
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
-import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_conversations.*
 import java.util.*
 
 @AndroidEntryPoint
@@ -27,10 +27,15 @@ class ConversationsActivity : AppCompatActivity() {
     private  val viewmodel by viewModels<MainActivityViewModel>()
     private lateinit var conversationadapter: ConversationAdapter
     private lateinit var snackbar: Snackbar
+    var isActionMode:Boolean = false
+    var counter = 0
+    var selectionList  = mutableListOf<Conversation>()
+    var convoList  = mutableListOf<Conversation>()
 
-        override fun onCreate(savedInstanceState: Bundle?) {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_conversations)
         setUpactionBar()
 
         //Setup the recyclerview holding chats
@@ -38,13 +43,14 @@ class ConversationsActivity : AppCompatActivity() {
 
         viewmodel.conversation.observe(this,{
             if (it.isNullOrEmpty()){
-                textView_Info.text = "You currently have no existing conversations"
+                textView_Info_conversations.text = "You currently have no existing conversations"
                 imageView_empty.visibility = View.VISIBLE
             }else {
-                textView_Info.text = "Swipe a conversation Left or Right to delete it"
+                textView_Info_conversations.text = "Swipe a conversation Left or Right to delete it"
                 imageView_empty.visibility = View.GONE
             }
             conversationadapter.submitList(it)
+            convoList = it as MutableList<Conversation>
         })
 
         //A custom itemtouchhelper to add a background to a viewholder
@@ -120,7 +126,7 @@ class ConversationsActivity : AppCompatActivity() {
     }
 
     private fun setUpAdapter() {
-        conversationadapter = ConversationAdapter()
+        conversationadapter = ConversationAdapter(this)
         conversations_recyclerView.layoutManager = LinearLayoutManager(this)
         conversations_recyclerView.adapter = conversationadapter
     }
@@ -158,5 +164,18 @@ class ConversationsActivity : AppCompatActivity() {
             viewmodel.makeconversation(conversation)
         }
         snackbar.show()
+    }
+
+    fun startselection(position: Int) {
+        if (!isActionMode){
+            isActionMode = true
+            selectionList.add(convoList[position])
+            counter++
+            updateToolbar(counter)
+        }
+    }
+
+    private fun updateToolbar(counter : Int) {
+
     }
 }

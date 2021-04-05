@@ -16,7 +16,7 @@ import kotlinx.coroutines.launch
 class ChatActivityViewModel @ViewModelInject constructor(private val mainRepository: MainRepository) : ViewModel() {
 
     var chatList  = mainRepository.chats
-    var currentuser = MutableLiveData<String>()
+    var currentuser = MutableLiveData<User>()
 
     fun users(conversationid : Int) = mainRepository.users(conversationid)
     fun chats(conversationid : Int) = mainRepository.chats(conversationid)

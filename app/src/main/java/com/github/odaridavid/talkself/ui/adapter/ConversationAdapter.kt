@@ -5,14 +5,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.github.odaridavid.talkself.R
 import com.github.odaridavid.talkself.models.Conversation
 import com.github.odaridavid.talkself.ui.activities.ChatActivity
+import com.github.odaridavid.talkself.ui.activities.ConversationsActivity
 import com.github.odaridavid.talkself.utils.Utils
- class ConversationAdapter : ListAdapter<Conversation, ConversationAdapter.ViewHolder>(
+ class ConversationAdapter(private val activity: ConversationsActivity) : ListAdapter<Conversation, ConversationAdapter.ViewHolder>(
     ConversationDiffUtil
 ) {
 
@@ -31,12 +33,19 @@ import com.github.odaridavid.talkself.utils.Utils
                 holder.itemView.context.startActivity(it)
             }
         }
+
+        holder.cardview.setOnLongClickListener {
+            activity.startselection(position)
+            return@setOnLongClickListener true
+        }
+
     }
 
      class ViewHolder (itemView: View) : RecyclerView.ViewHolder(itemView) {
         var lastman: TextView = itemView.findViewById<View>(R.id.conversation_last_man) as TextView
         var timeText: TextView = itemView.findViewById<View>(R.id.conversation_time) as TextView
         var messageText: TextView = itemView.findViewById<View>(R.id.text_chat_last_message) as TextView
+         var cardview : CardView = itemView.findViewById(R.id.cardview)
 
 
         fun bind(message: Conversation) {
