@@ -14,13 +14,12 @@ import com.github.odaridavid.talkself.models.Chat
 import com.github.odaridavid.talkself.models.Conversation
 import com.github.odaridavid.talkself.models.User
 import com.github.odaridavid.talkself.ui.adapter.ChatAdapter
-import com.github.odaridavid.talkself.ui.viewmodel.ChatActivityViewModel
+import com.github.odaridavid.talkself.ui.fragments.chat.ChatActivityViewModel
 import com.github.odaridavid.talkself.utils.*
 import com.google.android.material.textfield.TextInputLayout
 import dagger.hilt.android.AndroidEntryPoint
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 import kotlinx.android.synthetic.main.activity_chat.*
-import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 
 @AndroidEntryPoint
@@ -38,47 +37,60 @@ class ChatActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_chat)
+        setContentView(R.layout.fragment_chat)
         conversation = intent.getParcelableExtra<Conversation>("conversation")
 
         setUpAdapter()
 
         floatingActionButtonexchange.setOnClickListener {
-            if (currentUser == users[0]){
-                currentUser = users[1]
+            currentUser = if (currentUser == users[0]){
+                users[1]
             }else{
-                currentUser = users[0]
+                users[0]
             }
-            viewmodel.currentuser.postValue(currentUser!!.name)
+            viewmodel.currentuser.postValue(currentUser)
         }
 
 
         viewmodel.users(conversation?.id!!).observe(this, {
-            if (it.size < 2){
-                val view = getView()
+            when {
+                it.size < 2 -> {
 
-                val firstView = view.findViewById<TextInputLayout>(R.id.first_username_view)
-                val secondView = view.findViewById<TextInputLayout>(R.id.second_username_view)
+                    val view = getView()
+                    val firstView = view.findViewById<TextInputLayout>(R.id.first_username_view)
+                    val secondView = view.findViewById<TextInputLayout>(R.id.second_username_view)
 
-                showSetUsernameDialog(view, firstView,secondView)
+                    showSetUsernameDialog(view, firstView,secondView)
 
-            }else{
-                users = it as MutableList<User>
-                if (currentUser == null){
-                    currentUser = it[0]
-                    chatAdapter.currentUser = currentUser
                 }
-                viewmodel.currentuser.postValue(currentUser?.name)
-                initViewModel()
+
+                else -> {
+
+                    users = it as MutableList<User>
+
+                    when (currentUser) {
+                        null -> {
+                            currentUser = it[0]
+                            chatAdapter.currentUser = currentUser
+                        }
+                    }
+                    viewmodel.currentuser.postValue(currentUser)
+                    initViewModel()
+                }
+
             }
         })
 
 
         viewmodel.currentuser.observe(this, {
-            if (it.isNullOrBlank()) {
-                supportActionBar?.title = "New Chat.";
+            when {
+                it != null -> {
+                    activityChatTitle.text = "Chatting as ${it.name}.";
+                }
+                else -> {
+                    activityChatTitle.text = "New Chat.";
+                }
             }
-            supportActionBar?.title = "Chatting as $it.";
         })
 
         val itemTouchHelperCallback =
@@ -165,9 +177,12 @@ class ChatActivity : AppCompatActivity() {
         viewmodel.chats(conversation!!.id!!).observe(this, {
             if (it.isNullOrEmpty()){
                 layout_nomessage.visibility = View.VISIBLE
+                textView_info_chats.visibility = View.GONE
             }else{
                 layout_nomessage.visibility = View.GONE
+                textView_info_chats.visibility = View.VISIBLE
                 chatAdapter.submitList(it)
+                scrollToLatestText(it)
             }
         })
     }
@@ -193,13 +208,16 @@ class ChatActivity : AppCompatActivity() {
                 conversation?.id
             )
             viewmodel.addText(chat)
-            conversation?.lastUser = currentUser?.name
-            conversation?.lastMessage = text
-            conversation?.lasttimemessage = System.currentTimeMillis()
-            viewmodel.updateConversation(conversation)
+            updateConversation(text)
             clearEditText()
-            scrollToLatestText()
         }
+    }
+
+    private fun updateConversation(text: String) {
+        conversation?.lastUser = currentUser?.name
+        conversation?.lastMessage = text
+        conversation?.lasttimemessage = System.currentTimeMillis()
+        viewmodel.updateConversation(conversation)
     }
 
 
@@ -207,12 +225,10 @@ class ChatActivity : AppCompatActivity() {
         message_edit_text.setText("")
     }
 
-    private fun scrollToLatestText() {
-        viewmodel.chatList.value?.size?.minus(1)?.let {
+    private fun scrollToLatestText(list: List<Chat>) {
             chat_recycler_view.layoutManager?.scrollToPosition(
-                it
+                list.size -1
             )
-        }
     }
 
     private fun showSetUsernameDialog(

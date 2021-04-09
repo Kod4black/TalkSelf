@@ -40,20 +40,19 @@ class ChatAdapter() : ListAdapter<Chat, RecyclerView.ViewHolder>(
         val message = getItem(position)
         val previousmessage = if (position >= 1) getItem(position - 1) else null
 
-
         when (holder.itemViewType) {
             VIEW_TYPE_MESSAGE_SENT -> (holder as SentMessageHolder).bind(
                 previousmessage,
                 message
             )
 
-
-
             VIEW_TYPE_MESSAGE_RECEIVED -> (holder as ReceivedMessageHolder).bind(
                 previousmessage,
                 message
             )
         }
+
+
     }
 
     private class ReceivedMessageHolder internal constructor(itemView: View) :
@@ -70,6 +69,8 @@ class ChatAdapter() : ListAdapter<Chat, RecyclerView.ViewHolder>(
             nameText.text = message.username
             if (previousmessage != null && previousmessage.userid == message.userid){
                 nameText.visibility = View.GONE
+            }else{
+                nameText.visibility = View.VISIBLE
             }
         }
 
@@ -95,6 +96,9 @@ class ChatAdapter() : ListAdapter<Chat, RecyclerView.ViewHolder>(
 
             if (previousmessage != null && previousmessage.userid == message.userid){
                 nameText.visibility = View.GONE
+            }else{
+                nameText.visibility = View.VISIBLE
+
             }
         }
 

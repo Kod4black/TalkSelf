@@ -17,7 +17,7 @@ class Utils {
 
         @SuppressLint("SimpleDateFormat")
         fun formatMillisecondsToDate(createdAt: Long): String {
-            val format: DateFormat = SimpleDateFormat("MMMM dd, yyyy HH:mm a")
+            val format: DateFormat = SimpleDateFormat("dd MMMM, yyyy HH:mm a")
             format.timeZone = TimeZone.getDefault()
             return format.format(createdAt)
         }
