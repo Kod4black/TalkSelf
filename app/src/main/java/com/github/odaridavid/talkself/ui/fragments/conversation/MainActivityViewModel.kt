@@ -1,9 +1,8 @@
-package com.github.odaridavid.talkself.ui.viewmodel
+package com.github.odaridavid.talkself.ui.fragments.conversation
 
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.github.odaridavid.talkself.models.Chat
 import com.github.odaridavid.talkself.models.Conversation
 import com.github.odaridavid.talkself.repository.MainRepository
 import com.github.odaridavid.talkself.utils.Coroutines
