@@ -14,7 +14,7 @@ import com.github.odaridavid.talkself.models.Chat
 import com.github.odaridavid.talkself.models.Conversation
 import com.github.odaridavid.talkself.models.User
 import com.github.odaridavid.talkself.ui.adapter.ChatAdapter
-import com.github.odaridavid.talkself.ui.viewmodel.ChatActivityViewModel
+import com.github.odaridavid.talkself.ui.fragments.chat.ChatActivityViewModel
 import com.github.odaridavid.talkself.utils.*
 import com.google.android.material.textfield.TextInputLayout
 import dagger.hilt.android.AndroidEntryPoint
@@ -37,7 +37,7 @@ class ChatActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_chat)
+        setContentView(R.layout.fragment_chat)
         conversation = intent.getParcelableExtra<Conversation>("conversation")
 
         setUpAdapter()

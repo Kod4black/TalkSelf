@@ -1,11 +1,9 @@
-
-plugins{
+plugins {
     id 'com.android.application'
     id 'kotlin-android'
     id 'kotlin-android-extensions'
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
-
 }
 
 
@@ -28,9 +26,13 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
-        debug{
+        debug {
             applicationIdSuffix ".debug"
         }
+    }
+
+    buildFeatures {
+        dataBinding true
     }
 
     compileOptions {
