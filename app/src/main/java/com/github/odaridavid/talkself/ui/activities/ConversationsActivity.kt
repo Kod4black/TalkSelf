@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.github.odaridavid.talkself.R
 import com.github.odaridavid.talkself.models.Conversation
 import com.github.odaridavid.talkself.ui.adapter.ConversationAdapter
-import com.github.odaridavid.talkself.ui.viewmodel.MainActivityViewModel
+import com.github.odaridavid.talkself.ui.fragments.conversation.MainActivityViewModel
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
@@ -35,7 +35,7 @@ class ConversationsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_conversations)
+        setContentView(R.layout.fragment_conversations)
         setUpactionBar()
 
         //Setup the recyclerview holding chats

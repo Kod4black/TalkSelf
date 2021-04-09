@@ -10,8 +10,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
-        <activity android:name=".ui.activities.ConversationsActivity"
+        <activity android:name=".ui.activities.MainActivity"></activity>
+        <activity
+            android:name=".ui.activities.ConversationsActivity"
             android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -19,16 +20,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity android:name=".ui.activities.SplashActivity" />
         <activity
             android:name=".ui.activities.SettingsActivity"
             android:label="Settings" />
         <activity
             android:name=".ui.activities.ChatActivity"
-            android:label="Talk self">
-
-        </activity>
+            android:label="Talk self"></activity>
 
         <meta-data
             android:name="preloaded_fonts"
