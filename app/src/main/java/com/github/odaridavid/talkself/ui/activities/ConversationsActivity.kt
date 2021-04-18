@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.github.odaridavid.talkself.R
 import com.github.odaridavid.talkself.models.Conversation
 import com.github.odaridavid.talkself.ui.adapter.ConversationAdapter
-import com.github.odaridavid.talkself.ui.fragments.conversation.MainActivityViewModel
+import com.github.odaridavid.talkself.ui.fragments.conversation.ConversationsViewModel
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
@@ -24,7 +24,7 @@ import java.util.*
 @AndroidEntryPoint
 class ConversationsActivity : AppCompatActivity() {
 
-    private  val viewmodel by viewModels<MainActivityViewModel>()
+    private  val viewmodel by viewModels<ConversationsViewModel>()
     private lateinit var conversationadapter: ConversationAdapter
     private lateinit var snackbar: Snackbar
     var isActionMode:Boolean = false
