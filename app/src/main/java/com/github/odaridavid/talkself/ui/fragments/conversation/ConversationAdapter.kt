@@ -25,12 +25,13 @@ import com.github.odaridavid.talkself.utils.ExtensionFunctions
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val conversation = getItem(position)
         holder.bind(conversation)
-        holder.itemView.setOnClickListener {
-            Intent(holder.itemView.context, ChatActivity::class.java).also {
-                it.putExtra("conversation", conversation)
-                holder.itemView.context.startActivity(it)
-            }
-        }
+
+//        holder.itemView.setOnClickListener {
+//            Intent(holder.itemView.context, ChatActivity::class.java).also {
+//                it.putExtra("conversation", conversation)
+//                holder.itemView.context.startActivity(it)
+//            }
+//        }
 
         holder.cardview.setOnLongClickListener {
             return@setOnLongClickListener true
