@@ -14,7 +14,7 @@ import com.github.odaridavid.talkself.models.Chat
 import com.github.odaridavid.talkself.models.Conversation
 import com.github.odaridavid.talkself.models.User
 import com.github.odaridavid.talkself.ui.adapter.ChatAdapter
-import com.github.odaridavid.talkself.ui.fragments.chat.ChatActivityViewModel
+import com.github.odaridavid.talkself.ui.fragments.chat.ChatViewModel
 import com.github.odaridavid.talkself.utils.*
 import com.google.android.material.textfield.TextInputLayout
 import dagger.hilt.android.AndroidEntryPoint
@@ -25,7 +25,7 @@ import java.util.*
 @AndroidEntryPoint
 class ChatActivity : AppCompatActivity() {
 
-    private val viewmodel by viewModels<ChatActivityViewModel>()
+    private val viewmodel by viewModels<ChatViewModel>()
 
     var conversation: Conversation? = null
 
@@ -293,9 +293,5 @@ class ChatActivity : AppCompatActivity() {
         dialog.show()
     }
 
-
-    companion object {
-        const val CHATS_KEY = "chats"
-    }
 
 }
