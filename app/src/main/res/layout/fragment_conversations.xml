@@ -7,6 +7,10 @@
         <variable
             name="viewModel"
             type="com.github.odaridavid.talkself.ui.fragments.conversation.ConversationsViewModel" />
+
+        <variable
+            name="adapter"
+            type="com.github.odaridavid.talkself.ui.fragments.conversation.ConversationAdapter" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -63,6 +67,7 @@
             android:layout_marginTop="8dp"
             android:background="@color/colorBlack"
             android:visibility="visible"
+            setAdapter="@{adapter}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

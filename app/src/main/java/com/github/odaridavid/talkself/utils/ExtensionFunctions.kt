@@ -1,13 +1,28 @@
 package com.github.odaridavid.talkself.utils
 
 import android.annotation.SuppressLint
+import androidx.databinding.BindingAdapter
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
-class Utils {
+class ExtensionFunctions {
 
     companion object{
+
+
+        @JvmStatic
+        @BindingAdapter(value = ["setAdapter"])
+        fun RecyclerView.bindRecyclerViewAdapter(adapter: RecyclerView.Adapter<*>) {
+            this.run {
+                this.layoutManager = LinearLayoutManager(this.context)
+                this.adapter = adapter
+            }
+        }
+
         @SuppressLint("SimpleDateFormat")
         fun formatMillisecondsToTime(createdAt: Long): String {
             val format: DateFormat = SimpleDateFormat("HH:mm a")

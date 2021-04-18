@@ -1,6 +1,5 @@
 package com.github.odaridavid.talkself.ui.fragments.chat
 
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.github.odaridavid.talkself.models.Chat
