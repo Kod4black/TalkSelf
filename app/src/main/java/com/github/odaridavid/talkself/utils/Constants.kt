@@ -11,7 +11,7 @@
  * the License.
  *
  **/
-package com.github.odaridavid.talkself
+package com.github.odaridavid.talkself.utils
 
 
 const val TALK_SELF_APP_SP = "talk_self_pref"
@@ -25,3 +25,6 @@ const val DEFAULT_USERNAME = "Anonymous"
 
 const val USER_ONE_ID = 1
 const val USER_TWO_ID = 2
+
+const val VIEW_TYPE_MESSAGE_SENT = 1
+const val VIEW_TYPE_MESSAGE_RECEIVED = 2

@@ -11,16 +11,20 @@
  * the License.
  *
  **/
-package com.github.odaridavid.talkself
+package com.github.odaridavid.talkself.models
 
 import android.os.Parcelable
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import kotlinx.android.parcel.Parcelize
 
+@Entity(tableName = "user")
 @Parcelize
-data class Chat(
-    val id: Long,
-    val userId: Int,
-    val username: String,
-    val text: String,
-    val timeSent: Long
-) : Parcelable
+data class User(
+    val name: String? = null,
+    val conversationId: Int? = null
+    ) : Parcelable{
+    @PrimaryKey(autoGenerate = true)
+    var id: Int? = null
+    }
