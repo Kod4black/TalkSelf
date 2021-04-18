@@ -1,4 +1,4 @@
- package com.github.odaridavid.talkself.ui.adapter;
+ package com.github.odaridavid.talkself.ui.fragments.chat;
 
 import android.view.LayoutInflater
 import android.view.View
@@ -12,7 +12,7 @@ import com.github.odaridavid.talkself.utils.VIEW_TYPE_MESSAGE_RECEIVED
 import com.github.odaridavid.talkself.utils.VIEW_TYPE_MESSAGE_SENT
 import com.github.odaridavid.talkself.models.Chat
 import com.github.odaridavid.talkself.models.User
-import com.github.odaridavid.talkself.utils.Utils
+import com.github.odaridavid.talkself.utils.ExtensionFunctions
 
 
 class ChatAdapter() : ListAdapter<Chat, RecyclerView.ViewHolder>(
@@ -65,7 +65,7 @@ class ChatAdapter() : ListAdapter<Chat, RecyclerView.ViewHolder>(
         fun bind(previousmessage: Chat?, message: Chat) {
             messageText.text = message.message
             // Format the stored timestamp into a readable String using method.
-            timeText.text = message.timesent?.let { Utils.formatMillisecondsToTime(it) }
+            timeText.text = message.timesent?.let { ExtensionFunctions.formatMillisecondsToTime(it) }
             nameText.text = message.username
             if (previousmessage != null && previousmessage.userid == message.userid){
                 nameText.visibility = View.GONE
@@ -92,7 +92,7 @@ class ChatAdapter() : ListAdapter<Chat, RecyclerView.ViewHolder>(
             messageText.text = message.message
             nameText.text = message.username
             // Format the stored timestamp into a readable String using method.
-            timeText.text = message.timesent?.let { Utils.formatMillisecondsToTime(it) }
+            timeText.text = message.timesent?.let { ExtensionFunctions.formatMillisecondsToTime(it) }
 
             if (previousmessage != null && previousmessage.userid == message.userid){
                 nameText.visibility = View.GONE
