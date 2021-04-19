@@ -1,4 +1,4 @@
- package com.github.odaridavid.talkself.ui.adapter;
+ package com.github.odaridavid.talkself.ui.fragments.conversation;
 
 import android.content.Intent
 import android.view.LayoutInflater
@@ -11,31 +11,29 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.github.odaridavid.talkself.R
 import com.github.odaridavid.talkself.models.Conversation
-import com.github.odaridavid.talkself.ui.activities.ChatActivity
-import com.github.odaridavid.talkself.ui.activities.ConversationsActivity
-import com.github.odaridavid.talkself.utils.Utils
- class ConversationAdapter(private val activity: ConversationsActivity) : ListAdapter<Conversation, ConversationAdapter.ViewHolder>(
+import com.github.odaridavid.talkself.utils.ExtensionFunctions
+ class ConversationAdapter() : ListAdapter<Conversation, ConversationAdapter.ViewHolder>(
     ConversationDiffUtil
 ) {
 
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ConversationAdapter.ViewHolder{
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.convesations, parent, false)
-        return ConversationAdapter.ViewHolder(view)
+        return ViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: ConversationAdapter.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val conversation = getItem(position)
         holder.bind(conversation)
-        holder.itemView.setOnClickListener {
-            Intent(holder.itemView.context, ChatActivity::class.java).also {
-                it.putExtra("conversation", conversation)
-                holder.itemView.context.startActivity(it)
-            }
-        }
+
+//        holder.itemView.setOnClickListener {
+//            Intent(holder.itemView.context, ChatActivity::class.java).also {
+//                it.putExtra("conversation", conversation)
+//                holder.itemView.context.startActivity(it)
+//            }
+//        }
 
         holder.cardview.setOnLongClickListener {
-            activity.startselection(position)
             return@setOnLongClickListener true
         }
 
@@ -51,7 +49,7 @@ import com.github.odaridavid.talkself.utils.Utils
         fun bind(message: Conversation) {
             messageText.text = message.lastMessage
             lastman.text = message.lastUser
-            timeText.text = Utils.formatMillisecondsToDate(message.timeCreated!!)
+            timeText.text = ExtensionFunctions.formatMillisecondsToDate(message.timeCreated!!)
 
         }
 
