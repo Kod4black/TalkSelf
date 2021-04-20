@@ -3,17 +3,28 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/app_navigation"
-    app:startDestination="@id/conversationFragment2">
+    app:startDestination="@id/conversationFragment">
     <fragment
-        android:id="@+id/conversationFragment2"
+        android:id="@+id/conversationFragment"
         android:name="com.github.odaridavid.talkself.ui.fragments.conversation.ConversationFragment"
-        android:label="ConversationFragment" >
+        android:label="ConversationFragment">
         <action
-            android:id="@+id/action_conversationFragment2_to_chatFragment"
-            app:destination="@id/chatFragment" />
+            android:id="@+id/action_conversationFragment_to_chatFragment"
+            app:destination="@id/chatFragment">
+            <argument
+                android:name="conversation"
+                app:argType="com.github.odaridavid.talkself.models.Conversation" />
+        </action>
+
+
     </fragment>
+
     <fragment
         android:id="@+id/chatFragment"
         android:name="com.github.odaridavid.talkself.ui.fragments.chat.ChatFragment"
-        android:label="ChatFragment" />
+        android:label="ChatFragment" >
+        <argument
+            android:name="conversation"
+            app:argType="com.github.odaridavid.talkself.models.Conversation" />
+    </fragment>
 </navigation>

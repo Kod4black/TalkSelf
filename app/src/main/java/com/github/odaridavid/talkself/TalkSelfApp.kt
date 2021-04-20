@@ -29,13 +29,5 @@ class TalkSelfApp : Application() {
 
         sharedPref = getSharedPreferences(TALK_SELF_APP_SP, Context.MODE_PRIVATE)
 
-        if (sharedPref.getInt(USER_ONE_ID_PREF_KEY, INVALID_DEFAULT_ID) == INVALID_DEFAULT_ID) {
-            val editor = sharedPref.edit()
-            with(editor) {
-                putInt(USER_ONE_ID_PREF_KEY, USER_ONE_ID)
-                putInt(USER_TWO_ID_PREF_KEY, USER_TWO_ID)
-                apply()
-            }
-        }
     }
 }
