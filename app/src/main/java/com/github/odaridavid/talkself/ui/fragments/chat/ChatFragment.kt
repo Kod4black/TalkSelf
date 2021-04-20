@@ -2,18 +2,19 @@ package com.github.odaridavid.talkself.ui.fragments.chat
 
 import android.graphics.Canvas
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
-import androidx.activity.viewModels
+import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.github.odaridavid.talkself.R
 import com.github.odaridavid.talkself.databinding.FragmentChatBinding
-import com.github.odaridavid.talkself.databinding.FragmentConversationsBinding
 import com.github.odaridavid.talkself.models.Chat
 import com.github.odaridavid.talkself.models.Conversation
 import com.github.odaridavid.talkself.models.User
@@ -22,7 +23,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 
 @AndroidEntryPoint
-class ChatFragment : Fragment(R.layout.fragment_chat) {
+class ChatFragment : Fragment() {
 
     private val viewmodel by viewModels<ChatViewModel>()
     private var conversation: Conversation? = null
@@ -30,14 +31,20 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
     private lateinit var chatAdapter: ChatAdapter
     private var users = mutableListOf<User>()
 
-    private val binding : FragmentChatBinding by lazy {
-        DataBindingUtil.setContentView<FragmentChatBinding>(requireActivity(), R.layout.fragment_chat).apply {
-            lifecycleOwner = requireActivity()
-        }
-    }
+    private lateinit var binding : FragmentChatBinding
+    val args: ChatFragmentArgs by navArgs()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         super.onCreate(savedInstanceState)
+
+        initVariables()
+        initRecyclerview()
+
+        binding = DataBindingUtil.inflate(inflater,R.layout.fragment_chat,container,false)
 
         binding.floatingActionButtonexchange.setOnClickListener {
             currentUser = if (currentUser == users[0]){
@@ -49,14 +56,14 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         }
 
 
-        viewmodel.users(conversation?.id!!).observe(this, {
+        viewmodel.users(conversation?.id!!).observe(requireActivity(), {
             when {
                 it.size < 2 -> {
 
                     val view = getView()
 
-                    val firstView = view?.findViewById<TextInputLayout>(R.id.first_username_view)
-                    val secondView = view?.findViewById<TextInputLayout>(R.id.second_username_view)
+                    val firstView = view.findViewById<TextInputLayout>(R.id.first_username_view)
+                    val secondView = view.findViewById<TextInputLayout>(R.id.second_username_view)
 
                     showSetUsernameDialog(view, firstView,secondView)
 
@@ -80,7 +87,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         })
 
 
-        viewmodel.currentuser.observe(this, {
+        viewmodel.currentuser.observe(requireActivity(), {
             when {
                 it != null -> {
                     binding.activityChatTitle.text = "Chatting as ${it.name}.";
@@ -164,16 +171,25 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         val itemTouchHelper = ItemTouchHelper(itemTouchHelperCallback)
         itemTouchHelper.attachToRecyclerView(binding.chatRecyclerView)
 
+        binding.sendTextButton.setOnClickListener {
+            sendText()
+        }
+
+        return  binding.root
+    }
+
+    private fun initVariables() {
+        conversation = args.conversation
     }
 
 
-    private fun setUpAdapter() {
+    private fun initRecyclerview() {
         chatAdapter = ChatAdapter()
         binding.chatRecyclerView.adapter = chatAdapter
     }
 
     private fun initViewModel() {
-        viewmodel.chats(conversation!!.id!!).observe(this, {
+        viewmodel.chats(conversation!!.id!!).observe(requireActivity(), {
             if (it.isNullOrEmpty()){
                 binding.layoutNomessage.visibility = View.VISIBLE
                 binding.textViewInfoChats.visibility = View.GONE
@@ -196,7 +212,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
     }
 
 
-    fun sendText(view: View) {
+    fun sendText() {
         if (binding.messageEditText.text.toString().trim().isNotBlank()) {
             val text = binding.messageEditText.text.toString()
             val chat = Chat(

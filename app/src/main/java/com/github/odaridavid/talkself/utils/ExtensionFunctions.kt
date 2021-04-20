@@ -14,15 +14,6 @@ class ExtensionFunctions {
     companion object{
 
 
-        @JvmStatic
-        @BindingAdapter(value = ["setAdapter"])
-        fun RecyclerView.bindRecyclerViewAdapter(adapter: RecyclerView.Adapter<*>) {
-            this.run {
-                this.layoutManager = LinearLayoutManager(this.context)
-                this.adapter = adapter
-            }
-        }
-
         @SuppressLint("SimpleDateFormat")
         fun formatMillisecondsToTime(createdAt: Long): String {
             val format: DateFormat = SimpleDateFormat("HH:mm a")

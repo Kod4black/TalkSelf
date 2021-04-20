@@ -13,14 +13,13 @@
  **/
 package com.github.odaridavid.talkself.models
 
+import android.os.Parcel
 import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import kotlinx.android.parcel.Parcelize
 import java.util.*
 
 @Entity(tableName = "chat")
-@Parcelize
 data class Chat(
     var userid: Int? = Random().nextInt(),
     var username: String? = null,
@@ -30,4 +29,37 @@ data class Chat(
     ) : Parcelable{
     @PrimaryKey(autoGenerate = true)
     var id: Int? = null
+
+    constructor(parcel: Parcel) : this(
+        parcel.readValue(Int::class.java.classLoader) as? Int,
+        parcel.readString(),
+        parcel.readString(),
+        parcel.readValue(Long::class.java.classLoader) as? Long,
+        parcel.readValue(Int::class.java.classLoader) as? Int
+    ) {
+        id = parcel.readValue(Int::class.java.classLoader) as? Int
     }
+
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeValue(userid)
+        parcel.writeString(username)
+        parcel.writeString(message)
+        parcel.writeValue(timesent)
+        parcel.writeValue(conservationid)
+        parcel.writeValue(id)
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    companion object CREATOR : Parcelable.Creator<Chat> {
+        override fun createFromParcel(parcel: Parcel): Chat {
+            return Chat(parcel)
+        }
+
+        override fun newArray(size: Int): Array<Chat?> {
+            return arrayOfNulls(size)
+        }
+    }
+}
