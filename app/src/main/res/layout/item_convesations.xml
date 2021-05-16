@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/cardview"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="5dp"
-    app:cardCornerRadius="15dp"
+    android:layout_marginTop="1dp"
+    app:cardCornerRadius="0dp"
     app:cardMaxElevation="5dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -19,6 +18,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
+            android:layout_marginStart="8dp"
             android:fontFamily="@font/poppins"
             android:text="karis"
             android:textColor="@color/colorGrey"
@@ -45,7 +45,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:cardBackgroundColor="@color/colorPurple"
-            app:cardCornerRadius="12dp"
+            app:cardCornerRadius="8dp"
             app:cardElevation="0dp"
             app:cardUseCompatPadding="true"
             app:layout_constraintStart_toStartOf="@+id/conversation_last_man"
