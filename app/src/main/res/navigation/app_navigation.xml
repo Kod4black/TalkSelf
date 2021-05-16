@@ -9,7 +9,7 @@
         android:name="com.github.odaridavid.talkself.ui.fragments.conversation.ConversationFragment"
         android:label="ConversationFragment">
         <action
-            android:id="@+id/action_conversationFragment_to_chatFragment"
+            android:id="@+id/conversation_to_chat"
             app:destination="@id/chatFragment">
             <argument
                 android:name="conversation"

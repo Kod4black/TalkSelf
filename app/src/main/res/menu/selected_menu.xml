@@ -14,6 +14,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/action_prefs"
-        android:title="Preferences" />
+        android:title="Delete"
+        app:showAsAction="always" />
+    <item
+        android:title="Select All"
+        app:showAsAction="always" />
+    <item
+        android:title="Deselect All"
+        app:showAsAction="always" />
 </menu>

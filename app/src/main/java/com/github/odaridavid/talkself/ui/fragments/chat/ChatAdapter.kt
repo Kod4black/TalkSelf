@@ -58,9 +58,9 @@ class ChatAdapter() : ListAdapter<Chat, RecyclerView.ViewHolder>(
     private class ReceivedMessageHolder internal constructor(itemView: View) :
         RecyclerView.ViewHolder(itemView) {
 
-        var messageText: TextView
-        var timeText: TextView
-        var nameText: TextView
+        var messageText: TextView = itemView.findViewById<View>(R.id.text_gchat_message_other) as TextView
+        var timeText: TextView = itemView.findViewById<View>(R.id.text_gchat_timestamp_other) as TextView
+        var nameText: TextView = itemView.findViewById<View>(R.id.text_gchat_user_other) as TextView
 
         fun bind(previousmessage: Chat?, message: Chat) {
             messageText.text = message.message
@@ -74,11 +74,6 @@ class ChatAdapter() : ListAdapter<Chat, RecyclerView.ViewHolder>(
             }
         }
 
-        init {
-            messageText = itemView.findViewById<View>(R.id.text_gchat_message_other) as TextView
-            timeText = itemView.findViewById<View>(R.id.text_gchat_timestamp_other) as TextView
-            nameText = itemView.findViewById<View>(R.id.text_gchat_user_other) as TextView
-        }
     }
 
     private class SentMessageHolder  constructor(itemView: View) :
