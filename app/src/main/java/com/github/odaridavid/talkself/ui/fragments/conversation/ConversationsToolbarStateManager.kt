@@ -21,7 +21,10 @@ class ConversationsToolbarStateManager {
         get() = _selectedConversations
 
     fun setToolbarState(state: ToolbarState) =
-        run { _toolbarState.value = state }
+        run {
+            _toolbarState.value = state
+            _isMultiSelection.value = isMultiSelectionStateActive()
+        }
 
     fun isMultiSelectionStateActive(): Boolean =
         ToolbarState.MultiselectionState == _toolbarState.value
@@ -40,8 +43,8 @@ class ConversationsToolbarStateManager {
         }
     }
 
-    fun addAllConversationsToSelectedList(list: ArrayList<Conversation>) {
-        _selectedConversations.value = list
+    fun addAllConversationsToSelectedList(list: List<Conversation>) {
+        _selectedConversations.value = list as ArrayList<Conversation>
     }
 
     fun clearSelectedList() {

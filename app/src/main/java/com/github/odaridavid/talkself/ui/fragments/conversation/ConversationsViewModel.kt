@@ -42,6 +42,13 @@ class ConversationsViewModel @Inject constructor(private val mainRepository: Mai
         }
     }
 
+    fun deleteConversations(conversations: List<Conversation>){
+        Coroutines.io {
+            conversations.forEach{
+                deleteConversation(it)
+            }
+        }
+    }
 
     //    delete chats from a particular conversation
     fun deleteChats(conversation: Conversation) {
