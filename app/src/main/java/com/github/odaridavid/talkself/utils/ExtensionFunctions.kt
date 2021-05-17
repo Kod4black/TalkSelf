@@ -1,7 +1,9 @@
 package com.github.odaridavid.talkself.utils
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.view.View
+import android.widget.Toast
 import androidx.annotation.IntegerRes
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
@@ -33,6 +35,9 @@ class ExtensionFunctions {
             return format.format(createdAt)
         }
 
+        fun Activity.toast(message: String){
+            Toast.makeText(this,message,Toast.LENGTH_LONG).show()
+        }
 
         /**
          * Set up snackbar resources

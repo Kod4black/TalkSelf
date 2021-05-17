@@ -1,16 +1,15 @@
 package com.github.odaridavid.talkself.ui.fragments.conversation;
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import androidx.cardview.widget.CardView
+import android.widget.ImageView
+import androidx.core.view.isVisible
 import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.github.odaridavid.talkself.R
+import com.github.odaridavid.talkself.databinding.ItemConvesationsBinding
 import com.github.odaridavid.talkself.models.Conversation
 import com.github.odaridavid.talkself.utils.ExtensionFunctions
 
@@ -24,9 +23,11 @@ class ConversationAdapter(
 ) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view =
-            LayoutInflater.from(parent.context).inflate(R.layout.item_convesations, parent, false)
-        return ViewHolder(view)
+
+        val binding =
+            ItemConvesationsBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return ViewHolder(binding)
+
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -44,35 +45,35 @@ class ConversationAdapter(
 
         }
 
-        holder.cardview.setOnLongClickListener {
+        holder.binding.cardview.setOnLongClickListener {
             onLongClick.invoke(conversation)
+            holder.binding.imageViewIsChecked.isVisible = true
             return@setOnLongClickListener true
         }
 
 
 
-        stateManager.selectedConversations.observe(lifecycleOwner,{
-            when{
+        stateManager.selectedConversations.observe(lifecycleOwner, {
+            when {
                 it.contains(conversation) -> {
-
+                    holder.binding.imageViewIsChecked.isVisible = true
+                }
+                else -> {
+                    holder.binding.imageViewIsChecked.isVisible = false
                 }
             }
         })
 
     }
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var lastman: TextView = itemView.findViewById<View>(R.id.conversation_last_man) as TextView
-        var timeText: TextView = itemView.findViewById<View>(R.id.conversation_time) as TextView
-        var messageText: TextView =
-            itemView.findViewById<View>(R.id.text_chat_last_message) as TextView
-        var cardview: CardView = itemView.findViewById(R.id.cardview)
+    class ViewHolder(val binding: ItemConvesationsBinding) : RecyclerView.ViewHolder(binding.root) {
 
 
         fun bind(message: Conversation) {
-            messageText.text = message.lastMessage
-            lastman.text = message.lastUser
-            timeText.text = ExtensionFunctions.formatMillisecondsToDate(message.timeCreated!!)
+            binding.textChatLastMessage.text = message.lastMessage
+            binding.conversationLastMan.text = message.lastUser
+            binding.conversationTime.text =
+                ExtensionFunctions.formatMillisecondsToDate(message.timeCreated!!)
 
         }
 
@@ -93,6 +94,10 @@ class ConversationAdapter(
             }
 
         }
+    }
+
+    private fun selectionStateImageView(imageViewIsChecked: ImageView, isVisible: Boolean) {
+        imageViewIsChecked.isVisible = isVisible
     }
 
 

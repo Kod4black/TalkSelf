@@ -1,5 +1,6 @@
 package com.github.odaridavid.talkself.ui.fragments.conversation
 
+import android.annotation.SuppressLint
 import android.graphics.Canvas
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -21,6 +22,7 @@ import com.github.odaridavid.talkself.ui.fragments.dialogFragments.DeleteDialogF
 import com.github.odaridavid.talkself.utils.Coroutines
 import com.github.odaridavid.talkself.utils.ExtensionFunctions.Companion.action
 import com.github.odaridavid.talkself.utils.ExtensionFunctions.Companion.snack
+import com.github.odaridavid.talkself.utils.ExtensionFunctions.Companion.toast
 import com.github.odaridavid.talkself.utils.ToolbarState
 import dagger.hilt.android.AndroidEntryPoint
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
@@ -32,16 +34,15 @@ class ConversationFragment : Fragment() {
     private val viewmodel by viewModels<ConversationsViewModel>()
     private lateinit var conversationadapter: ConversationAdapter
 
-    var isActionMode: Boolean = false
-    var counter = 0
-    var selectionList = mutableListOf<Conversation>()
-    var conversationList = mutableListOf<Conversation>()
-
     private lateinit var binding: FragmentConversationsBinding
 
     private val callback = object : OnBackPressedCallback(false) {
         override fun handleOnBackPressed() {
-            finishCardTransform()
+            if (isMultiSelected()) {
+                viewmodel.stateManager.setToolbarState(ToolbarState.NormalViewState)
+            } else {
+                finishCardTransform()
+            }
         }
     }
 
@@ -63,30 +64,7 @@ class ConversationFragment : Fragment() {
         //Handle onbackpresses
         addOnBackPressCallback()
 
-        //Observe changes on the conversations from the viewModely
-        viewmodel.conversation.observe(requireActivity(), {
-            conversationadapter.submitList(it)
-        })
-
-        //Launch our custom dialog Card to collect user input
-        binding.fab.setOnClickListener {
-            startCardTransform()
-        }
-
-        //Close the dialog when a user clicks on the dialog card
-        binding.myCardView.setOnClickListener {
-            finishCardTransform()
-        }
-
-        //Call the function to create a Conversation and launch the next Fragment
-        binding.dialog.buttonCreate.setOnClickListener {
-            createConversation(it)
-        }
-
-        //Close the dialog fragment when user clicks on the dismiss button
-        binding.dialog.buttonDismiss.setOnClickListener {
-            finishCardTransform()
-        }
+        bindUI()
 
         return binding.root
     }
@@ -304,33 +282,91 @@ class ConversationFragment : Fragment() {
      * Toolbar State management
      */
 
+    @SuppressLint("SetTextI18n")
     private fun bindUI() = Coroutines.main {
+        //Launch our custom dialog Card to collect user input
+        binding.fab.setOnClickListener {
+            startCardTransform()
+        }
+
+        //Close the dialog when a user clicks on the dialog card
+        binding.myCardView.setOnClickListener {
+            finishCardTransform()
+        }
+
+        //Call the function to create a Conversation and launch the next Fragment
+        binding.dialog.buttonCreate.setOnClickListener {
+            createConversation(it)
+        }
+
+        //Close the dialog fragment when user clicks on the dismiss button
+        binding.dialog.buttonDismiss.setOnClickListener {
+            finishCardTransform()
+        }
+
+        //Observe toolbar state changes and react accordingly
         viewmodel.stateManager.toolbarState.observe(viewLifecycleOwner, { state ->
             when (state) {
 
                 ToolbarState.NormalViewState -> {
                     setNormalToolbar()
                     viewmodel.stateManager.clearSelectedList()
+                    callback.isEnabled = false
                 }
 
                 ToolbarState.MultiselectionState -> {
                     setSelectedToolbar()
+                    callback.isEnabled = true
                 }
 
             }
         })
+
+        //Observe selected conversations and react to the toolbartitle accordingly
+        viewmodel.stateManager.selectedConversations.observe(viewLifecycleOwner, {
+            if (isMultiSelected()) {
+                binding.activityConvesationsTitle.text = "${it.size} selected"
+                if (it.size == 0){
+                    viewmodel.stateManager.setToolbarState(ToolbarState.NormalViewState)
+                }
+            } else {
+                binding.activityConvesationsTitle.text = "Your Conversations"
+            }
+        })
+
+        //Observe changes on the conversations from the viewModel
+        viewmodel.conversation.observe(requireActivity(), {
+            conversationadapter.submitList(it)
+        })
+
+        //Observe the state of the isMultiselection state Variable
+        viewmodel.stateManager.isMultiSelection.observe(viewLifecycleOwner, {
+            if (!it) {
+                conversationadapter.notifyDataSetChanged()
+            }
+        })
+
+        toolBarCommonStuff()
+
     }
 
     private fun setSelectedToolbar() {
 
         binding.toolbar.apply {
             menu.clear()
-            setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.colorAccent))
+            setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.colorGrey))
             inflateMenu(R.menu.selected_menu)
             navigationIcon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_cancel)
             setNavigationOnClickListener {
                 viewmodel.stateManager.setToolbarState(ToolbarState.NormalViewState)
             }
+//            binding.activityConvesationsTitle.visibility = View.GONE
+            binding.activityConvesationsTitle.apply {
+                visibility = View.VISIBLE
+                setTextColor(ContextCompat.getColor(requireContext(), R.color.colorBlack))
+                textSize = 14F
+            }
+
         }
 
     }
@@ -341,7 +377,12 @@ class ConversationFragment : Fragment() {
             navigationIcon = null
             setNavigationOnClickListener(null)
             menu.clear()
-            setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.colorPrimary))
+            setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.colorBlack))
+            binding.activityConvesationsTitle.apply {
+                visibility = View.VISIBLE
+                setTextColor(ContextCompat.getColor(requireContext(), R.color.colorWhite))
+                textSize = 24F
+            }
         }
 
     }
@@ -358,6 +399,28 @@ class ConversationFragment : Fragment() {
     }
 
     private fun isMultiSelected() = viewmodel.stateManager.isMultiSelectionStateActive()
+
+    private fun toolBarCommonStuff() {
+        binding.toolbar.setOnMenuItemClickListener { menuItem ->
+            when (menuItem.itemId) {
+
+                R.id.action_deleteAll -> {
+                    activity?.toast("Feature is under Development")
+                }
+
+                R.id.action_selectAll -> {
+                    viewmodel.stateManager.addAllConversationsToSelectedList(viewmodel.conversation.value!!)
+                }
+
+                R.id.action_deselect_all -> {
+                    viewmodel.stateManager.clearSelectedList()
+                }
+            }
+
+            true
+        }
+    }
+
 
 }
 
