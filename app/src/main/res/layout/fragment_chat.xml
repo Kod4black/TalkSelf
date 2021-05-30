@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
     <data>
 
     </data>
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/colorBlack"
@@ -27,13 +29,38 @@
                     android:id="@+id/activityChatTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Your Conversations"
+                    android:text="Chatting as Karis"
                     android:textColor="@android:color/white"
                     android:textSize="24sp"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
+
+
+                <ImageView
+                    android:id="@+id/edit_users"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_users"
+                    app:tint="@color/colorGrey" />
+
+                <ImageView
+                    android:id="@+id/imageView2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    app:tint="@color/colorGrey"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_back" />
+
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.appcompat.widget.Toolbar>
@@ -44,10 +71,10 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="@+id/chat_recycler_view"
+            app:layout_constraintBottom_toTopOf="@+id/message_edit_text"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/chat_recycler_view" />
+            app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
         <TextView
             android:id="@+id/textView_info_chats"
@@ -63,15 +90,14 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/chat_recycler_view"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:orientation="vertical"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            android:layout_height="wrap_content"
             app:layout_constrainedHeight="true"
             app:layout_constraintBottom_toTopOf="@+id/message_edit_text"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView_info_chats"
+            app:layout_constraintVertical_bias="0.0"
             tools:itemCount="5" />
 
         <EditText
@@ -99,10 +125,10 @@
             android:id="@+id/floatingActionButtonexchange"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="5dp"
             android:clickable="true"
             app:backgroundTint="@android:color/white"
             app:elevation="8dp"
-            android:layout_margin="5dp"
             app:layout_constraintBottom_toBottomOf="@+id/message_edit_text"
             app:layout_constraintEnd_toStartOf="@+id/send_text_button"
             app:layout_constraintTop_toTopOf="@+id/message_edit_text"
@@ -112,11 +138,11 @@
             android:id="@+id/send_text_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="5dp"
             android:src="@drawable/ic_baseline_send_24"
             app:backgroundTint="@android:color/white"
             app:elevation="8dp"
             app:fabSize="normal"
-            android:layout_margin="5dp"
             app:layout_constraintBottom_toBottomOf="@+id/floatingActionButtonexchange"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/floatingActionButtonexchange" />

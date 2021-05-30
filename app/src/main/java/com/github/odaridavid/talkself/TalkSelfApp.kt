@@ -26,8 +26,6 @@ class TalkSelfApp : Application() {
 
     override fun onCreate() {
         super.onCreate()
-
         sharedPref = getSharedPreferences(TALK_SELF_APP_SP, Context.MODE_PRIVATE)
-
     }
 }

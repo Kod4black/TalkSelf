@@ -3,7 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraint"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/colorBlack"
@@ -24,6 +26,7 @@
                     android:id="@+id/activityConvesationsTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_bold"
                     android:text="Your Conversations"
                     android:textColor="@color/colorGrey"
                     android:textSize="24sp"
@@ -42,7 +45,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
-            android:fontFamily="sans-serif"
+            android:fontFamily="@font/poppins"
             android:text="Swipe a conversation Left or Right to delete it."
             android:textAlignment="center"
             android:textColor="@color/colorGrey"
@@ -99,13 +102,18 @@
                 app:srcCompat="@drawable/ic_add" />
         </com.skydoves.transformationlayout.TransformationLayout>
 
+
         <View
             android:id="@+id/backgroundView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:alpha="0.5"
+            android:visibility="gone"
             android:background="@color/colorBlack"
-            android:visibility="gone" />
+            android:alpha="0.5"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/myCardView"
@@ -113,9 +121,9 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
             android:layout_marginEnd="32dp"
-            app:cardCornerRadius="10dp"
             android:visibility="gone"
             app:cardBackgroundColor="@color/colorPrimary"
+            app:cardCornerRadius="10dp"
             app:layout_constraintBottom_toBottomOf="@+id/conversations_recyclerView"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -128,4 +136,6 @@
         </com.google.android.material.card.MaterialCardView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+
 </layout>

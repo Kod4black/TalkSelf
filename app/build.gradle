@@ -13,7 +13,7 @@ android {
 
     defaultConfig {
         applicationId "com.github.odaridavid.talkself"
-        minSdkVersion 21
+        minSdkVersion 23
         targetSdkVersion 30
         versionCode 2
         versionName "2.0.0"
@@ -49,18 +49,21 @@ dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
-    implementation 'androidx.core:core-ktx:1.3.2'
-    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'androidx.core:core-ktx:1.5.0'
+    implementation 'androidx.appcompat:appcompat:1.3.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     implementation "com.google.android.material:material:1.3.0"
     implementation 'androidx.preference:preference-ktx:1.1.1'
 
+    //material design
+    implementation "com.google.android.material:material:1.3.0"
+
     //Fragments
-    implementation 'androidx.fragment:fragment-ktx:1.3.3'
+    implementation 'androidx.fragment:fragment-ktx:1.3.4'
 
     //Hilt
     implementation "com.google.dagger:hilt-android:$hilt_version"
-    implementation 'com.android.support:cardview-v7:28.0.0'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     kapt "com.google.dagger:hilt-android-compiler:$kapt_hilt_version"
 
     //Hilt Viewmodel

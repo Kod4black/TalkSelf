@@ -28,6 +28,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 import java.util.*
 
+
 @AndroidEntryPoint
 class ConversationFragment : Fragment() {
 
@@ -45,6 +46,8 @@ class ConversationFragment : Fragment() {
             }
         }
     }
+
+    var mScrollY = 0F
 
 
     override fun onCreateView(
@@ -66,6 +69,7 @@ class ConversationFragment : Fragment() {
 
         bindUI()
 
+
         return binding.root
     }
 
@@ -77,8 +81,8 @@ class ConversationFragment : Fragment() {
         val usernameOne = getUserOneName()
         val usernameTwo = getUserTwoName()
 
-        //If the usernames are null halt this function
-        if (usernameOne == null && usernameTwo == null) {
+        //If either of the usernames are null halt this function
+        if (usernameOne == null || usernameTwo == null) {
             return
         }
 
@@ -105,6 +109,7 @@ class ConversationFragment : Fragment() {
         binding.dialog.textInputEditTextFirstUsernameView.text?.clear()
     }
 
+    //Get the first username from the textInputEditText
     private fun getUserOneName(): String? {
 
         return if (binding.dialog.textInputEditTextFirstUsernameView.text.toString().isEmpty()) {
@@ -117,6 +122,7 @@ class ConversationFragment : Fragment() {
 
     }
 
+    //Get the first username from the textInputEditText
     private fun getUserTwoName(): String? {
 
         return if (binding.dialog.textInputEditTextSecondUsernameView.text.toString().isEmpty()) {
@@ -124,38 +130,65 @@ class ConversationFragment : Fragment() {
                 "Invalid Username.Should Contain Characters."
             null
         } else {
-            binding.dialog.textInputEditTextFirstUsernameView.text.toString()
+            binding.dialog.textInputEditTextSecondUsernameView.text.toString()
         }
 
     }
 
+    //Start the morph animation of the fab to a cardview
     private fun startCardTransform() {
         binding.transformationLayout.startTransform()
-        binding.backgroundView.isVisible = true
+        binding.backgroundView.apply {
+            isVisible = true
+        }
         callback.isEnabled = true
-
     }
 
+    //Stop the morph animation of the fab to a cardview
     private fun finishCardTransform() {
         binding.transformationLayout.finishTransform()
-        binding.backgroundView.isVisible = false
+        binding.backgroundView.apply {
+            isVisible = false
+        }
         callback.isEnabled = false
     }
 
 
+    //Sets up the recyclerview
     private fun setUpAdapter() {
         binding.conversationsRecyclerView.apply {
+
+            //Initialize the adapter
             conversationadapter = ConversationAdapter(
                 viewLifecycleOwner,
                 viewmodel.stateManager,
                 onclick = { conversation -> onClick(conversation) },
                 onLongClick = { conversation -> onLongClick(conversation) })
+
+            //set it to the recyclerview
             adapter = conversationadapter
+
+            addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(rcv: RecyclerView, dx: Int, dy: Int) {
+                    super.onScrolled(rcv, dx, dy)
+                    mScrollY += dy.toFloat()
+                    mScrollY = mScrollY.coerceAtLeast(0F)
+//                    layoutHeader.translationY = min(-mScrollY, 0F)
+                }
+            })
         }
     }
 
 
     fun showDeleteDialog(actualConversationObject: Conversation) {
+        //Initialize the delete dialog fragment and show it
+        /**
+         * @param action is a sort of constant which determines the type of action to be perfomed on
+         * @param actualConversationObject which is passed in here either to just delete or refresh the recyclerview
+         *
+         * @see actOnConversation() function
+         *
+         */
         DeleteDialogFragment(actualConversationObject) { action: String, conversation: Conversation ->
 
             actOnConversation(action, conversation)
@@ -164,6 +197,7 @@ class ConversationFragment : Fragment() {
     }
 
 
+    //Either delete or refresh the recyclerview based on the action passed
     private fun actOnConversation(action: String, conversation: Conversation) {
 
         when (action) {
@@ -180,9 +214,11 @@ class ConversationFragment : Fragment() {
 
     }
 
+    //Show a snackbar
     private fun showSnackBar(message: String, conversation: Conversation) {
 
-        binding.conversationsRecyclerView.snack(message) {
+        //If the undo action is pressed the conversation is added back
+        requireView().snack(message) {
             action("Undo") { addConversation(conversation) }
         }
 
@@ -319,6 +355,10 @@ class ConversationFragment : Fragment() {
                     callback.isEnabled = true
                 }
 
+                else -> {
+                    // do nothing
+                }
+
             }
         })
 
@@ -326,7 +366,7 @@ class ConversationFragment : Fragment() {
         viewmodel.stateManager.selectedConversations.observe(viewLifecycleOwner, {
             if (isMultiSelected()) {
                 binding.activityConvesationsTitle.text = "${it.size} selected"
-                if (it.size == 0){
+                if (it.size == 0) {
                     viewmodel.stateManager.setToolbarState(ToolbarState.NormalViewState)
                 }
             } else {
@@ -335,7 +375,7 @@ class ConversationFragment : Fragment() {
         })
 
         //Observe changes on the conversations from the viewModel
-        viewmodel.conversation.observe(requireActivity(), {
+        viewmodel.conversation.observe(viewLifecycleOwner, {
             conversationadapter.submitList(it)
         })
 

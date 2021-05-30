@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/app_navigation"
     app:startDestination="@id/conversationFragment">
     <fragment
@@ -10,11 +9,12 @@
         android:label="ConversationFragment">
         <action
             android:id="@+id/conversation_to_chat"
-            app:destination="@id/chatFragment">
-            <argument
-                android:name="conversation"
-                app:argType="com.github.odaridavid.talkself.models.Conversation" />
-        </action>
+            app:destination="@id/chatFragment"></action>
+
+        <argument
+            android:name="conversation"
+            app:nullable="true"
+            app:argType="com.github.odaridavid.talkself.models.Conversation" />
 
 
     </fragment>
@@ -22,9 +22,22 @@
     <fragment
         android:id="@+id/chatFragment"
         android:name="com.github.odaridavid.talkself.ui.fragments.chat.ChatFragment"
-        android:label="ChatFragment" >
+        android:label="ChatFragment">
+
+        <action
+            android:id="@+id/chat_to_users"
+            app:destination="@id/usersFragment"/>
+
         <argument
             android:name="conversation"
+            app:nullable="true"
             app:argType="com.github.odaridavid.talkself.models.Conversation" />
     </fragment>
+
+    <fragment
+        android:id="@+id/usersFragment"
+        android:name="com.github.odaridavid.talkself.ui.fragments.user.UsersFragment"
+        android:label="UsersFragment" />
+
+
 </navigation>

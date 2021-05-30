@@ -30,7 +30,7 @@ class ExtensionFunctions {
 
         @SuppressLint("SimpleDateFormat")
         fun formatMillisecondsToDate(createdAt: Long): String {
-            val format: DateFormat = SimpleDateFormat("dd MMMM, yyyy HH:mm a")
+            val format: DateFormat = SimpleDateFormat("MMM dd, yyyy HH:mm a")
             format.timeZone = TimeZone.getDefault()
             return format.format(createdAt)
         }
