@@ -5,22 +5,23 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AlertDialog
-import androidx.core.content.ContextCompat
+import androidx.core.os.bundleOf
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.odaridavid.talkself.R
 import com.github.odaridavid.talkself.databinding.FragmentChatBinding
 import com.github.odaridavid.talkself.models.Chat
 import com.github.odaridavid.talkself.models.Conversation
 import com.github.odaridavid.talkself.models.User
-import com.google.android.material.textfield.TextInputLayout
 import dagger.hilt.android.AndroidEntryPoint
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
+
 
 @AndroidEntryPoint
 class ChatFragment : Fragment() {
@@ -34,11 +35,14 @@ class ChatFragment : Fragment() {
     private lateinit var binding: FragmentChatBinding
     private val args: ChatFragmentArgs by navArgs()
 
+    private var shouldScroll = true
+
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_chat, container, false)
 
@@ -46,16 +50,14 @@ class ChatFragment : Fragment() {
         initRecyclerview()
 
         binding.floatingActionButtonexchange.setOnClickListener {
-            currentUser = if (currentUser == users[0]) {
-                users[1]
-            } else {
-                users[0]
-            }
+
+            currentUser = if (currentUser == users[0]) users[1] else users[0]
             viewmodel.currentuser.postValue(currentUser)
+
         }
 
 
-        viewmodel.users(conversation?.id!!).observe(requireActivity(), {
+        viewmodel.users(conversation?.id!!).observe(viewLifecycleOwner, {
 
             users = it as MutableList<User>
 
@@ -70,7 +72,7 @@ class ChatFragment : Fragment() {
         })
 
 
-        viewmodel.currentuser.observe(requireActivity(), {
+        viewmodel.currentuser.observe(viewLifecycleOwner, {
             when {
                 it != null -> {
                     binding.activityChatTitle.text = "Chatting as ${it.name}.";
@@ -81,12 +83,13 @@ class ChatFragment : Fragment() {
             }
         })
 
-        setUpCustomItemTouchHelper()
 
         binding.sendTextButton.setOnClickListener {
             sendText()
         }
 
+        setUpCustomItemTouchHelper()
+        toolBarCommonStuff()
         return binding.root
     }
 
@@ -98,19 +101,31 @@ class ChatFragment : Fragment() {
 
     private fun initRecyclerview() {
         chatAdapter = ChatAdapter()
-        binding.chatRecyclerView.adapter = chatAdapter
+        val layout = LinearLayoutManager(context)
+
+        binding.chatRecyclerView.apply {
+            layout.reverseLayout = false
+            layoutManager = layout
+            adapter = chatAdapter
+            layout.stackFromEnd = true
+        }
+
     }
 
     private fun initViewModel() {
-        viewmodel.chats(conversation!!.id!!).observe(requireActivity(), {
+        viewmodel.chats(conversation!!.id!!).observe(viewLifecycleOwner, {
             if (it.isNullOrEmpty()) {
                 binding.layoutNomessage.visibility = View.VISIBLE
                 binding.textViewInfoChats.visibility = View.GONE
             } else {
                 binding.layoutNomessage.visibility = View.GONE
                 binding.textViewInfoChats.visibility = View.VISIBLE
+
                 chatAdapter.submitList(it)
-                scrollToLatestText(it)
+
+                if (shouldScroll){
+                    scrollToLatestText()
+                }
             }
         })
     }
@@ -129,6 +144,7 @@ class ChatFragment : Fragment() {
             viewmodel.addText(chat)
             updateConversation(text)
             clearEditText()
+            shouldScroll = true
         }
     }
 
@@ -144,10 +160,11 @@ class ChatFragment : Fragment() {
         binding.messageEditText.setText("")
     }
 
-    private fun scrollToLatestText(list: List<Chat>) {
-        binding.chatRecyclerView.layoutManager?.scrollToPosition(
-            list.size - 1
+    private fun scrollToLatestText() {
+        binding.chatRecyclerView.smoothScrollToPosition(
+            chatAdapter.itemCount + 3
         )
+        shouldScroll = false
     }
 
 
@@ -225,5 +242,13 @@ class ChatFragment : Fragment() {
         val itemTouchHelper = ItemTouchHelper(itemTouchHelperCallback)
         itemTouchHelper.attachToRecyclerView(binding.chatRecyclerView)
     }
+
+    private fun toolBarCommonStuff() {
+        binding.editUsers.setOnClickListener {
+            val bundle = bundleOf("conversation" to conversation)
+            it.findNavController().navigate(R.id.chat_to_users,bundle)
+        }
+    }
+
 
 }
