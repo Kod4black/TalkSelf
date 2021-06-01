@@ -28,16 +28,21 @@
         app:layout_constraintStart_toEndOf="@+id/image_gchat_profile_other"
         app:layout_constraintTop_toTopOf="parent" />
 
+
     <androidx.cardview.widget.CardView
         android:id="@+id/card_gchat_message_other"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="3dp"
         app:cardBackgroundColor="@color/colorAccent"
         app:cardCornerRadius="12dp"
         app:cardElevation="0dp"
         app:cardPreventCornerOverlap="false"
         app:cardUseCompatPadding="true"
-        app:layout_constraintStart_toEndOf="@+id/image_gchat_profile_other"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/imageView3"
         app:layout_constraintTop_toBottomOf="@+id/text_gchat_user_other">
 
         <LinearLayout
@@ -56,12 +61,11 @@
                 android:paddingLeft="12dp"
                 android:paddingTop="8dp"
                 android:paddingRight="12dp"
-                android:text="Message"
-                android:textColor="#000000" />
+                android:textColor="#000000"
+                tools:text="Thinking of a ctreative story right now" />
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>
-
 
     <TextView
         android:id="@+id/text_gchat_timestamp_other"
@@ -72,6 +76,15 @@
         android:textSize="10sp"
         app:layout_constraintBottom_toBottomOf="@+id/card_gchat_message_other"
         app:layout_constraintStart_toEndOf="@+id/card_gchat_message_other" />
+
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        app:layout_constraintBottom_toBottomOf="@+id/card_gchat_message_other"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/card_gchat_message_other"
+        tools:srcCompat="@tools:sample/avatars" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
