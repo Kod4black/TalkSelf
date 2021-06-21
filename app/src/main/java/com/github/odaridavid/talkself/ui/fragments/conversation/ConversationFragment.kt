@@ -20,9 +20,9 @@ import com.github.odaridavid.talkself.models.Conversation
 import com.github.odaridavid.talkself.models.User
 import com.github.odaridavid.talkself.ui.fragments.dialogFragments.DeleteDialogFragment
 import com.github.odaridavid.talkself.utils.Coroutines
-import com.github.odaridavid.talkself.utils.ExtensionFunctions.Companion.action
-import com.github.odaridavid.talkself.utils.ExtensionFunctions.Companion.snack
-import com.github.odaridavid.talkself.utils.ExtensionFunctions.Companion.toast
+import com.github.odaridavid.talkself.utils.UtilityFunctions.Companion.action
+import com.github.odaridavid.talkself.utils.UtilityFunctions.Companion.snack
+import com.github.odaridavid.talkself.utils.UtilityFunctions.Companion.toast
 import com.github.odaridavid.talkself.utils.ToolbarState
 import dagger.hilt.android.AndroidEntryPoint
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator

@@ -4,6 +4,7 @@ plugins {
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
     id 'androidx.navigation.safeargs.kotlin'
+    id 'kotlin-parcelize'
 }
 
 
@@ -46,6 +47,7 @@ android {
 }
 
 dependencies {
+
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
@@ -90,5 +92,9 @@ dependencies {
     //Glide
     implementation 'com.github.bumptech.glide:glide:4.12.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.12.0'
+
+    //color picker
+    implementation "codes.side:andcolorpicker:0.3.0"
+
 
 }
