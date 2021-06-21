@@ -3,51 +3,54 @@
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.github.odaridavid.talkself.R
-import com.github.odaridavid.talkself.utils.VIEW_TYPE_MESSAGE_RECEIVED
-import com.github.odaridavid.talkself.utils.VIEW_TYPE_MESSAGE_SENT
+import com.github.odaridavid.talkself.databinding.ItemChatLeftBinding
+import com.github.odaridavid.talkself.databinding.ItemChatRightBinding
+import com.github.odaridavid.talkself.utils.VIEW_TYPE_MESSAGE_LEFT
+import com.github.odaridavid.talkself.utils.VIEW_TYPE_MESSAGE_RIGHT
 import com.github.odaridavid.talkself.models.Chat
 import com.github.odaridavid.talkself.models.User
-import com.github.odaridavid.talkself.utils.ExtensionFunctions
+import com.github.odaridavid.talkself.utils.UtilityFunctions
 
 
-class ChatAdapter() : ListAdapter<Chat, RecyclerView.ViewHolder>(
+class ChatAdapter : ListAdapter<Chat, RecyclerView.ViewHolder>(
     ChatDiffUtil
 ) {
 
     var currentUser: User? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        var view = View(parent.context)
-        if (viewType == VIEW_TYPE_MESSAGE_SENT) {
-            view = LayoutInflater.from(parent.context)
-                .inflate(R.layout.item_chat_right, parent, false)
-            return SentMessageHolder(view)
-        } else if (viewType == VIEW_TYPE_MESSAGE_RECEIVED) {
-             view = LayoutInflater.from(parent.context)
-                .inflate(R.layout.item_chat_left, parent, false)
-            return ReceivedMessageHolder(view)
+        val rightBinding = ItemChatRightBinding.inflate(LayoutInflater.from(parent.context),parent,false)
+        if (viewType == VIEW_TYPE_MESSAGE_RIGHT) {
+
+            return RightChatHolder(rightBinding)
+
+        } else if (viewType == VIEW_TYPE_MESSAGE_LEFT) {
+
+            val leftBinding = ItemChatLeftBinding.inflate(LayoutInflater.from(parent.context),parent,false)
+
+            return LeftChatHolder(leftBinding)
         }
 
-        return SentMessageHolder(view)
+        return RightChatHolder(rightBinding)
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val message = getItem(position)
-        val previousmessage = if (position >= 1) getItem(position - 1) else null
+        
+        val previousMessage = if (position >= 1) getItem(position - 1) else null
 
         when (holder.itemViewType) {
-            VIEW_TYPE_MESSAGE_SENT -> (holder as SentMessageHolder).bind(
-                previousmessage,
+            
+            VIEW_TYPE_MESSAGE_RIGHT -> (holder as RightChatHolder).bind(
+                previousMessage,
                 message
             )
 
-            VIEW_TYPE_MESSAGE_RECEIVED -> (holder as ReceivedMessageHolder).bind(
-                previousmessage,
+            VIEW_TYPE_MESSAGE_LEFT -> (holder as LeftChatHolder).bind(
+                previousMessage,
                 message
             )
         }
@@ -55,46 +58,88 @@ class ChatAdapter() : ListAdapter<Chat, RecyclerView.ViewHolder>(
 
     }
 
-    private class ReceivedMessageHolder internal constructor(itemView: View) :
-        RecyclerView.ViewHolder(itemView) {
+    private class LeftChatHolder(val binding: ItemChatLeftBinding) : RecyclerView.ViewHolder(binding.root) {
 
-        var messageText: TextView = itemView.findViewById<View>(R.id.text_gchat_message_other) as TextView
-        var timeText: TextView = itemView.findViewById<View>(R.id.text_gchat_timestamp_other) as TextView
-        var nameText: TextView = itemView.findViewById<View>(R.id.text_gchat_user_other) as TextView
+        fun bind(previousChat: Chat?, chat: Chat) {
 
-        fun bind(previousmessage: Chat?, message: Chat) {
-            messageText.text = message.message
-            // Format the stored timestamp into a readable String using method.
-            timeText.text = message.timesent?.let { ExtensionFunctions.formatMillisecondsToTime(it) }
-            nameText.text = message.username
-            if (previousmessage != null && previousmessage.userid == message.userid){
-                nameText.visibility = View.GONE
-            }else{
-                nameText.visibility = View.VISIBLE
+            binding.apply {
+
+                val date = chat.timesent?.let { UtilityFunctions.formatMillisecondsToDate(it) }
+                val prevDate = chat.timesent?.let { UtilityFunctions.formatMillisecondsToDate(it) }
+
+                textGchatMessageOther.text = chat.message
+                textGchatTimestampOther.text = chat.timesent?.let { UtilityFunctions.formatMillisecondsToTime(it) }
+                textGchatUserOther.text = chat.username
+                textGchatDateOther.text = date?.split(",")?.first()
+
+                if (previousChat != null && previousChat.userid == chat.userid){
+                    textGchatUserOther.visibility = View.GONE
+                    imageGchatProfileOther.visibility = View.INVISIBLE
+
+                }else{
+
+                    textGchatUserOther.visibility = View.VISIBLE
+                    imageGchatProfileOther.visibility = View.VISIBLE
+
+                }
+
+                when {
+                    previousChat == null -> {
+                        textGchatDateOther.visibility = View.VISIBLE
+                        return
+                    }
+                    date?.split(",")?.first() == prevDate?.split(",")?.first() -> {
+                        textGchatDateOther.visibility = View.GONE
+                    }
+                    else -> {
+                        textGchatDateOther.visibility = View.VISIBLE
+                    }
+                }
+
             }
+
         }
 
     }
 
-    private class SentMessageHolder  constructor(itemView: View) :
-        RecyclerView.ViewHolder(itemView) {
-        var messageText: TextView = itemView.findViewById<View>(R.id.text_gchat_message_me) as TextView
-        var timeText: TextView = itemView.findViewById(R.id.text_gchat_timestamp_me) as TextView
-        var nameText: TextView = itemView.findViewById(R.id.text_gchat_user_me) as TextView
+    private class RightChatHolder(val binding:  ItemChatRightBinding) : RecyclerView.ViewHolder(binding.root) {
+        
 
-        fun bind(previousmessage: Chat?, message: Chat) {
+        fun bind(previousChat: Chat?, chat: Chat) {
 
-            messageText.text = message.message
-            nameText.text = message.username
-            // Format the stored timestamp into a readable String using method.
-            timeText.text = message.timesent?.let { ExtensionFunctions.formatMillisecondsToTime(it) }
+            binding.apply {
 
-            if (previousmessage != null && previousmessage.userid == message.userid){
-                nameText.visibility = View.GONE
-            }else{
-                nameText.visibility = View.VISIBLE
+                val date = chat.timesent?.let { UtilityFunctions.formatMillisecondsToDate(it) }
+                val prevDate = chat.timesent?.let { UtilityFunctions.formatMillisecondsToDate(it) }
+
+
+                textGchatMessageRight.text = chat.message
+                textGchatUserDate.text = date?.split(",")?.first()
+                textGchatNameRight.text = chat.username
+                textGchatTimestampMe.text = chat.timesent?.let { UtilityFunctions.formatMillisecondsToTime(it) }
+
+                if (previousChat != null && previousChat.userid == chat.userid){
+                    textGchatNameRight.visibility = View.GONE
+                    imageGchatProfileOther.visibility = View.INVISIBLE
+                }else{
+                    textGchatNameRight.visibility = View.VISIBLE
+                    imageGchatProfileOther.visibility = View.VISIBLE
+                }
+                when {
+                    previousChat == null -> {
+                        textGchatUserDate.visibility = View.VISIBLE
+                        return
+                    }
+                    date?.split(",")?.first() == prevDate?.split(",")?.first() -> {
+                        textGchatUserDate.visibility = View.GONE
+                    }
+                    else -> {
+                        textGchatUserDate.visibility = View.VISIBLE
+                    }
+                }
 
             }
+
         }
 
     }
@@ -104,14 +149,14 @@ class ChatAdapter() : ListAdapter<Chat, RecyclerView.ViewHolder>(
         val chat = getItem(position)
         return if (chat.userid == currentUser?.id) {
             // If the current user is the sender of the message
-            VIEW_TYPE_MESSAGE_SENT
+            VIEW_TYPE_MESSAGE_RIGHT
         } else {
             // If some other user sent the message
-            VIEW_TYPE_MESSAGE_RECEIVED
+            VIEW_TYPE_MESSAGE_LEFT
         }
     }
 
-    fun getItemat(position: Int): Chat {
+    fun getItemAt(position: Int): Chat {
         return getItem(position)
     }
 

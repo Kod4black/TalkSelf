@@ -1,12 +1,12 @@
 package com.github.odaridavid.talkself.ui.fragments.chat
 
 import android.graphics.Canvas
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
@@ -44,34 +44,40 @@ class ChatFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_chat, container, false)
+        binding = FragmentChatBinding.inflate(inflater, container, false)
 
         initVariables()
         initRecyclerview()
+        bindUI()
+        fireUpObservers()
+        setUpCustomItemTouchHelper()
+        toolBarCommonStuff()
+        return binding.root
+    }
 
-        binding.floatingActionButtonexchange.setOnClickListener {
-
-            currentUser = if (currentUser == users[0]) users[1] else users[0]
-            viewmodel.currentuser.postValue(currentUser)
-
-        }
-
-
+    private fun fireUpObservers() {
+        //Fetch users from the database
         viewmodel.users(conversation?.id!!).observe(viewLifecycleOwner, {
 
+            //update the global variable of users we need this to switch the users
             users = it as MutableList<User>
 
+            // When current user is null, make the first user in the users list as the current user
             when (currentUser) {
                 null -> {
                     currentUser = it[0]
                     chatAdapter.currentUser = currentUser
                 }
             }
+
+            //Update the viewmodel also with the current user
             viewmodel.currentuser.postValue(currentUser)
-            initViewModel()
+
+            //Now we can fetch the chats
+            fetchChats()
         })
 
-
+        //Observe changes made to the current user
         viewmodel.currentuser.observe(viewLifecycleOwner, {
             when {
                 it != null -> {
@@ -82,15 +88,30 @@ class ChatFragment : Fragment() {
                 }
             }
         })
+    }
 
+    private fun bindUI() {
 
-        binding.sendTextButton.setOnClickListener {
-            sendText()
+        binding.apply {
+
+            // switches the current user
+            floatingActionButtonexchange.setOnClickListener {
+                currentUser = if (currentUser == users[0]) users[1] else users[0]
+                viewmodel.currentuser.postValue(currentUser)
+
+            }
+
+            //navigate up
+            imageViewback.setOnClickListener {
+                it.findNavController().navigateUp()
+            }
+
+            //send text
+            sendTextButton.setOnClickListener {
+                sendText()
+            }
+
         }
-
-        setUpCustomItemTouchHelper()
-        toolBarCommonStuff()
-        return binding.root
     }
 
 
@@ -100,7 +121,9 @@ class ChatFragment : Fragment() {
 
 
     private fun initRecyclerview() {
+
         chatAdapter = ChatAdapter()
+
         val layout = LinearLayoutManager(context)
 
         binding.chatRecyclerView.apply {
@@ -112,20 +135,24 @@ class ChatFragment : Fragment() {
 
     }
 
-    private fun initViewModel() {
+    private fun fetchChats() {
         viewmodel.chats(conversation!!.id!!).observe(viewLifecycleOwner, {
             if (it.isNullOrEmpty()) {
+                //show the empty state
                 binding.layoutNomessage.visibility = View.VISIBLE
                 binding.textViewInfoChats.visibility = View.GONE
             } else {
+
+                //hide empty state and display chats
                 binding.layoutNomessage.visibility = View.GONE
                 binding.textViewInfoChats.visibility = View.VISIBLE
 
                 chatAdapter.submitList(it)
 
-                if (shouldScroll){
+                if (shouldScroll) {
                     scrollToLatestText()
                 }
+
             }
         })
     }
@@ -133,7 +160,9 @@ class ChatFragment : Fragment() {
 
     private fun sendText() {
         if (binding.messageEditText.text.toString().trim().isNotBlank()) {
+            //get text
             val text = binding.messageEditText.text.toString()
+            // make a new chat
             val chat = Chat(
                 currentUser?.id,
                 currentUser?.name,
@@ -141,14 +170,23 @@ class ChatFragment : Fragment() {
                 System.currentTimeMillis(),
                 conversation?.id
             )
+            //add it
             viewmodel.addText(chat)
+
+            //update the conversation
             updateConversation(text)
+            //clear edit text
             clearEditText()
+
+            //should scroll to bottom
             shouldScroll = true
         }
     }
 
+    //Updates the details of this conversation we're having so we can display it on the previous page
     private fun updateConversation(text: String) {
+
+        //we need last user, last message and the last time it was sent
         conversation?.lastUser = currentUser?.name
         conversation?.lastMessage = text
         conversation?.lasttimemessage = System.currentTimeMillis()
@@ -161,13 +199,15 @@ class ChatFragment : Fragment() {
     }
 
     private fun scrollToLatestText() {
+
+        //Some funky behaviour here !!!
         binding.chatRecyclerView.smoothScrollToPosition(
             chatAdapter.itemCount + 3
         )
         shouldScroll = false
     }
 
-
+    // Just a custom item touch helper.
     private fun setUpCustomItemTouchHelper() {
         val itemTouchHelperCallback =
             object :
@@ -185,7 +225,7 @@ class ChatFragment : Fragment() {
 
                 override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
 
-                    val chat = chatAdapter.getItemat(viewHolder.adapterPosition)
+                    val chat = chatAdapter.getItemAt(viewHolder.adapterPosition)
 
                     when (direction) {
 
@@ -244,9 +284,12 @@ class ChatFragment : Fragment() {
     }
 
     private fun toolBarCommonStuff() {
+
+        //navigate to edit users
         binding.editUsers.setOnClickListener {
             val bundle = bundleOf("conversation" to conversation)
-            it.findNavController().navigate(R.id.chat_to_users,bundle)
+            //we need conversation id so we can use it to fetch users associated with this conversation.
+            it.findNavController().navigate(R.id.chat_to_users, bundle)
         }
     }
 

@@ -13,44 +13,17 @@
  **/
 package com.github.odaridavid.talkself.models
 
-import android.os.Parcel
 import android.os.Parcelable
-import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import kotlinx.parcelize.Parcelize
 
 @Entity(tableName = "user")
+@Parcelize
 data class User(
     val name: String? = null,
-    val conversationId: Int? = null
-    ) : Parcelable{
+    val conversationId: Int? = null,
+    val imageUri: String? = null,
     @PrimaryKey(autoGenerate = true)
-    var id: Int? = null
-
-    constructor(parcel: Parcel) : this(
-        parcel.readString(),
-        parcel.readValue(Int::class.java.classLoader) as? Int
-    ) {
-        id = parcel.readValue(Int::class.java.classLoader) as? Int
-    }
-
-    override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeString(name)
-        parcel.writeValue(conversationId)
-        parcel.writeValue(id)
-    }
-
-    override fun describeContents(): Int {
-        return 0
-    }
-
-    companion object CREATOR : Parcelable.Creator<User> {
-        override fun createFromParcel(parcel: Parcel): User {
-            return User(parcel)
-        }
-
-        override fun newArray(size: Int): Array<User?> {
-            return arrayOfNulls(size)
-        }
-    }
-}
+    var id: Int? = null,
+) : Parcelable

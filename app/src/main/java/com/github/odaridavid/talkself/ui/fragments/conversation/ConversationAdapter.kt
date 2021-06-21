@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.github.odaridavid.talkself.databinding.ItemConvesationsBinding
 import com.github.odaridavid.talkself.models.Conversation
-import com.github.odaridavid.talkself.utils.ExtensionFunctions
+import com.github.odaridavid.talkself.utils.UtilityFunctions
 
 class ConversationAdapter(
     private val lifecycleOwner: LifecycleOwner,
@@ -73,7 +73,7 @@ class ConversationAdapter(
             binding.textChatLastMessage.text = message.lastMessage
             binding.conversationLastMan.text = message.lastUser
             binding.conversationTime.text =
-                ExtensionFunctions.formatMillisecondsToDate(message.timeCreated!!)
+                UtilityFunctions.formatMillisecondsToDate(message.timeCreated!!)
 
         }
 
