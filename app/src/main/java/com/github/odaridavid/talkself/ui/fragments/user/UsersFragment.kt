@@ -56,6 +56,7 @@ class UsersFragment : Fragment(), ImageClick {
         conversation = arguments?.getParcelable("conversation")
 
         bindUI()
+        addOnBackPressCallback()
         return binding.root
     }
 
@@ -155,7 +156,6 @@ class UsersFragment : Fragment(), ImageClick {
                         try {
                             val hexColor = getColor(color.getRInt(),color.getGInt(),color.getBInt(),color.alpha.toDouble())
                             layoutGchatContainerOther.setBackgroundColor(Color.parseColor(hexColor))
-                            requireContext().toast(hexColor)
                         }catch (e : Exception){
                             requireContext().toast(e.message!!)
                         }
@@ -185,10 +185,14 @@ class UsersFragment : Fragment(), ImageClick {
 
     val callback = object : OnBackPressedCallback(false) {
         override fun handleOnBackPressed() {
+            requireContext().toast("Heeeey")
             transformationLayoutGlobal?.finishTransform()
             isEnabled = false
         }
     }
 
+    private fun addOnBackPressCallback() {
+        requireActivity().onBackPressedDispatcher.addCallback(requireActivity(), callback)
+    }
 
 }

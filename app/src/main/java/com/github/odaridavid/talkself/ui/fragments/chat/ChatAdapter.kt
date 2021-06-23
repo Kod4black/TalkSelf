@@ -74,7 +74,7 @@ class ChatAdapter : ListAdapter<Chat, RecyclerView.ViewHolder>(
 
                 if (previousChat != null && previousChat.userid == chat.userid){
                     textGchatUserOther.visibility = View.GONE
-                    imageGchatProfileOther.visibility = View.INVISIBLE
+                    imageGchatProfileOther.visibility = View.GONE
 
                 }else{
 
@@ -120,7 +120,7 @@ class ChatAdapter : ListAdapter<Chat, RecyclerView.ViewHolder>(
 
                 if (previousChat != null && previousChat.userid == chat.userid){
                     textGchatNameRight.visibility = View.GONE
-                    imageGchatProfileOther.visibility = View.INVISIBLE
+                    imageGchatProfileOther.visibility = View.GONE
                 }else{
                     textGchatNameRight.visibility = View.VISIBLE
                     imageGchatProfileOther.visibility = View.VISIBLE

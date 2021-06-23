@@ -4,8 +4,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp">
+        android:layout_marginStart="8dp">
 
         <TextView
             android:id="@+id/text_gchat_date_other"
@@ -18,41 +17,42 @@
             android:paddingBottom="4dp"
             android:text="June 10"
             android:textColor="#C0C0C0"
+            android:visibility="visible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/image_gchat_profile_other"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_marginStart="8dp"
             android:contentDescription="User Icon"
             android:src="@drawable/ic_koala"
+            app:layout_constraintBottom_toBottomOf="@+id/card_gchat_message_other"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/text_gchat_date_other" />
+            app:layout_constraintTop_toTopOf="@+id/card_gchat_message_other" />
 
         <TextView
             android:id="@+id/text_gchat_user_other"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
             android:text="John Grady Cole"
             android:textSize="16sp"
-            app:layout_constraintStart_toEndOf="@+id/image_gchat_profile_other"
+            app:layout_constraintStart_toStartOf="@+id/card_gchat_message_other"
             app:layout_constraintTop_toBottomOf="@+id/text_gchat_date_other" />
 
         <androidx.cardview.widget.CardView
             android:id="@+id/card_gchat_message_other"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="66dp"
+            android:layout_marginTop="4dp"
             app:cardBackgroundColor="#eef1f6"
             app:cardCornerRadius="50dp"
             app:cardElevation="0dp"
-            app:cardPreventCornerOverlap="false"
-            app:cardUseCompatPadding="true"
-            app:layout_constraintStart_toEndOf="@+id/image_gchat_profile_other"
+            app:cardPreventCornerOverlap="true"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/text_gchat_user_other">
 
             <LinearLayout
