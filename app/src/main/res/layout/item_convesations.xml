@@ -45,16 +45,15 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/conversation_last_man" />
 
-            <androidx.cardview.widget.CardView
+            <com.google.android.material.card.MaterialCardView
                 android:id="@+id/card_chat_last_message"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginBottom="8dp"
                 app:cardBackgroundColor="@color/colorPurple"
-                app:cardCornerRadius="12dp"
+                app:cardCornerRadius="50dp"
                 app:cardElevation="0dp"
-                app:cardUseCompatPadding="true"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/conversation_last_man">
@@ -80,7 +79,7 @@
                         android:textSize="14sp" />
                 </LinearLayout>
 
-            </androidx.cardview.widget.CardView>
+            </com.google.android.material.card.MaterialCardView>
 
             <ImageView
                 android:id="@+id/imageView_isChecked"

@@ -96,5 +96,7 @@ dependencies {
     //color picker
     implementation "codes.side:andcolorpicker:0.3.0"
 
+    //Circle imageview
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
 
 }
