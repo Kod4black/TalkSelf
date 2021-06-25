@@ -6,7 +6,7 @@ import com.github.odaridavid.talkself.models.Chat
 import com.github.odaridavid.talkself.models.Conversation
 import com.github.odaridavid.talkself.models.User
 
-@Database(entities = [Chat::class, Conversation::class,User::class], version = 4,exportSchema = false)
+@Database(entities = [Chat::class, Conversation::class,User::class], version = 6,exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun chatDao(): ChatDao
 }

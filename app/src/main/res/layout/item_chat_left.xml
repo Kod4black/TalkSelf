@@ -17,6 +17,7 @@
             android:paddingBottom="4dp"
             android:text="June 10"
             android:textColor="#C0C0C0"
+            android:textSize="14sp"
             android:visibility="visible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -24,8 +25,8 @@
 
         <ImageView
             android:id="@+id/image_gchat_profile_other"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:layout_marginStart="8dp"
             android:contentDescription="User Icon"
             android:src="@drawable/ic_koala"
@@ -38,7 +39,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="John Grady Cole"
-            android:textSize="16sp"
+            android:textSize="12sp"
             app:layout_constraintStart_toStartOf="@+id/card_gchat_message_other"
             app:layout_constraintTop_toBottomOf="@+id/text_gchat_date_other" />
 
@@ -46,7 +47,7 @@
             android:id="@+id/card_gchat_message_other"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="66dp"
+            android:layout_marginStart="51dp"
             android:layout_marginTop="4dp"
             app:cardBackgroundColor="#eef1f6"
             app:cardCornerRadius="50dp"
@@ -72,7 +73,7 @@
                     android:paddingRight="12dp"
                     android:text="Message"
                     android:textColor="#000000"
-                    android:textSize="16sp" />
+                    android:textSize="14sp" />
             </LinearLayout>
 
         </androidx.cardview.widget.CardView>

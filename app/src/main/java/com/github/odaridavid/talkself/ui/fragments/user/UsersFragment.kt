@@ -1,15 +1,19 @@
 package com.github.odaridavid.talkself.ui.fragments.user
 
 import android.graphics.Color
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.core.graphics.alpha
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -45,6 +49,7 @@ class UsersFragment : Fragment(), ImageClick {
     private var conversation: Conversation? = null
     private lateinit var userAdapter: UsersAdapter
     private var transformationLayoutGlobal : TransformationLayout? = null
+    private lateinit var user : User
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -57,6 +62,7 @@ class UsersFragment : Fragment(), ImageClick {
 
         bindUI()
         addOnBackPressCallback()
+
         return binding.root
     }
 
@@ -76,31 +82,40 @@ class UsersFragment : Fragment(), ImageClick {
 
         }
 
-        viewmodel.users(conversation?.id!!).observe(viewLifecycleOwner, {
+        viewmodel.users(conversation?.conservationId!!).observe(viewLifecycleOwner, {
             userAdapter.submitList(it)
         })
+
+        setFragmentResultListener("requestKey") { _, bundle ->
+            val result = bundle.getInt("bundleKey")
+            user.imageUri = result.toString()
+            onImageClick(transformationLayoutGlobal!!,user)
+        }
+
     }
 
 
 
     override fun onImageClick(transformationLayout: TransformationLayout, user: User) {
+
+        requireContext().toast(user.toString())
+
         transformationLayout.apply {
             transformationLayoutGlobal = this
             bindDialogView(user)
             bindTargetView(binding.myCardView)
-            startTransform()
+            startCardTransform(transformationLayoutGlobal!!)
             callback.isEnabled = true
         }
-
-
     }
 
     private fun bindDialogView(user: User) {
+        this.user = user
 
         binding.dialog.apply {
 
             Glide.with(imageViewUserProfile)
-                .load(user.imageUri)
+                .load(user.imageUri?.toInt())
                 .circleCrop()
                 .placeholder(R.drawable.ic_koala)
                 .error(R.drawable.ic_koala)
@@ -108,8 +123,13 @@ class UsersFragment : Fragment(), ImageClick {
                 .into(imageViewUserProfile)
 
 
+            imageViewUserProfile.setOnClickListener {
+                it.findNavController().navigate(R.id.usersFragment_to_memoji)
+            }
+
+
             textInputEditText.apply {
-                addTextChangedListener(object : TextWatcher{
+                addTextChangedListener(object : TextWatcher {
                     override fun beforeTextChanged(
                         s: CharSequence?,
                         start: Int,
@@ -119,7 +139,12 @@ class UsersFragment : Fragment(), ImageClick {
 
                     }
 
-                    override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                    override fun onTextChanged(
+                        s: CharSequence?,
+                        start: Int,
+                        before: Int,
+                        count: Int
+                    ) {
                         textGchatUserOther.text = s.toString()
                     }
 
@@ -177,22 +202,38 @@ class UsersFragment : Fragment(), ImageClick {
             )
 
 
-
         }
-
 
     }
 
     val callback = object : OnBackPressedCallback(false) {
         override fun handleOnBackPressed() {
-            requireContext().toast("Heeeey")
-            transformationLayoutGlobal?.finishTransform()
-            isEnabled = false
+            transformationLayoutGlobal?.let { finishCardTransform(it) }
         }
     }
 
     private fun addOnBackPressCallback() {
         requireActivity().onBackPressedDispatcher.addCallback(requireActivity(), callback)
     }
+
+
+    //Start the morph animation of the image to a cardview
+    private fun startCardTransform(transformationLayout: TransformationLayout) {
+        transformationLayout.startTransform()
+        binding.backgroundView.apply {
+            isVisible = true
+        }
+        callback.isEnabled = true
+    }
+
+    //Stop the morph animation of the image to a cardview
+    private fun finishCardTransform(transformationLayout: TransformationLayout) {
+        transformationLayout.finishTransform()
+        binding.backgroundView.apply {
+            isVisible = false
+        }
+        callback.isEnabled = false
+    }
+
 
 }

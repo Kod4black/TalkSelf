@@ -71,7 +71,7 @@ class ConversationAdapter(
 
         fun bind(message: Conversation) {
             binding.textChatLastMessage.text = message.lastMessage
-            binding.conversationLastMan.text = message.lastUser
+            binding.conversationLastMan.text = message.user?.name
             binding.conversationTime.text =
                 UtilityFunctions.formatMillisecondsToDate(message.timeCreated!!)
 

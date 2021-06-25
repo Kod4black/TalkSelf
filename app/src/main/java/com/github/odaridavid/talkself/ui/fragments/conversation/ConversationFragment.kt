@@ -75,7 +75,7 @@ class ConversationFragment : Fragment() {
 
     private fun createConversation(it: View) {
         //Create a new conversation using a randrom id
-        val conversation = Conversation(Random().nextInt(), System.currentTimeMillis())
+        val conversation = Conversation(conservationId = Random().nextInt(), System.currentTimeMillis())
 
         //Get username strings from the InputEditTextviews
         val usernameOne = getUserOneName()
@@ -87,8 +87,8 @@ class ConversationFragment : Fragment() {
         }
 
         //Create user objects from the two usernames and associate them with the created conversation Id through th constructor
-        val user1 = User(usernameOne, conversation.id)
-        val user2 = User(usernameTwo, conversation.id)
+        val user1 = User(usernameOne, conversation.conservationId)
+        val user2 = User(usernameTwo, conversation.conservationId)
 
         //Call the function to add these objects to the database
         makeConversation(user1, user2, conversation)
@@ -340,6 +340,14 @@ class ConversationFragment : Fragment() {
             finishCardTransform()
         }
 
+            fireUpObservers()
+
+
+        toolBarCommonStuff()
+
+    }
+
+    private suspend fun fireUpObservers() {
         //Observe toolbar state changes and react accordingly
         viewmodel.stateManager.toolbarState.observe(viewLifecycleOwner, { state ->
             when (state) {
@@ -376,6 +384,14 @@ class ConversationFragment : Fragment() {
 
         //Observe changes on the conversations from the viewModel
         viewmodel.conversation.observe(viewLifecycleOwner, {
+
+            Coroutines.io {
+                it.map { conversation ->
+                    conversation.user = conversation.lastUserId?.let { it1 -> viewmodel.getUser(it1) }
+                }
+            }
+
+
             conversationadapter.submitList(it)
         })
 
@@ -385,9 +401,6 @@ class ConversationFragment : Fragment() {
                 conversationadapter.notifyDataSetChanged()
             }
         })
-
-        toolBarCommonStuff()
-
     }
 
     private fun setSelectedToolbar() {

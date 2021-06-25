@@ -23,7 +23,7 @@ import kotlinx.parcelize.Parcelize
 data class User(
     val name: String? = null,
     val conversationId: Int? = null,
-    val imageUri: String? = null,
+    var imageUri: String? = null,
     @PrimaryKey(autoGenerate = true)
     var id: Int? = null,
 ) : Parcelable

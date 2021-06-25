@@ -11,9 +11,10 @@ class MainRepository @Inject constructor(private val chatDao: ChatDao) {
 
     val chats = chatDao.getAllChats()
     val conversations = chatDao.getAllConversations()
-    fun users(conversationid : Int) = chatDao.getUsers(conversationid)
 
-    fun chats(conversationid : Int) = chatDao.getChats(conversationid)
+    fun users(conversationId : Int) = chatDao.getUsers(conversationId)
+
+    fun chats(conversationId : Int) = chatDao.getChats(conversationId)
 
     suspend fun addChat(chat: Chat){
         chatDao.addChat(chat)
@@ -21,6 +22,10 @@ class MainRepository @Inject constructor(private val chatDao: ChatDao) {
 
     fun addUser(user: User){
         chatDao.addUser(user)
+    }
+
+    suspend fun getUser(userId : Int) : User{
+        return chatDao.getUser(userId)
     }
 
     suspend fun addconversation(conversation: Conversation){
@@ -38,7 +43,7 @@ class MainRepository @Inject constructor(private val chatDao: ChatDao) {
     }
 
     fun deleteChats(conversation: Conversation){
-        chatDao.deleteChats(conversation.id!!)
+        chatDao.deleteChats(conversation.conservationId!!)
     }
 
     fun updateChat(chat: Chat) {

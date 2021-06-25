@@ -1,6 +1,8 @@
 package com.github.odaridavid.talkself.ui.fragments.conversation
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import com.github.odaridavid.talkself.models.Conversation
 import com.github.odaridavid.talkself.models.User
@@ -60,6 +62,10 @@ class ConversationsViewModel @Inject constructor(private val mainRepository: Mai
         Coroutines.io {
             mainRepository.addUser(user)
         }
+    }
+
+    suspend fun getUser(userId : Int) : User{
+        return mainRepository.getUser(userId)
     }
 
 }
