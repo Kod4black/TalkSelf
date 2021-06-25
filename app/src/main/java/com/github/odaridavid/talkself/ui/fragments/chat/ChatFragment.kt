@@ -46,29 +46,31 @@ class ChatFragment : Fragment() {
         super.onCreate(savedInstanceState)
         binding = FragmentChatBinding.inflate(inflater, container, false)
 
+        return binding.root
+    }
+
+    override fun onResume() {
+        super.onResume()
         initVariables()
         initRecyclerview()
         bindUI()
         fireUpObservers()
         setUpCustomItemTouchHelper()
         toolBarCommonStuff()
-        return binding.root
     }
 
     private fun fireUpObservers() {
         //Fetch users from the database
-        viewmodel.users(conversation?.id!!).observe(viewLifecycleOwner, {
+        viewmodel.users(conversation?.conservationId!!).observe(viewLifecycleOwner, {
 
             //update the global variable of users we need this to switch the users
             users = it as MutableList<User>
 
             // When current user is null, make the first user in the users list as the current user
-            when (currentUser) {
-                null -> {
-                    currentUser = it[0]
-                    chatAdapter.currentUser = currentUser
-                }
-            }
+
+            currentUser = it[0]
+            chatAdapter.currentUser = currentUser
+
 
             //Update the viewmodel also with the current user
             viewmodel.currentuser.postValue(currentUser)
@@ -136,7 +138,7 @@ class ChatFragment : Fragment() {
     }
 
     private fun fetchChats() {
-        viewmodel.chats(conversation!!.id!!).observe(viewLifecycleOwner, {
+        viewmodel.chats(conversation!!.conservationId!!).observe(viewLifecycleOwner, {
             if (it.isNullOrEmpty()) {
                 //show the empty state
                 binding.layoutNomessage.visibility = View.VISIBLE
@@ -164,11 +166,11 @@ class ChatFragment : Fragment() {
             val text = binding.messageEditText.text.toString()
             // make a new chat
             val chat = Chat(
-                currentUser?.id,
-                currentUser?.name,
-                text,
-                System.currentTimeMillis(),
-                conversation?.id
+                userid = currentUser?.id,
+                username = currentUser?.name,
+                message = text,
+                timesent = System.currentTimeMillis(),
+                conservationId = conversation?.conservationId
             )
             //add it
             viewmodel.addText(chat)
@@ -187,7 +189,7 @@ class ChatFragment : Fragment() {
     private fun updateConversation(text: String) {
 
         //we need last user, last message and the last time it was sent
-        conversation?.lastUser = currentUser?.name
+        conversation?.lastUserId = currentUser?.id
         conversation?.lastMessage = text
         conversation?.lasttimemessage = System.currentTimeMillis()
         viewmodel.updateConversation(conversation)

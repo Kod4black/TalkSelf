@@ -65,7 +65,7 @@ class ChatAdapter : ListAdapter<Chat, RecyclerView.ViewHolder>(
             binding.apply {
 
                 val date = chat.timesent?.let { UtilityFunctions.formatMillisecondsToDate(it) }
-                val prevDate = chat.timesent?.let { UtilityFunctions.formatMillisecondsToDate(it) }
+                val prevDate = previousChat?.timesent?.let { UtilityFunctions.formatMillisecondsToDate(it) }
 
                 textGchatMessageOther.text = chat.message
                 textGchatTimestampOther.text = chat.timesent?.let { UtilityFunctions.formatMillisecondsToTime(it) }
@@ -103,14 +103,13 @@ class ChatAdapter : ListAdapter<Chat, RecyclerView.ViewHolder>(
     }
 
     private class RightChatHolder(val binding:  ItemChatRightBinding) : RecyclerView.ViewHolder(binding.root) {
-        
 
         fun bind(previousChat: Chat?, chat: Chat) {
 
             binding.apply {
 
                 val date = chat.timesent?.let { UtilityFunctions.formatMillisecondsToDate(it) }
-                val prevDate = chat.timesent?.let { UtilityFunctions.formatMillisecondsToDate(it) }
+                val prevDate = previousChat?.timesent?.let { UtilityFunctions.formatMillisecondsToDate(it) }
 
 
                 textGchatMessageRight.text = chat.message
@@ -125,6 +124,7 @@ class ChatAdapter : ListAdapter<Chat, RecyclerView.ViewHolder>(
                     textGchatNameRight.visibility = View.VISIBLE
                     imageGchatProfileOther.visibility = View.VISIBLE
                 }
+
                 when {
                     previousChat == null -> {
                         textGchatUserDate.visibility = View.VISIBLE
@@ -163,7 +163,7 @@ class ChatAdapter : ListAdapter<Chat, RecyclerView.ViewHolder>(
     companion object {
         val ChatDiffUtil = object : DiffUtil.ItemCallback<Chat>() {
             override fun areItemsTheSame(oldItem: Chat, newItem: Chat): Boolean {
-                return oldItem.id == newItem.id
+                return oldItem == newItem
             }
 
             override fun areContentsTheSame(oldItem: Chat, newItem: Chat): Boolean {
