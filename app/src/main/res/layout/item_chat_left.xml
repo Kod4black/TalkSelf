@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -38,7 +39,7 @@
             android:id="@+id/text_gchat_user_other"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="John Grady Cole"
+            tools:text="John Grady Cole"
             android:textSize="12sp"
             app:layout_constraintStart_toStartOf="@+id/card_gchat_message_other"
             app:layout_constraintTop_toBottomOf="@+id/text_gchat_date_other" />

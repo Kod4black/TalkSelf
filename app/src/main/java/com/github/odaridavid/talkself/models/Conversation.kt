@@ -11,11 +11,9 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class Conversation(
     @PrimaryKey(autoGenerate = false)
-    var conservationId: Int? = null,
+    var conversationId: Int? = null,
     var timeCreated: Long? = null,
-    var lastUserId: Int? = null,
+    var userId: Int? = null,
     var lastMessage: String? = null,
     var lasttimemessage: Long? = null,
-    @Ignore
-    var user : User? = null
 ) : Parcelable

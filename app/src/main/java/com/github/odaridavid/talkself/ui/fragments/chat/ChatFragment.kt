@@ -1,12 +1,16 @@
 package com.github.odaridavid.talkself.ui.fragments.chat
 
+import android.R
+import android.annotation.SuppressLint
 import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.Typeface
 import android.os.Bundle
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.os.bundleOf
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
@@ -14,11 +18,14 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.github.odaridavid.talkself.R
 import com.github.odaridavid.talkself.databinding.FragmentChatBinding
 import com.github.odaridavid.talkself.models.Chat
 import com.github.odaridavid.talkself.models.Conversation
 import com.github.odaridavid.talkself.models.User
+import com.skydoves.powermenu.MenuAnimation
+import com.skydoves.powermenu.OnMenuItemClickListener
+import com.skydoves.powermenu.PowerMenu
+import com.skydoves.powermenu.PowerMenuItem
 import dagger.hilt.android.AndroidEntryPoint
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 
@@ -45,13 +52,14 @@ class ChatFragment : Fragment() {
     ): View {
         super.onCreate(savedInstanceState)
         binding = FragmentChatBinding.inflate(inflater, container, false)
-
+        conversation = args.conversation
         return binding.root
     }
 
+
+
     override fun onResume() {
         super.onResume()
-        initVariables()
         initRecyclerview()
         bindUI()
         fireUpObservers()
@@ -59,9 +67,10 @@ class ChatFragment : Fragment() {
         toolBarCommonStuff()
     }
 
+    @SuppressLint("SetTextI18n")
     private fun fireUpObservers() {
         //Fetch users from the database
-        viewmodel.users(conversation?.conservationId!!).observe(viewLifecycleOwner, {
+        viewmodel.users(conversation?.conversationId!!).observe(viewLifecycleOwner, {
 
             //update the global variable of users we need this to switch the users
             users = it as MutableList<User>
@@ -83,10 +92,10 @@ class ChatFragment : Fragment() {
         viewmodel.currentuser.observe(viewLifecycleOwner, {
             when {
                 it != null -> {
-                    binding.activityChatTitle.text = "Chatting as ${it.name}.";
+                    binding.activityChatTitle.text = "Chatting as ${it.name}."
                 }
                 else -> {
-                    binding.activityChatTitle.text = "New Chat.";
+                    binding.activityChatTitle.text = "New Chat."
                 }
             }
         })
@@ -117,11 +126,6 @@ class ChatFragment : Fragment() {
     }
 
 
-    private fun initVariables() {
-        conversation = args.conversation
-    }
-
-
     private fun initRecyclerview() {
 
         chatAdapter = ChatAdapter()
@@ -138,7 +142,7 @@ class ChatFragment : Fragment() {
     }
 
     private fun fetchChats() {
-        viewmodel.chats(conversation!!.conservationId!!).observe(viewLifecycleOwner, {
+        viewmodel.chats(conversation!!.conversationId!!).observe(viewLifecycleOwner, {
             if (it.isNullOrEmpty()) {
                 //show the empty state
                 binding.layoutNomessage.visibility = View.VISIBLE
@@ -149,11 +153,14 @@ class ChatFragment : Fragment() {
                 binding.layoutNomessage.visibility = View.GONE
                 binding.textViewInfoChats.visibility = View.VISIBLE
 
+
                 chatAdapter.submitList(it)
 
                 if (shouldScroll) {
                     scrollToLatestText()
                 }
+
+                chatAdapter.notifyDataSetChanged()
 
             }
         })
@@ -166,11 +173,11 @@ class ChatFragment : Fragment() {
             val text = binding.messageEditText.text.toString()
             // make a new chat
             val chat = Chat(
-                userid = currentUser?.id,
+                userId = currentUser?.userId,
                 username = currentUser?.name,
                 message = text,
                 timesent = System.currentTimeMillis(),
-                conservationId = conversation?.conservationId
+                conservationId = conversation?.conversationId
             )
             //add it
             viewmodel.addText(chat)
@@ -189,7 +196,7 @@ class ChatFragment : Fragment() {
     private fun updateConversation(text: String) {
 
         //we need last user, last message and the last time it was sent
-        conversation?.lastUserId = currentUser?.id
+        conversation?.userId = currentUser?.userId
         conversation?.lastMessage = text
         conversation?.lasttimemessage = System.currentTimeMillis()
         viewmodel.updateConversation(conversation)
@@ -204,7 +211,7 @@ class ChatFragment : Fragment() {
 
         //Some funky behaviour here !!!
         binding.chatRecyclerView.smoothScrollToPosition(
-            chatAdapter.itemCount + 3
+            chatAdapter.itemCount
         )
         shouldScroll = false
     }
@@ -227,23 +234,27 @@ class ChatFragment : Fragment() {
 
                 override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
 
-                    val chat = chatAdapter.getItemAt(viewHolder.adapterPosition)
+                    val chat = chatAdapter.getItemAt(viewHolder.adapterPosition).chat
 
-                    when (direction) {
-
-                        ItemTouchHelper.LEFT -> {
-                            chat.userid = users[1].id
-                            chat.username = users[1].name
+                    if (users.size == 2) {
+                        when (direction) {
+                            ItemTouchHelper.LEFT -> {
+                                chat.userId = users[1].userId
+                            }
+                            ItemTouchHelper.RIGHT -> {
+                                chat.userId = users[0].userId
+                            }
                         }
-
-                        ItemTouchHelper.RIGHT -> {
-                            chat.userid = users[0].id
-                            chat.username = users[0].name
+                    }else{
+                        when (direction) {
+                            ItemTouchHelper.LEFT -> {
+                                chat.userId = users[1].userId
+                            }
                         }
-
                     }
+
                     viewmodel.updatechat(chat)
-                    chatAdapter.notifyDataSetChanged()
+
                 }
 
                 override fun onChildDraw(
@@ -289,9 +300,10 @@ class ChatFragment : Fragment() {
 
         //navigate to edit users
         binding.editUsers.setOnClickListener {
-            val bundle = bundleOf("conversation" to conversation)
             //we need conversation id so we can use it to fetch users associated with this conversation.
-            it.findNavController().navigate(R.id.chat_to_users, bundle)
+            val action =
+                ChatFragmentDirections.chatToUsers(conversation = conversation!!, user = null)
+            it.findNavController().navigate(action)
         }
     }
 

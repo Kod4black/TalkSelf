@@ -1,21 +1,24 @@
- package com.github.odaridavid.talkself.ui.fragments.chat;
+ package com.github.odaridavid.talkself.ui.fragments.chat
 
-import android.view.LayoutInflater
+ import android.graphics.Color
+ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.github.odaridavid.talkself.databinding.ItemChatLeftBinding
+ import com.github.odaridavid.talkself.data.room.relations.ChatAndUser
+ import com.github.odaridavid.talkself.databinding.ItemChatLeftBinding
 import com.github.odaridavid.talkself.databinding.ItemChatRightBinding
 import com.github.odaridavid.talkself.utils.VIEW_TYPE_MESSAGE_LEFT
 import com.github.odaridavid.talkself.utils.VIEW_TYPE_MESSAGE_RIGHT
 import com.github.odaridavid.talkself.models.Chat
 import com.github.odaridavid.talkself.models.User
 import com.github.odaridavid.talkself.utils.UtilityFunctions
+ import com.github.odaridavid.talkself.utils.UtilityFunctions.Companion.bindImage
 
 
-class ChatAdapter : ListAdapter<Chat, RecyclerView.ViewHolder>(
+ class ChatAdapter : ListAdapter<ChatAndUser, RecyclerView.ViewHolder>(
     ChatDiffUtil
 ) {
 
@@ -38,20 +41,20 @@ class ChatAdapter : ListAdapter<Chat, RecyclerView.ViewHolder>(
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        val message = getItem(position)
+        val chatAndUser = getItem(position)
         
-        val previousMessage = if (position >= 1) getItem(position - 1) else null
+        val previousChatAndUser = if (position >= 1) getItem(position - 1) else null
 
         when (holder.itemViewType) {
             
             VIEW_TYPE_MESSAGE_RIGHT -> (holder as RightChatHolder).bind(
-                previousMessage,
-                message
+                previousChatAndUser,
+                chatAndUser
             )
 
             VIEW_TYPE_MESSAGE_LEFT -> (holder as LeftChatHolder).bind(
-                previousMessage,
-                message
+                previousChatAndUser,
+                chatAndUser
             )
         }
 
@@ -60,19 +63,25 @@ class ChatAdapter : ListAdapter<Chat, RecyclerView.ViewHolder>(
 
     private class LeftChatHolder(val binding: ItemChatLeftBinding) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(previousChat: Chat?, chat: Chat) {
+        fun bind(previousChatAndUser: ChatAndUser?, chatAndUser: ChatAndUser) {
 
             binding.apply {
 
-                val date = chat.timesent?.let { UtilityFunctions.formatMillisecondsToDate(it) }
-                val prevDate = previousChat?.timesent?.let { UtilityFunctions.formatMillisecondsToDate(it) }
+                val date = chatAndUser.chat.timesent?.let { UtilityFunctions.formatMillisecondsToDate(it) }
+                val prevDate = previousChatAndUser?.chat?.timesent?.let { UtilityFunctions.formatMillisecondsToDate(it) }
 
-                textGchatMessageOther.text = chat.message
-                textGchatTimestampOther.text = chat.timesent?.let { UtilityFunctions.formatMillisecondsToTime(it) }
-                textGchatUserOther.text = chat.username
+                textGchatMessageOther.text = chatAndUser.chat.message
+                textGchatTimestampOther.text = chatAndUser.chat.timesent?.let { UtilityFunctions.formatMillisecondsToTime(it) }
                 textGchatDateOther.text = date?.split(",")?.first()
 
-                if (previousChat != null && previousChat.userid == chat.userid){
+                textGchatUserOther.text = chatAndUser.user.name
+                layoutGchatContainerOther.setBackgroundColor(Color.parseColor(chatAndUser.user.color))
+
+                imageGchatProfileOther.apply {
+                    context.bindImage(chatAndUser.user.imageUri!!,this)
+                }
+
+                if (previousChatAndUser != null && previousChatAndUser.chat.userId == chatAndUser.chat.userId){
                     textGchatUserOther.visibility = View.GONE
                     imageGchatProfileOther.visibility = View.GONE
 
@@ -84,7 +93,7 @@ class ChatAdapter : ListAdapter<Chat, RecyclerView.ViewHolder>(
                 }
 
                 when {
-                    previousChat == null -> {
+                    previousChatAndUser == null -> {
                         textGchatDateOther.visibility = View.VISIBLE
                         return
                     }
@@ -104,20 +113,25 @@ class ChatAdapter : ListAdapter<Chat, RecyclerView.ViewHolder>(
 
     private class RightChatHolder(val binding:  ItemChatRightBinding) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(previousChat: Chat?, chat: Chat) {
+        fun bind(previousChatAndUser: ChatAndUser?, chatAndUser: ChatAndUser) {
 
             binding.apply {
 
-                val date = chat.timesent?.let { UtilityFunctions.formatMillisecondsToDate(it) }
-                val prevDate = previousChat?.timesent?.let { UtilityFunctions.formatMillisecondsToDate(it) }
+                val date = chatAndUser.chat.timesent?.let { UtilityFunctions.formatMillisecondsToDate(it) }
+                val prevDate = previousChatAndUser?.chat?.timesent?.let { UtilityFunctions.formatMillisecondsToDate(it) }
 
-
-                textGchatMessageRight.text = chat.message
+                textGchatMessageRight.text = chatAndUser.chat.message
                 textGchatUserDate.text = date?.split(",")?.first()
-                textGchatNameRight.text = chat.username
-                textGchatTimestampMe.text = chat.timesent?.let { UtilityFunctions.formatMillisecondsToTime(it) }
+                textGchatNameRight.text = chatAndUser.user.name
+                textGchatTimestampMe.text = chatAndUser.chat.timesent?.let { UtilityFunctions.formatMillisecondsToTime(it) }
+                imageGchatProfileOther.apply {
+                    context.bindImage(chatAndUser.user.imageUri!!,this)
+                }
 
-                if (previousChat != null && previousChat.userid == chat.userid){
+                layoutGchatContainerMe.setBackgroundColor(Color.parseColor(chatAndUser.user.color))
+
+
+                if (previousChatAndUser != null && previousChatAndUser.chat.userId == chatAndUser.chat.userId){
                     textGchatNameRight.visibility = View.GONE
                     imageGchatProfileOther.visibility = View.GONE
                 }else{
@@ -126,7 +140,7 @@ class ChatAdapter : ListAdapter<Chat, RecyclerView.ViewHolder>(
                 }
 
                 when {
-                    previousChat == null -> {
+                    previousChatAndUser == null -> {
                         textGchatUserDate.visibility = View.VISIBLE
                         return
                     }
@@ -146,8 +160,8 @@ class ChatAdapter : ListAdapter<Chat, RecyclerView.ViewHolder>(
 
 
     override fun getItemViewType(position: Int): Int {
-        val chat = getItem(position)
-        return if (chat.userid == currentUser?.id) {
+        val chatAndUser = getItem(position)
+        return if (chatAndUser.chat.userId == currentUser?.userId) {
             // If the current user is the sender of the message
             VIEW_TYPE_MESSAGE_RIGHT
         } else {
@@ -156,17 +170,17 @@ class ChatAdapter : ListAdapter<Chat, RecyclerView.ViewHolder>(
         }
     }
 
-    fun getItemAt(position: Int): Chat {
+    fun getItemAt(position: Int): ChatAndUser {
         return getItem(position)
     }
 
     companion object {
-        val ChatDiffUtil = object : DiffUtil.ItemCallback<Chat>() {
-            override fun areItemsTheSame(oldItem: Chat, newItem: Chat): Boolean {
-                return oldItem == newItem
+        val ChatDiffUtil = object : DiffUtil.ItemCallback<ChatAndUser>() {
+            override fun areItemsTheSame(oldItem: ChatAndUser, newItem: ChatAndUser): Boolean {
+                return oldItem.chat.chatId == newItem.chat.chatId && oldItem.chat.userId == newItem.chat.userId && oldItem.user.userId == newItem.user.userId
             }
 
-            override fun areContentsTheSame(oldItem: Chat, newItem: Chat): Boolean {
+            override fun areContentsTheSame(oldItem: ChatAndUser, newItem: ChatAndUser): Boolean {
                 return oldItem == newItem
             }
         }

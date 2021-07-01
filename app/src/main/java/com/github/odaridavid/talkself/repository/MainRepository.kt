@@ -4,13 +4,13 @@ import com.github.odaridavid.talkself.data.room.ChatDao
 import com.github.odaridavid.talkself.models.Chat
 import com.github.odaridavid.talkself.models.Conversation
 import com.github.odaridavid.talkself.models.User
-import com.github.odaridavid.talkself.utils.Coroutines
 import javax.inject.Inject
 
 class MainRepository @Inject constructor(private val chatDao: ChatDao) {
 
     val chats = chatDao.getAllChats()
     val conversations = chatDao.getAllConversations()
+    val conversationsandusers = chatDao.getAllConversationsandUsers()
 
     fun users(conversationId : Int) = chatDao.getUsers(conversationId)
 
@@ -24,26 +24,29 @@ class MainRepository @Inject constructor(private val chatDao: ChatDao) {
         chatDao.addUser(user)
     }
 
-    suspend fun getUser(userId : Int) : User{
+    fun getUser(userId : Int) : User{
         return chatDao.getUser(userId)
     }
 
-    suspend fun addconversation(conversation: Conversation){
+    suspend fun updateUser(user: User){
+        chatDao.updateUser(user)
+    }
+
+    suspend fun addConversation(conversation: Conversation){
         chatDao.makeConversation(conversation )
     }
 
-    suspend fun updateconversation(conversation: Conversation){
+    suspend fun updateConversation(conversation: Conversation){
         chatDao.updateConversation(conversation )
     }
 
      suspend fun deleteConversation(conversation: Conversation){
-         Coroutines.io {
-             chatDao.deleteConversation(conversation)
-         }
+         chatDao.deleteConversation(conversation)
     }
 
+
     fun deleteChats(conversation: Conversation){
-        chatDao.deleteChats(conversation.conservationId!!)
+        chatDao.deleteChats(conversation.conversationId!!)
     }
 
     fun updateChat(chat: Chat) {

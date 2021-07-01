@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "562088179639",
+    "project_id": "talk-self",
+    "storage_bucket": "talk-self.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:562088179639:android:6af9a1f600f17f8cc9da32",
+        "android_client_info": {
+          "package_name": "com.github.odaridavid.talkself"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "562088179639-u6muuv8n6ss1kuj8227m4nl9j4556i66.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.github.odaridavid.talkself",
+            "certificate_hash": "a603825e580585b56daded29c598f062f91747d3"
+          }
+        },
+        {
+          "client_id": "562088179639-bqtbkelt3or4r11ksr93ms6khv2sflb3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD_UdrCX1k_IJpM8tT6kvK3E9FJRMeImVw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "562088179639-bqtbkelt3or4r11ksr93ms6khv2sflb3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

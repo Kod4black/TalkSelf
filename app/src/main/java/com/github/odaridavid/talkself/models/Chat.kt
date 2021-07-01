@@ -24,11 +24,9 @@ import kotlinx.parcelize.Parcelize
 data class Chat(
     @PrimaryKey(autoGenerate = true)
     var chatId: Int? = null,
-    var userid: Int? = null,
+    var userId: Int? = null,
     var username: String? = null,
     var message: String? = null,
     var timesent: Long? = null,
     var conservationId: Int? = null,
-    @Ignore
-    var user: User? = null
 ) : Parcelable

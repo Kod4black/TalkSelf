@@ -75,7 +75,7 @@ class ConversationFragment : Fragment() {
 
     private fun createConversation(it: View) {
         //Create a new conversation using a randrom id
-        val conversation = Conversation(conservationId = Random().nextInt(), System.currentTimeMillis())
+        val conversation = Conversation(conversationId = Random().nextInt(), System.currentTimeMillis())
 
         //Get username strings from the InputEditTextviews
         val usernameOne = getUserOneName()
@@ -87,8 +87,8 @@ class ConversationFragment : Fragment() {
         }
 
         //Create user objects from the two usernames and associate them with the created conversation Id through th constructor
-        val user1 = User(usernameOne, conversation.conservationId)
-        val user2 = User(usernameTwo, conversation.conservationId)
+        val user1 = User(name = usernameOne,conversationId = conversation.conversationId,color = "#774df2")
+        val user2 = User(name = usernameTwo, conversationId = conversation.conversationId, color = "#eef1f6")
 
         //Call the function to add these objects to the database
         makeConversation(user1, user2, conversation)
@@ -264,8 +264,8 @@ class ConversationFragment : Fragment() {
                 }
 
                 override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                    val conversation = conversationadapter.getItemAt(viewHolder.adapterPosition)
-                    showDeleteDialog(conversation)
+                    val conversationAndUser = conversationadapter.getItemAt(viewHolder.adapterPosition)
+                    showDeleteDialog(conversationAndUser.conversation!!)
                 }
 
                 override fun onChildDraw(
@@ -347,7 +347,7 @@ class ConversationFragment : Fragment() {
 
     }
 
-    private suspend fun fireUpObservers() {
+    private  fun fireUpObservers() {
         //Observe toolbar state changes and react accordingly
         viewmodel.stateManager.toolbarState.observe(viewLifecycleOwner, { state ->
             when (state) {
@@ -383,16 +383,10 @@ class ConversationFragment : Fragment() {
         })
 
         //Observe changes on the conversations from the viewModel
-        viewmodel.conversation.observe(viewLifecycleOwner, {
-
-            Coroutines.io {
-                it.map { conversation ->
-                    conversation.user = conversation.lastUserId?.let { it1 -> viewmodel.getUser(it1) }
-                }
+        viewmodel.conversationAndUser.observe(viewLifecycleOwner, {
+            if (it.isNotEmpty()){
+                conversationadapter.submitList(it)
             }
-
-
-            conversationadapter.submitList(it)
         })
 
         //Observe the state of the isMultiselection state Variable

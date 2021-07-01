@@ -1,6 +1,5 @@
 package com.github.odaridavid.talkself.di
 
-import com.github.odaridavid.talkself.data.room.AppDatabase
 import com.github.odaridavid.talkself.data.room.ChatDao
 import com.github.odaridavid.talkself.repository.MainRepository
 import dagger.Module
@@ -15,7 +14,7 @@ class RepositoryModule {
 
     @Provides
     @Singleton
-    fun provideMainrepository(chatDao: ChatDao): MainRepository {
+    fun providesMainRepository(chatDao: ChatDao): MainRepository {
         return MainRepository(chatDao)
     }
 

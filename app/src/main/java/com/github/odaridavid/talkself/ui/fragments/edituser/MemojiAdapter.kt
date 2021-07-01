@@ -1,4 +1,4 @@
-package com.github.odaridavid.talkself.ui.fragments.memoji
+package com.github.odaridavid.talkself.ui.fragments.edituser
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -9,8 +9,9 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.github.odaridavid.talkself.R
 import com.github.odaridavid.talkself.databinding.ItemMemojiBinding
+import com.github.odaridavid.talkself.utils.UtilityFunctions.Companion.bindImage
 
-class MemojiAdapter(private val call: (Int) -> Unit) : ListAdapter<Int, MemojiAdapter.ViewHolder>(
+class MemojiAdapter(private val call: (String) -> Unit) : ListAdapter<String, MemojiAdapter.ViewHolder>(
     ConversationDiffUtil
 ) {
 
@@ -24,30 +25,27 @@ class MemojiAdapter(private val call: (Int) -> Unit) : ListAdapter<Int, MemojiAd
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
-        val drawable = getItem(position)
+        val imageUrl = getItem(position)
 
-        Glide.with(holder.binding.imageViewMemoji)
-            .load(drawable)
-            .circleCrop()
-            .placeholder(R.drawable.ic_koala)
-            .error(R.drawable.ic_koala)
-            .diskCacheStrategy(DiskCacheStrategy.ALL)
-            .into(holder.binding.imageViewMemoji)
+        holder.binding.imageViewMemoji.apply {
+            context.bindImage(imageUrl,this)
+        }
+
 
         holder.itemView.setOnClickListener {
-            call(drawable)
+            call(imageUrl)
         }
     }
 
     class ViewHolder(val binding: ItemMemojiBinding) : RecyclerView.ViewHolder(binding.root)
 
     companion object {
-        val ConversationDiffUtil = object : DiffUtil.ItemCallback<Int>() {
-            override fun areItemsTheSame(oldItem: Int, newItem: Int): Boolean {
+        val ConversationDiffUtil = object : DiffUtil.ItemCallback<String>() {
+            override fun areItemsTheSame(oldItem: String, newItem: String): Boolean {
                return oldItem == newItem
             }
 
-            override fun areContentsTheSame(oldItem: Int, newItem: Int): Boolean {
+            override fun areContentsTheSame(oldItem: String, newItem: String): Boolean {
                 return oldItem == newItem
             }
 
