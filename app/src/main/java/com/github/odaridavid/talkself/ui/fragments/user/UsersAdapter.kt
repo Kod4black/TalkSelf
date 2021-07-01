@@ -2,21 +2,19 @@ package com.github.odaridavid.talkself.ui.fragments.user
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.activity.OnBackPressedCallback
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.github.odaridavid.talkself.R
-import com.github.odaridavid.talkself.databinding.FragmentUsersBinding
 import com.github.odaridavid.talkself.databinding.ItemUserBinding
 import com.github.odaridavid.talkself.models.User
+import com.github.odaridavid.talkself.utils.UtilityFunctions.Companion.bindImage
 import com.github.odaridavid.talkself.utils.interfaces.ImageClick
 
 class UsersAdapter(
-    private val fragmentUsersBinding: FragmentUsersBinding,
-    private val callback: OnBackPressedCallback,
     private val imageClick: ImageClick,
 ) : ListAdapter<User, UsersAdapter.ViewHolder>(UserDiffUtil) {
 
@@ -31,13 +29,8 @@ class UsersAdapter(
         holder.bind(user)
 
         holder.itemView.setOnClickListener {
-
-            imageClick.onImageClick(holder.itemUserBinding.transformationLayout, user)
-
-            holder.itemUserBinding.transformationLayout.apply {
-
-            }
-
+            val action = UsersFragmentDirections.usersToEditUser(user)
+            it.findNavController().navigate(action)
         }
     }
 
@@ -46,13 +39,9 @@ class UsersAdapter(
 
         fun bind(user: User) {
             itemUserBinding.textViewName.text = user.name
-
-            Glide.with(itemUserBinding.shapeableImageView)
-                .load(user.imageUri)
-                .placeholder(R.drawable.ic_koala)
-                .error(R.drawable.ic_koala)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into(itemUserBinding.shapeableImageView)
+            itemUserBinding.shapeableImageView.apply {
+                context.bindImage(user.imageUri!!, this)
+            }
         }
 
     }
@@ -64,11 +53,11 @@ class UsersAdapter(
         val UserDiffUtil = object : DiffUtil.ItemCallback<User>() {
 
             override fun areItemsTheSame(oldItem: User, newItem: User): Boolean {
-                return oldItem.id == newItem.id
+                return oldItem.userId == newItem.userId
             }
 
             override fun areContentsTheSame(oldItem: User, newItem: User): Boolean {
-                return oldItem.id == newItem.id
+                return oldItem.userId == newItem.userId
             }
 
         }

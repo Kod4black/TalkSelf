@@ -1,8 +1,6 @@
 package com.github.odaridavid.talkself.ui.fragments.conversation
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import com.github.odaridavid.talkself.models.Conversation
 import com.github.odaridavid.talkself.models.User
@@ -22,25 +20,27 @@ class ConversationsViewModel @Inject constructor(private val mainRepository: Mai
         get() = _stateManager
 
     val conversation = mainRepository.conversations
+    val conversationAndUser = mainRepository.conversationsandusers
+
 
     //    make an new conversation in the  conversation table
     fun makeConversation(conversation: Conversation) {
         Coroutines.io {
-            mainRepository.addconversation(conversation)
+            mainRepository.addConversation(conversation)
         }
     }
 
     //    delete a conversation from conversation table
     fun deleteConversation(conversation: Conversation) {
-        viewModelScope.launch {
+        Coroutines.io {
             mainRepository.deleteConversation(conversation)
         }
     }
 
     //    update a conversation in the conversation table
     fun updateConversation(conversation: Conversation) {
-        viewModelScope.launch {
-            mainRepository.updateconversation(conversation)
+        Coroutines.io {
+            mainRepository.updateConversation(conversation)
         }
     }
 
