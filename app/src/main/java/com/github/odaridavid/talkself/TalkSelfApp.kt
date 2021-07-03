@@ -14,28 +14,7 @@
 package com.github.odaridavid.talkself
 
 import android.app.Application
-import android.content.Context
-import android.content.SharedPreferences
-import com.github.odaridavid.talkself.utils.*
 import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
-class TalkSelfApp : Application() {
-
-    lateinit var sharedPref: SharedPreferences
-
-    override fun onCreate() {
-        super.onCreate()
-
-        sharedPref = getSharedPreferences(TALK_SELF_APP_SP, Context.MODE_PRIVATE)
-
-        if (sharedPref.getInt(USER_ONE_ID_PREF_KEY, INVALID_DEFAULT_ID) == INVALID_DEFAULT_ID) {
-            val editor = sharedPref.edit()
-            with(editor) {
-                putInt(USER_ONE_ID_PREF_KEY, USER_ONE_ID)
-                putInt(USER_TWO_ID_PREF_KEY, USER_TWO_ID)
-                apply()
-            }
-        }
-    }
-}
+class TalkSelfApp : Application()

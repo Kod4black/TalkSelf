@@ -1,19 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/app_navigation"
-    app:startDestination="@id/conversationFragment2">
+    app:startDestination="@id/conversationFragment">
     <fragment
-        android:id="@+id/conversationFragment2"
+        android:id="@+id/conversationFragment"
         android:name="com.github.odaridavid.talkself.ui.fragments.conversation.ConversationFragment"
-        android:label="ConversationFragment" >
+        android:label="ConversationFragment">
+
         <action
-            android:id="@+id/action_conversationFragment2_to_chatFragment"
-            app:destination="@id/chatFragment" />
+            android:id="@+id/conversation_to_chat"
+            app:destination="@id/chatFragment"
+            app:enterAnim="@anim/fromright"
+            app:exitAnim="@anim/toleft"
+            app:popEnterAnim="@anim/fromleft"
+            app:popExitAnim="@anim/toright" />
+
+        <argument
+            android:name="conversation"
+            app:argType="com.github.odaridavid.talkself.models.Conversation"
+            app:nullable="true" />
     </fragment>
+
     <fragment
         android:id="@+id/chatFragment"
         android:name="com.github.odaridavid.talkself.ui.fragments.chat.ChatFragment"
-        android:label="ChatFragment" />
+        android:label="ChatFragment">
+
+        <action
+            android:id="@+id/chat_to_users"
+            app:destination="@id/usersFragment"
+            app:enterAnim="@anim/fromright"
+            app:exitAnim="@anim/toleft"
+            app:popEnterAnim="@anim/fromleft"
+            app:popExitAnim="@anim/toright" />
+
+        <argument
+            android:name="conversation"
+            app:argType="com.github.odaridavid.talkself.models.Conversation"
+            app:nullable="false" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/usersFragment"
+        android:name="com.github.odaridavid.talkself.ui.fragments.user.UsersFragment"
+        android:label="UsersFragment" >
+        <action
+            android:id="@+id/users_to_editUser"
+            app:destination="@id/memojiFragment"
+            app:enterAnim="@anim/fromright"
+            app:exitAnim="@anim/toleft"
+            app:popEnterAnim="@anim/fromleft"
+            app:popExitAnim="@anim/toright" />
+
+        <argument
+            android:name="conversation"
+            app:argType="com.github.odaridavid.talkself.models.Conversation"
+            app:nullable="false" />
+
+        <argument
+            android:name="user"
+            app:argType="com.github.odaridavid.talkself.models.User"
+            app:nullable="true" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/memojiFragment"
+        android:name="com.github.odaridavid.talkself.ui.fragments.edituser.EditUserFragment"
+        android:label="EditUserFragment" >
+
+        <argument
+            android:name="user"
+            app:argType="com.github.odaridavid.talkself.models.User"
+            app:nullable="false" />
+
+    </fragment>
+
 </navigation>
