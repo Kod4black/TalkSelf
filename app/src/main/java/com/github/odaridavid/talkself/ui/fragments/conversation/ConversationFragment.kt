@@ -87,8 +87,8 @@ class ConversationFragment : Fragment() {
         }
 
         //Create user objects from the two usernames and associate them with the created conversation Id through th constructor
-        val user1 = User(name = usernameOne,conversationId = conversation.conversationId,color = "#774df2")
-        val user2 = User(name = usernameTwo, conversationId = conversation.conversationId, color = "#eef1f6")
+        val user1 = User(name = usernameOne,conversationId = conversation.conversationId,color = "#774df2",imageUri = "")
+        val user2 = User(name = usernameTwo, conversationId = conversation.conversationId, color = "#ff2e2e2e",imageUri = "")
 
         //Call the function to add these objects to the database
         makeConversation(user1, user2, conversation)

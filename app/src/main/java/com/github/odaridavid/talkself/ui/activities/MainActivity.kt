@@ -23,7 +23,7 @@ class MainActivity : AppCompatActivity() {
 //
 //        val storageRef: StorageReference = FirebaseStorage.getInstance().reference
 //        var images = mutableListOf<String>()
-
+//
 //        storageRef.listAll().addOnSuccessListener { listResult ->
 //            for (file in listResult.items) {
 //                file.downloadUrl.addOnSuccessListener { uri -> // adding the url in the arraylist

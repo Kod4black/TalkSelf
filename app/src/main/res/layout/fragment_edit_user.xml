@@ -68,14 +68,16 @@
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/image_gchat_profile_other"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginEnd="5dp"
                 android:contentDescription="User Icon"
-                android:src="@drawable/ic_koala"
+                android:src="@drawable/ic_user"
+                app:layout_constraintBottom_toBottomOf="@+id/card_gchat_message_other"
+                app:layout_constraintEnd_toStartOf="@+id/card_gchat_message_other"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/text_gchat_user_other" />
+                app:layout_constraintTop_toTopOf="@+id/card_gchat_message_other" />
 
             <TextView
                 android:id="@+id/text_gchat_user_other"
@@ -115,7 +117,7 @@
                         android:paddingTop="8dp"
                         android:paddingRight="12dp"
                         android:text="Heeyyyy? How're you doing?"
-                        android:textColor="#000000"
+                        android:textColor="#FFFFFF"
                         android:textSize="16sp" />
                 </LinearLayout>
 
@@ -154,7 +156,7 @@
                     android:layout_marginStart="24dp"
                     android:layout_marginTop="8dp"
                     android:fontFamily="@font/poppins_bold"
-                    android:text="Edit profile picture"
+                    android:text="Tap to Edit profile picture"
                     android:textColor="@color/colorGrey"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -171,8 +173,7 @@
                         android:layout_width="150dp"
                         android:layout_height="150dp"
                         android:layout_marginTop="16dp"
-                        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerSize50Percent"
-                        tools:srcCompat="@tools:sample/avatars" />
+                        android:src="@drawable/ic_user" />
                 </com.skydoves.transformationlayout.TransformationLayout>
 
                 <TextView
@@ -250,10 +251,10 @@
                         app:hslColoringMode="pure"
                         app:hslMode="lightness" />
 
-                    <codes.side.andcolorpicker.alpha.HSLAlphaColorPickerSeekBar
-                        android:id="@+id/alphaColorPickerSeekBar"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+<!--                    <codes.side.andcolorpicker.alpha.HSLAlphaColorPickerSeekBar-->
+<!--                        android:id="@+id/alphaColorPickerSeekBar"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content" />-->
 
 
                 </LinearLayout>

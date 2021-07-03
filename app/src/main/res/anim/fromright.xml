@@ -8,6 +8,8 @@
         android:toXScale="0.98"
         android:toYScale="0.98"
         android:duration="@android:integer/config_shortAnimTime"
+        android:pivotX="0.5"
+        android:pivotY="0.5"
 
         />
 

@@ -106,6 +106,7 @@ class UtilityFunctions {
                     .placeholder(R.drawable.ic_user)
                     .error(R.drawable.ic_user)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .dontAnimate()
                     .into(imageView)
             }
 

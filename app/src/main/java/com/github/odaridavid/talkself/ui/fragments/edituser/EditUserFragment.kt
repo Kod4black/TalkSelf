@@ -151,7 +151,7 @@ class EditUserFragment : Fragment() {
                     hueColorPickerSeekBar,
                     saturationColorPickerSeekBar,
                     lightnessColorPickerSeekBar,
-                    alphaColorPickerSeekBar
+//                    alphaColorPickerSeekBar
                 )
             }
 

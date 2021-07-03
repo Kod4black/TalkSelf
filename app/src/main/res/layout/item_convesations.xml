@@ -36,7 +36,7 @@
                 android:layout_height="35dp"
                 android:layout_marginStart="8dp"
                 android:contentDescription="User Icon"
-                android:src="@drawable/ic_koala"
+                android:src="@drawable/ic_user"
                 app:layout_constraintBottom_toBottomOf="@+id/card_chat_last_message"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/card_chat_last_message" />
@@ -68,6 +68,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/conversation_last_man">
 
                 <LinearLayout
+                    android:id="@+id/layout_gchat_container_other"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
