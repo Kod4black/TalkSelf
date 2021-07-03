@@ -1,9 +1,11 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
-    id 'kotlin-android-extensions'
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
+    id 'androidx.navigation.safeargs.kotlin'
+    id 'kotlin-parcelize'
+    id 'com.google.gms.google-services'
 }
 
 
@@ -13,12 +15,34 @@ android {
 
     defaultConfig {
         applicationId "com.github.odaridavid.talkself"
-        minSdkVersion 21
+        minSdkVersion 23
         targetSdkVersion 30
-        versionCode 2
-        versionName "2.0.0"
+        versionCode 3
+        versionName "3.0.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    bundle {
+        language {
+            // This property is set to true by default.
+            // You can specify `false` to turn off
+            // generating configuration APKs for language resources.
+            // These resources are instead packaged with each base and
+            // feature APK.
+            // Continue reading below to learn about situations when an app
+            // might change setting to `false`, otherwise consider leaving
+            // the default on for more optimized downloads.
+            enableSplit = false
+        }
+        density {
+            // This property is set to true by default.
+            enableSplit = true
+        }
+        abi {
+            // This property is set to true by default.
+            enableSplit = true
+        }
     }
 
     buildTypes {
@@ -26,9 +50,9 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
-        debug {
-            applicationIdSuffix ".debug"
-        }
+//        debug {
+//            applicationIdSuffix ".debug"
+//        }
     }
 
     buildFeatures {
@@ -46,25 +70,45 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: "libs", include: ["*.jar"])
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
-    implementation 'androidx.core:core-ktx:1.3.2'
-    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation fileTree(dir: "libs", include: ["*.jar"])
+
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    implementation 'androidx.core:core-ktx:1.5.0'
+    implementation 'androidx.appcompat:appcompat:1.3.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     implementation "com.google.android.material:material:1.3.0"
     implementation 'androidx.preference:preference-ktx:1.1.1'
 
+    //Firebase
+    implementation platform('com.google.firebase:firebase-bom:28.2.0')
+    implementation 'com.google.firebase:firebase-analytics-ktx'
+    implementation 'com.google.firebase:firebase-storage:20.0.0'
+
+    //material design
+    implementation "com.google.android.material:material:1.3.0"
+
     //Fragments
-    implementation 'androidx.fragment:fragment-ktx:1.3.2'
+    implementation 'androidx.fragment:fragment-ktx:1.3.5'
 
     //Hilt
     implementation "com.google.dagger:hilt-android:$hilt_version"
-    kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    kapt("androidx.hilt:hilt-compiler:1.0.0")
+    kapt "com.google.dagger:hilt-android-compiler:$kapt_hilt_version"
 
     //Hilt Viewmodel
     implementation "androidx.hilt:hilt-lifecycle-viewmodel:$hilt_viewmodel_version"
     kapt "androidx.hilt:hilt-compiler:$hilt_viewmodel_version"
+
+//    //worker
+//    implementation("androidx.hilt:hilt-work:1.0.0")
+//    implementation("androidx.work:work-runtime-ktx:$work_version")
+
+//    // Hilt WorkManager
+//    implementation "androidx.hilt:hilt-work:$hilt_work_manager_version"
+
 
     //Room
     implementation "androidx.room:room-runtime:$room_version"
@@ -77,7 +121,28 @@ dependencies {
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
 
+    //livedata
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.3.1"
+
+
+    //A simple utility class to add a background, an icon and a label to a RecyclerView item while swiping it left or right.
     implementation 'it.xabaras.android:recyclerview-swipedecorator:1.2.3'
 
+    //Transform into a different view or activity using morphing animations.
+    implementation "com.github.skydoves:transformationlayout:1.0.8"
+
+    //Power menu
+    implementation "com.github.skydoves:powermenu:2.1.9"
+
+
+    //Glide
+    implementation 'com.github.bumptech.glide:glide:4.12.0'
+    kapt 'com.github.bumptech.glide:compiler:4.12.0'
+
+    //color picker
+    implementation "codes.side:andcolorpicker:0.3.0"
+
+    //Circle imageview
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
 
 }

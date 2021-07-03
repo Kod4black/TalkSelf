@@ -1,77 +1,129 @@
- package com.github.odaridavid.talkself.ui.fragments.conversation;
+package com.github.odaridavid.talkself.ui.fragments.conversation
 
-import android.content.Intent
+import android.graphics.Color
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import androidx.cardview.widget.CardView
+import android.widget.ImageView
+import androidx.core.view.isVisible
+import androidx.lifecycle.LifecycleOwner
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.github.odaridavid.talkself.R
+import com.github.odaridavid.talkself.data.room.relations.ConversationAndUser
+import com.github.odaridavid.talkself.databinding.ItemConvesationsBinding
 import com.github.odaridavid.talkself.models.Conversation
-import com.github.odaridavid.talkself.utils.ExtensionFunctions
- class ConversationAdapter() : ListAdapter<Conversation, ConversationAdapter.ViewHolder>(
+import com.github.odaridavid.talkself.models.User
+import com.github.odaridavid.talkself.utils.UtilityFunctions
+import com.github.odaridavid.talkself.utils.UtilityFunctions.Companion.bindImage
+
+class ConversationAdapter(
+    private val lifecycleOwner: LifecycleOwner,
+    private val stateManager: ConversationsToolbarStateManager,
+    private val onclick: (Conversation) -> Unit,
+    private val onLongClick: (Conversation) -> Unit
+) : ListAdapter<ConversationAndUser, ConversationAdapter.ViewHolder>(
     ConversationDiffUtil
 ) {
 
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.convesations, parent, false)
-        return ViewHolder(view)
+
+        val binding =
+            ItemConvesationsBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return ViewHolder(binding)
+
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val conversation = getItem(position)
-        holder.bind(conversation)
+        val conversationAndUser = getItem(position)
 
-//        holder.itemView.setOnClickListener {
-//            Intent(holder.itemView.context, ChatActivity::class.java).also {
-//                it.putExtra("conversation", conversation)
-//                holder.itemView.context.startActivity(it)
-//            }
+        holder.bindConversation(conversationAndUser.conversation)
+        holder.bindUser(conversationAndUser.user)
+
+        holder.itemView.setOnClickListener {
+
+            if (stateManager.isMultiSelectionStateActive()) {
+                conversationAndUser.conversation?.let { it1 -> onclick.invoke(it1) }
+            } else {
+                val actions = conversationAndUser.conversation?.let { it1 ->
+                    ConversationFragmentDirections.conversationToChat(
+                        it1
+                    )
+                }
+                if (actions != null) {
+                    it.findNavController().navigate(actions)
+                }
+            }
+
+        }
+
+//        holder.binding.cardview.setOnLongClickListener {
+//            conversationAndUser.conversation?.let { it1 -> onLongClick.invoke(it1) }
+//            holder.binding.imageViewIsChecked.isVisible = true
+//            return@setOnLongClickListener true
 //        }
 
-        holder.cardview.setOnLongClickListener {
-            return@setOnLongClickListener true
+
+
+        stateManager.selectedConversations.observe(lifecycleOwner, {
+            when {
+                it.contains(conversationAndUser) -> {
+                    holder.binding.imageViewIsChecked.isVisible = true
+                }
+                else -> {
+                    holder.binding.imageViewIsChecked.isVisible = false
+                }
+            }
+        })
+
+    }
+
+    class ViewHolder(val binding: ItemConvesationsBinding) : RecyclerView.ViewHolder(binding.root) {
+
+        fun bindConversation(message: Conversation?) {
+            binding.apply {
+                textChatLastMessage.text = message?.lastMessage
+                conversationTime.text =
+                    UtilityFunctions.formatMillisecondsToDate(message?.timeCreated!!)
+
+            }
+
+        }
+
+        fun bindUser(user: User?) {
+            binding.apply {
+                conversationLastMan.text = user?.name
+                imageGchatProfileOther.apply {
+                    context.bindImage(user?.imageUri, this)
+                }
+
+            }
         }
 
     }
 
-     class ViewHolder (itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var lastman: TextView = itemView.findViewById<View>(R.id.conversation_last_man) as TextView
-        var timeText: TextView = itemView.findViewById<View>(R.id.conversation_time) as TextView
-        var messageText: TextView = itemView.findViewById<View>(R.id.text_chat_last_message) as TextView
-         var cardview : CardView = itemView.findViewById(R.id.cardview)
-
-
-        fun bind(message: Conversation) {
-            messageText.text = message.lastMessage
-            lastman.text = message.lastUser
-            timeText.text = ExtensionFunctions.formatMillisecondsToDate(message.timeCreated!!)
-
-        }
-
+    fun getItemAt(position: Int): ConversationAndUser {
+        return getItem(position)
     }
-
-     fun getItemat(position: Int): Conversation {
-         return getItem(position)
-     }
 
     companion object {
-        val ConversationDiffUtil = object : DiffUtil.ItemCallback<Conversation>() {
-            override fun areItemsTheSame(oldItem: Conversation, newItem: Conversation): Boolean {
+        val ConversationDiffUtil = object : DiffUtil.ItemCallback<ConversationAndUser>() {
+            override fun areItemsTheSame(
+                oldItem: ConversationAndUser,
+                newItem: ConversationAndUser
+            ): Boolean {
                 return oldItem == newItem
             }
 
-            override fun areContentsTheSame(oldItem: Conversation, newItem: Conversation): Boolean {
+            override fun areContentsTheSame(
+                oldItem: ConversationAndUser,
+                newItem: ConversationAndUser
+            ): Boolean {
                 return oldItem == newItem
             }
 
         }
     }
-
 
 
 }
