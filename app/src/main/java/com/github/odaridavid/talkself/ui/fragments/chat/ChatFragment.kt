@@ -136,7 +136,6 @@ class ChatFragment : Fragment() {
             layout.reverseLayout = false
             layoutManager = layout
             adapter = chatAdapter
-            layout.stackFromEnd = true
         }
 
     }
@@ -211,7 +210,7 @@ class ChatFragment : Fragment() {
 
         //Some funky behaviour here !!!
         binding.chatRecyclerView.smoothScrollToPosition(
-            chatAdapter.itemCount
+            chatAdapter.itemCount + 3
         )
         shouldScroll = false
     }

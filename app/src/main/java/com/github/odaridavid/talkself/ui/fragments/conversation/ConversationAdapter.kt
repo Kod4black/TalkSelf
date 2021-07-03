@@ -1,5 +1,6 @@
 package com.github.odaridavid.talkself.ui.fragments.conversation
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -56,11 +57,11 @@ class ConversationAdapter(
 
         }
 
-        holder.binding.cardview.setOnLongClickListener {
-            conversationAndUser.conversation?.let { it1 -> onLongClick.invoke(it1) }
-            holder.binding.imageViewIsChecked.isVisible = true
-            return@setOnLongClickListener true
-        }
+//        holder.binding.cardview.setOnLongClickListener {
+//            conversationAndUser.conversation?.let { it1 -> onLongClick.invoke(it1) }
+//            holder.binding.imageViewIsChecked.isVisible = true
+//            return@setOnLongClickListener true
+//        }
 
 
 
@@ -95,6 +96,7 @@ class ConversationAdapter(
                 imageGchatProfileOther.apply {
                     context.bindImage(user?.imageUri, this)
                 }
+
             }
         }
 

@@ -23,7 +23,7 @@ import kotlinx.parcelize.Parcelize
 data class User(
     var name: String? = null,
     val conversationId: Int? = null,
-    var imageUri: String? = "ic_koala",
+    var imageUri: String? = null,
     var color : String? = null,
     @PrimaryKey(autoGenerate = true)
     var userId: Int? = null,
