@@ -5,8 +5,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@color/colorBlack">
+            android:layout_height="wrap_content">
 
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/shapeableImageView"
@@ -23,7 +22,7 @@
                 app:strokeColor="@color/colorPurple"
                 app:strokeWidth="3dp" />
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/textView_Name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
