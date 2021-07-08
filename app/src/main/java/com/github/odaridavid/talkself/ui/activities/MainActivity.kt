@@ -1,5 +1,8 @@
 package com.github.odaridavid.talkself.ui.activities
 
+import android.app.UiModeManager
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
@@ -16,10 +19,19 @@ import kotlinx.coroutines.delay
 
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceChangeListener {
+
+    lateinit var uiManager: UiModeManager
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        uiManager = getSystemService(Context.UI_MODE_SERVICE) as UiModeManager
+
+
+
 //
 //        val storageRef: StorageReference = FirebaseStorage.getInstance().reference
 //        var images = mutableListOf<String>()
@@ -43,6 +55,17 @@ class MainActivity : AppCompatActivity() {
 //            }
 //        }
 
+    }
+
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
+        if (key == "theme") {
+            val state = sharedPreferences?.getBoolean(key, true)!!
+            if (state){
+                uiManager.nightMode = UiModeManager.MODE_NIGHT_YES
+            }else{
+                uiManager.nightMode = UiModeManager.MODE_NIGHT_NO
+            }
+        }
     }
 }
 

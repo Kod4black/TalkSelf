@@ -8,10 +8,9 @@
         android:id="@+id/constraint"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorBlack"
         tools:context=".ui.activities.ConversationsActivity">
 
-        <androidx.appcompat.widget.Toolbar
+        <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -22,13 +21,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/activityConvesationsTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/poppins_bold"
                     android:text="Your Conversations"
-                    android:textColor="@color/colorGrey"
                     android:textSize="24sp"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -36,7 +34,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-        </androidx.appcompat.widget.Toolbar>
+        </com.google.android.material.appbar.MaterialToolbar>
 
 
         <TextView
@@ -58,7 +56,6 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginTop="8dp"
-            android:background="@color/colorBlack"
             android:visibility="visible"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -122,7 +119,6 @@
             android:layout_marginStart="32dp"
             android:layout_marginEnd="32dp"
             android:visibility="gone"
-            app:cardBackgroundColor="@color/colorPrimary"
             app:cardCornerRadius="10dp"
             app:layout_constraintBottom_toBottomOf="@+id/conversations_recyclerView"
             app:layout_constraintEnd_toEndOf="parent"
