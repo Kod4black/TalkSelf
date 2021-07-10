@@ -20,6 +20,9 @@
             android:name="conversation"
             app:argType="com.github.odaridavid.talkself.models.Conversation"
             app:nullable="true" />
+        <action
+            android:id="@+id/conversation_to_settings"
+            app:destination="@id/settingsFragment" />
     </fragment>
 
     <fragment
@@ -77,5 +80,9 @@
             app:nullable="false" />
 
     </fragment>
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.github.odaridavid.talkself.ui.fragments.settings.SettingsFragment"
+        android:label="SettingsFragment" />
 
 </navigation>
