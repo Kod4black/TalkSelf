@@ -10,7 +10,7 @@ class MainRepository @Inject constructor(private val chatDao: ChatDao) {
 
     val chats = chatDao.getAllChats()
     val conversations = chatDao.getAllConversations()
-    val conversationsandusers = chatDao.getAllConversationsandUsers()
+    val conversationsandusers = chatDao.getAllConversationsAndUsers()
 
     fun users(conversationId : Int) = chatDao.getUsers(conversationId)
 

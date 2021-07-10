@@ -7,6 +7,7 @@ import com.github.odaridavid.talkself.data.room.relations.ConversationAndUser
 import com.github.odaridavid.talkself.models.Chat
 import com.github.odaridavid.talkself.models.Conversation
 import com.github.odaridavid.talkself.models.User
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ChatDao {
@@ -15,11 +16,11 @@ interface ChatDao {
     suspend fun addChat(chat: Chat)
 
     @Query("SELECT * FROM chat order by timeSent asc")
-    fun getAllChats(): LiveData<List<Chat>>
+    fun getAllChats(): Flow<List<Chat>>
 
     @Transaction
     @Query("SELECT * FROM chat WHERE conservationid=:conversationId order by timeSent asc")
-    fun getChats(conversationId: Int): LiveData<List<ChatAndUser>>
+    fun getChats(conversationId: Int): Flow<List<ChatAndUser>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun makeConversation(conversation: Conversation)
@@ -28,11 +29,11 @@ interface ChatDao {
     suspend fun updateConversation(conversation : Conversation)
 
     @Query("SELECT * FROM conversation order by timeCreated asc")
-    fun getAllConversations(): LiveData<List<Conversation>>
+    fun getAllConversations(): Flow<List<Conversation>>
 
     @Transaction
     @Query("SELECT * FROM conversation order by timeCreated asc")
-    fun getAllConversationsandUsers(): LiveData<List<ConversationAndUser>>
+    fun getAllConversationsAndUsers(): Flow<List<ConversationAndUser>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun addUser(user: User)
@@ -44,7 +45,7 @@ interface ChatDao {
     fun getUser(userId : Int): User
 
     @Query("SELECT * FROM user where conversationId =:conversationId  ")
-    fun getUsers(conversationId : Int): LiveData<List<User>>
+    fun getUsers(conversationId : Int): Flow<List<User>>
 
     @Delete
     fun deleteConversation(conversation: Conversation)

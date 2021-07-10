@@ -1,6 +1,7 @@
 package com.github.odaridavid.talkself.ui.fragments.conversation
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.github.odaridavid.talkself.models.Conversation
 import com.github.odaridavid.talkself.models.User
@@ -19,8 +20,8 @@ class ConversationsViewModel @Inject constructor(private val mainRepository: Mai
     val stateManager
         get() = _stateManager
 
-    val conversation = mainRepository.conversations
-    val conversationAndUser = mainRepository.conversationsandusers
+    val conversation = mainRepository.conversations.asLiveData()
+    val conversationAndUser = mainRepository.conversationsandusers.asLiveData()
 
 
     //    make an new conversation in the  conversation table
