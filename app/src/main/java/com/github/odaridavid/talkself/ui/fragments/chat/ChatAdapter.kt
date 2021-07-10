@@ -17,7 +17,6 @@ import com.github.odaridavid.talkself.models.User
 import com.github.odaridavid.talkself.utils.UtilityFunctions
  import com.github.odaridavid.talkself.utils.UtilityFunctions.Companion.bindImage
 
-
  class ChatAdapter : ListAdapter<ChatAndUser, RecyclerView.ViewHolder>(
     ChatDiffUtil
 ) {

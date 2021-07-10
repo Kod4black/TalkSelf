@@ -2,6 +2,7 @@ package com.github.odaridavid.talkself.ui.fragments.chat
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.github.odaridavid.talkself.models.Chat
 import com.github.odaridavid.talkself.models.Conversation
@@ -19,8 +20,8 @@ class ChatViewModel @Inject constructor(private val mainRepository: MainReposito
 
     var currentuser = MutableLiveData<User>()
 
-    fun users(conversationId : Int) = mainRepository.users(conversationId)
-    fun chats(conversationId : Int) = mainRepository.chats(conversationId)
+    fun users(conversationId : Int) = mainRepository.users(conversationId).asLiveData()
+    fun chats(conversationId : Int) = mainRepository.chats(conversationId).asLiveData()
 
 
     //add add a chat to the chat table
