@@ -402,7 +402,7 @@ class ConversationFragment : Fragment() {
         binding.toolbar.apply {
             menu.clear()
             setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.colorGrey))
-            inflateMenu(R.menu.selected_menu)
+            inflateMenu(R.menu.conversation_selected_menu)
             navigationIcon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_cancel)
             setNavigationOnClickListener {
                 viewmodel.stateManager.setToolbarState(ToolbarState.NormalViewState)
@@ -424,10 +424,9 @@ class ConversationFragment : Fragment() {
             navigationIcon = null
             setNavigationOnClickListener(null)
             menu.clear()
-            setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.colorBlack))
+//            inflateMenu(R.menu.conversation_normal_fragment)
             binding.activityConvesationsTitle.apply {
                 visibility = View.VISIBLE
-                setTextColor(ContextCompat.getColor(requireContext(), R.color.colorWhite))
                 textSize = 24F
             }
         }
@@ -448,23 +447,32 @@ class ConversationFragment : Fragment() {
     private fun isMultiSelected() = viewmodel.stateManager.isMultiSelectionStateActive()
 
     private fun toolBarCommonStuff() {
-        binding.toolbar.setOnMenuItemClickListener { menuItem ->
-            when (menuItem.itemId) {
 
-                R.id.action_deleteAll -> {
-                    activity?.toast("Feature is under Development")
+        binding.toolbar.apply {
+
+
+            setOnMenuItemClickListener { menuItem ->
+                when (menuItem.itemId) {
+
+                    R.id.action_deleteAll -> {
+                        activity?.toast("Feature is under Development")
+                    }
+
+                    R.id.action_selectAll -> {
+                        viewmodel.stateManager.addAllConversationsToSelectedList(viewmodel.conversation.value!!)
+                    }
+
+                    R.id.action_deselect_all -> {
+                        viewmodel.stateManager.clearSelectedList()
+                    }
+
+                    R.id.settings -> {
+                        findNavController().navigate(R.id.conversation_to_settings)
+                    }
                 }
 
-                R.id.action_selectAll -> {
-                    viewmodel.stateManager.addAllConversationsToSelectedList(viewmodel.conversation.value!!)
-                }
-
-                R.id.action_deselect_all -> {
-                    viewmodel.stateManager.clearSelectedList()
-                }
+                true
             }
-
-            true
         }
     }
 
