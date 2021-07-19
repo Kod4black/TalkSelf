@@ -6,7 +6,8 @@ import com.github.odaridavid.talkself.models.Conversation
 import com.github.odaridavid.talkself.models.User
 
 data class ConversationAndUser(
-    @Embedded val conversation: Conversation?,
+    @Embedded
+    val conversation: Conversation?,
     @Relation(
         parentColumn = "userId",
         entityColumn = "userId"
