@@ -31,36 +31,10 @@ class ChatViewModel @Inject constructor(private val mainRepository: MainReposito
         }
     }
 
-    //add a new user to user table
-    fun addUser(user: User){
-        Coroutines.io {
-            mainRepository.addUser(user)
-        }
-    }
-
-    //get user from room
-    fun getUser(userId : Int) : User {
-        return mainRepository.getUser(userId)
-    }
-
     //update a conversation in the conversation table
     fun updateConversation(conversation: Conversation?) {
         Coroutines.io {
             mainRepository.updateConversation(conversation!!)
-        }
-    }
-                                                                      
-    //Create a new conversation in the conversation table
-    fun makeConversation(conversation: Conversation){
-        Coroutines.io {
-            mainRepository.addConversation(conversation)
-        }
-    }
-
-    //delete a conversation in conversation table
-    fun deleteConversation(conversation: Conversation?){
-        Coroutines.io {
-            mainRepository.deleteConversation(conversation!!)
         }
     }
 

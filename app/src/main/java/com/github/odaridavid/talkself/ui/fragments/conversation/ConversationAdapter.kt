@@ -57,14 +57,6 @@ class ConversationAdapter(
 
         }
 
-//        holder.binding.cardview.setOnLongClickListener {
-//            conversationAndUser.conversation?.let { it1 -> onLongClick.invoke(it1) }
-//            holder.binding.imageViewIsChecked.isVisible = true
-//            return@setOnLongClickListener true
-//        }
-
-
-
         stateManager.selectedConversations.observe(lifecycleOwner, {
             when {
                 it.contains(conversationAndUser) -> {
