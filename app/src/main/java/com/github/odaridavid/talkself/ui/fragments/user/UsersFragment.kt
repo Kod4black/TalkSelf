@@ -58,7 +58,7 @@ class UsersFragment : Fragment(), ImageClick {
 
         }
 
-        viewmodel.users(conversation?.conversationId!!).observe(viewLifecycleOwner, {
+        viewmodel.getUsersInConversation(conversation?.conversationId!!).observe(viewLifecycleOwner, {
             userAdapter.submitList(it)
         })
 
