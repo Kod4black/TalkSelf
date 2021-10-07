@@ -8,11 +8,8 @@ import com.github.odaridavid.talkself.models.Chat
 import com.github.odaridavid.talkself.models.Conversation
 import com.github.odaridavid.talkself.models.User
 import com.github.odaridavid.talkself.repository.MainRepository
-import com.github.odaridavid.talkself.utils.Coroutines
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 @HiltViewModel
@@ -20,27 +17,24 @@ class ChatViewModel @Inject constructor(private val mainRepository: MainReposito
 
     var currentuser = MutableLiveData<User>()
 
-    fun users(conversationId : Int) = mainRepository.users(conversationId).asLiveData()
-    fun chats(conversationId : Int) = mainRepository.chats(conversationId).asLiveData()
+    fun users(conversationId: Int) = mainRepository.users(conversationId).asLiveData()
+    fun chats(conversationId: Int) = mainRepository.chats(conversationId).asLiveData()
 
 
-    //add add a chat to the chat table
-    fun addText(chat: Chat){
-        Coroutines.io {
+    fun addText(chat: Chat) {
+        viewModelScope.launch {
             mainRepository.addChat(chat)
         }
     }
 
-    //update a conversation in the conversation table
     fun updateConversation(conversation: Conversation?) {
-        Coroutines.io {
+        viewModelScope.launch {
             mainRepository.updateConversation(conversation!!)
         }
     }
 
-    //update a chat
-    fun updatechat(chat : Chat){
-        Coroutines.io{
+    fun updatechat(chat: Chat) {
+        viewModelScope.launch {
             mainRepository.updateChat(chat)
         }
     }
