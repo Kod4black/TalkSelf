@@ -1,16 +1,11 @@
 package com.github.odaridavid.talkself.ui.fragments.chat
 
-import android.R
 import android.annotation.SuppressLint
 import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Typeface
 import android.os.Bundle
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
@@ -22,10 +17,6 @@ import com.github.odaridavid.talkself.databinding.FragmentChatBinding
 import com.github.odaridavid.talkself.models.Chat
 import com.github.odaridavid.talkself.models.Conversation
 import com.github.odaridavid.talkself.models.User
-import com.skydoves.powermenu.MenuAnimation
-import com.skydoves.powermenu.OnMenuItemClickListener
-import com.skydoves.powermenu.PowerMenu
-import com.skydoves.powermenu.PowerMenuItem
 import dagger.hilt.android.AndroidEntryPoint
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 
@@ -57,7 +48,6 @@ class ChatFragment : Fragment() {
     }
 
 
-
     override fun onResume() {
         super.onResume()
         initRecyclerview()
@@ -70,23 +60,24 @@ class ChatFragment : Fragment() {
     @SuppressLint("SetTextI18n")
     private fun fireUpObservers() {
         //Fetch users from the database
-        viewmodel.users(conversation?.conversationId!!).observe(viewLifecycleOwner, {
+        viewmodel.getUsersInConversation(conversation?.conversationId!!)
+            .observe(viewLifecycleOwner, {
 
-            //update the global variable of users we need this to switch the users
-            users = it as MutableList<User>
+                //update the global variable of users we need this to switch the users
+                users = it as MutableList<User>
 
-            // When current user is null, make the first user in the users list as the current user
+                // When current user is null, make the first user in the users list as the current user
 
-            currentUser = it[0]
-            chatAdapter.currentUser = currentUser
+                currentUser = it[0]
+                chatAdapter.currentUser = currentUser
 
 
-            //Update the viewmodel also with the current user
-            viewmodel.currentuser.postValue(currentUser)
+                //Update the viewmodel also with the current user
+                viewmodel.currentuser.postValue(currentUser)
 
-            //Now we can fetch the chats
-            fetchChats()
-        })
+                //Now we can fetch the chats
+                fetchChats()
+            })
 
         //Observe changes made to the current user
         viewmodel.currentuser.observe(viewLifecycleOwner, {
@@ -141,28 +132,29 @@ class ChatFragment : Fragment() {
     }
 
     private fun fetchChats() {
-        viewmodel.chats(conversation!!.conversationId!!).observe(viewLifecycleOwner, {
-            if (it.isNullOrEmpty()) {
-                //show the empty state
-                binding.layoutNomessage.visibility = View.VISIBLE
-                binding.textViewInfoChats.visibility = View.GONE
-            } else {
+        viewmodel.getMessagesInConversation(conversation!!.conversationId!!)
+            .observe(viewLifecycleOwner, {
+                if (it.isNullOrEmpty()) {
+                    //show the empty state
+                    binding.layoutNomessage.visibility = View.VISIBLE
+                    binding.textViewInfoChats.visibility = View.GONE
+                } else {
 
-                //hide empty state and display chats
-                binding.layoutNomessage.visibility = View.GONE
-                binding.textViewInfoChats.visibility = View.VISIBLE
+                    //hide empty state and display chats
+                    binding.layoutNomessage.visibility = View.GONE
+                    binding.textViewInfoChats.visibility = View.VISIBLE
 
 
-                chatAdapter.submitList(it)
+                    chatAdapter.submitList(it)
 
-                if (shouldScroll) {
-                    scrollToLatestText()
+                    if (shouldScroll) {
+                        scrollToLatestText()
+                    }
+
+                    chatAdapter.notifyDataSetChanged()
+
                 }
-
-                chatAdapter.notifyDataSetChanged()
-
-            }
-        })
+            })
     }
 
 
@@ -179,7 +171,7 @@ class ChatFragment : Fragment() {
                 conservationId = conversation?.conversationId
             )
             //add it
-            viewmodel.addText(chat)
+            viewmodel.addMessage(chat)
 
             //update the conversation
             updateConversation(text)
@@ -198,7 +190,9 @@ class ChatFragment : Fragment() {
         conversation?.userId = currentUser?.userId
         conversation?.lastMessage = text
         conversation?.lasttimemessage = System.currentTimeMillis()
-        viewmodel.updateConversation(conversation)
+        conversation?.run {
+            viewmodel.updateConversation(this)
+        }
     }
 
 
@@ -244,7 +238,7 @@ class ChatFragment : Fragment() {
                                 chat.userId = users[0].userId
                             }
                         }
-                    }else{
+                    } else {
                         when (direction) {
                             ItemTouchHelper.LEFT -> {
                                 chat.userId = users[1].userId

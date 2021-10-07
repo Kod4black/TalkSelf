@@ -4,15 +4,16 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.odaridavid.talkself.models.User
-import com.github.odaridavid.talkself.repository.MainRepository
+import com.github.odaridavid.talkself.repository.UserRepository
 import com.github.odaridavid.talkself.utils.UtilityFunctions.Companion.notifyObserver
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class EditUserViewModel @Inject constructor(private val mainRepository: MainRepository) :
-    ViewModel() {
+internal class EditUserViewModel @Inject constructor(
+    private val userRepository: UserRepository
+) : ViewModel() {
 
     var user = MutableLiveData<User>()
 
@@ -37,7 +38,7 @@ class EditUserViewModel @Inject constructor(private val mainRepository: MainRepo
 
     fun updateUser(user: User) {
         viewModelScope.launch {
-            mainRepository.updateUser(user)
+            userRepository.updateUser(user)
         }
     }
 

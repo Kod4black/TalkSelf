@@ -9,4 +9,6 @@ import com.github.odaridavid.talkself.models.User
 @Database(entities = [Chat::class, Conversation::class,User::class], version = 13,exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun chatDao(): ChatDao
+    abstract fun conversationDao(): ConversationDao
+    abstract fun userDao(): UserDao
 }
