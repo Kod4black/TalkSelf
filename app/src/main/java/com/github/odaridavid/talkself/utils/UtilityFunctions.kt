@@ -5,12 +5,8 @@ import android.content.Context
 import android.view.View
 import android.widget.ImageView
 import android.widget.Toast
-import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.MutableLiveData
-import codes.side.andcolorpicker.converter.getBInt
-import codes.side.andcolorpicker.converter.getGInt
-import codes.side.andcolorpicker.converter.getRInt
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.github.odaridavid.talkself.R
@@ -43,17 +39,6 @@ class UtilityFunctions {
             Toast.makeText(this, message, Toast.LENGTH_LONG).show()
         }
 
-        /**
-         * Set up snackbar resources
-         */
-        inline fun View.snack(
-            @StringRes messageRes: Int,
-            length: Int = Snackbar.LENGTH_LONG,
-            f: Snackbar.() -> Unit
-        ) {
-            snack(resources.getString(messageRes), length, f)
-        }
-
         inline fun View.snack(
             message: String,
             length: Int = Snackbar.LENGTH_LONG,
@@ -62,14 +47,6 @@ class UtilityFunctions {
             val snack = Snackbar.make(this, message, length)
             snack.f()
             snack.show()
-        }
-
-        fun Snackbar.action(
-            @StringRes actionRes: Int,
-            color: Int? = null,
-            listener: (View) -> Unit
-        ) {
-            action(view.resources.getString(actionRes), color, listener)
         }
 
         fun Snackbar.action(action: String, color: Int? = null, listener: (View) -> Unit) {

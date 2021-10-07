@@ -26,7 +26,7 @@ class UsersFragment : Fragment(), ImageClick {
     private var conversation: Conversation? = null
     private lateinit var userAdapter: UsersAdapter
     private val args: UsersFragmentArgs by navArgs()
-    private lateinit var user : User
+    private lateinit var user: User
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -47,7 +47,7 @@ class UsersFragment : Fragment(), ImageClick {
         binding.apply {
 
             users.apply {
-                userAdapter = UsersAdapter( this@UsersFragment)
+                userAdapter = UsersAdapter(this@UsersFragment)
                 adapter = userAdapter
                 layoutManager = StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL)
             }
@@ -69,13 +69,7 @@ class UsersFragment : Fragment(), ImageClick {
 
     }
 
-
-
     override fun onImageClick(user: User) {
         // to remove
     }
-
-
-
-
 }

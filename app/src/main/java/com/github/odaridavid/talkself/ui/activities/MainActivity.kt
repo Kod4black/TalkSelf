@@ -21,31 +21,7 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
         setContentView(R.layout.activity_main)
 
         uiManager = getSystemService(Context.UI_MODE_SERVICE) as UiModeManager
-        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
-
-
-//
-//        val storageRef: StorageReference = FirebaseStorage.getInstance().reference
-//        var images = mutableListOf<String>()
-//
-//        storageRef.listAll().addOnSuccessListener { listResult ->
-//            for (file in listResult.items) {
-//                file.downloadUrl.addOnSuccessListener { uri -> // adding the url in the arraylist
-//                    Log.e("Itemvalue", uri.toString())
-//                }.addOnSuccessListener {
-//                    Log.i("image",it.toString())
-//                    images.add(it.toString())
-//                }
-//            }
-//
-//
-//
-//        }.addOnCompleteListener {
-//            Coroutines.io {
-//                delay(7000)
-//
-//            }
-//        }
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this)
 
     }
 

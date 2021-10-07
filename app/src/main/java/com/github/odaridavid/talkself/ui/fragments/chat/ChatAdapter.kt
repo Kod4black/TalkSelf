@@ -1,37 +1,36 @@
- package com.github.odaridavid.talkself.ui.fragments.chat
+package com.github.odaridavid.talkself.ui.fragments.chat
 
- import android.graphics.Color
- import android.view.LayoutInflater
+import android.graphics.Color
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
- import com.github.odaridavid.talkself.data.room.relations.ChatAndUser
- import com.github.odaridavid.talkself.databinding.ItemChatLeftBinding
+import com.github.odaridavid.talkself.data.room.relations.ChatAndUser
+import com.github.odaridavid.talkself.databinding.ItemChatLeftBinding
 import com.github.odaridavid.talkself.databinding.ItemChatRightBinding
-import com.github.odaridavid.talkself.utils.VIEW_TYPE_MESSAGE_LEFT
-import com.github.odaridavid.talkself.utils.VIEW_TYPE_MESSAGE_RIGHT
-import com.github.odaridavid.talkself.models.Chat
 import com.github.odaridavid.talkself.models.User
 import com.github.odaridavid.talkself.utils.UtilityFunctions
- import com.github.odaridavid.talkself.utils.UtilityFunctions.Companion.bindImage
+import com.github.odaridavid.talkself.utils.UtilityFunctions.Companion.bindImage
 
- class ChatAdapter : ListAdapter<ChatAndUser, RecyclerView.ViewHolder>(
+class ChatAdapter : ListAdapter<ChatAndUser, RecyclerView.ViewHolder>(
     ChatDiffUtil
 ) {
 
     var currentUser: User? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        val rightBinding = ItemChatRightBinding.inflate(LayoutInflater.from(parent.context),parent,false)
+        val rightBinding =
+            ItemChatRightBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         if (viewType == VIEW_TYPE_MESSAGE_RIGHT) {
 
             return RightChatHolder(rightBinding)
 
         } else if (viewType == VIEW_TYPE_MESSAGE_LEFT) {
 
-            val leftBinding = ItemChatLeftBinding.inflate(LayoutInflater.from(parent.context),parent,false)
+            val leftBinding =
+                ItemChatLeftBinding.inflate(LayoutInflater.from(parent.context), parent, false)
 
             return LeftChatHolder(leftBinding)
         }
@@ -41,11 +40,11 @@ import com.github.odaridavid.talkself.utils.UtilityFunctions
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val chatAndUser = getItem(position)
-        
+
         val previousChatAndUser = if (position >= 1) getItem(position - 1) else null
 
         when (holder.itemViewType) {
-            
+
             VIEW_TYPE_MESSAGE_RIGHT -> (holder as RightChatHolder).bind(
                 previousChatAndUser,
                 chatAndUser
@@ -60,31 +59,36 @@ import com.github.odaridavid.talkself.utils.UtilityFunctions
 
     }
 
-    private class LeftChatHolder(val binding: ItemChatLeftBinding) : RecyclerView.ViewHolder(binding.root) {
+    private class LeftChatHolder(val binding: ItemChatLeftBinding) :
+        RecyclerView.ViewHolder(binding.root) {
 
         fun bind(previousChatAndUser: ChatAndUser?, chatAndUser: ChatAndUser) {
 
             binding.apply {
 
-                val date = chatAndUser.chat.timesent?.let { UtilityFunctions.formatMillisecondsToDate(it) }
-                val prevDate = previousChatAndUser?.chat?.timesent?.let { UtilityFunctions.formatMillisecondsToDate(it) }
+                val date =
+                    chatAndUser.chat.timesent?.let { UtilityFunctions.formatMillisecondsToDate(it) }
+                val prevDate = previousChatAndUser?.chat?.timesent?.let {
+                    UtilityFunctions.formatMillisecondsToDate(it)
+                }
 
                 textGchatMessageOther.text = chatAndUser.chat.message
-                textGchatTimestampOther.text = chatAndUser.chat.timesent?.let { UtilityFunctions.formatMillisecondsToTime(it) }
+                textGchatTimestampOther.text =
+                    chatAndUser.chat.timesent?.let { UtilityFunctions.formatMillisecondsToTime(it) }
                 textGchatDateOther.text = date?.split(",")?.first()
 
                 textGchatUserOther.text = chatAndUser.user.name
                 layoutGchatContainerOther.setBackgroundColor(Color.parseColor(chatAndUser.user.color))
 
                 imageGchatProfileOther.apply {
-                    context.bindImage(chatAndUser.user.imageUri!!,this)
+                    context.bindImage(chatAndUser.user.imageUri!!, this)
                 }
 
-                if (previousChatAndUser != null && previousChatAndUser.chat.userId == chatAndUser.chat.userId){
+                if (previousChatAndUser != null && previousChatAndUser.chat.userId == chatAndUser.chat.userId) {
                     textGchatUserOther.visibility = View.GONE
                     imageGchatProfileOther.visibility = View.GONE
 
-                }else{
+                } else {
 
                     textGchatUserOther.visibility = View.VISIBLE
                     imageGchatProfileOther.visibility = View.VISIBLE
@@ -110,30 +114,35 @@ import com.github.odaridavid.talkself.utils.UtilityFunctions
 
     }
 
-    private class RightChatHolder(val binding:  ItemChatRightBinding) : RecyclerView.ViewHolder(binding.root) {
+    private class RightChatHolder(val binding: ItemChatRightBinding) :
+        RecyclerView.ViewHolder(binding.root) {
 
         fun bind(previousChatAndUser: ChatAndUser?, chatAndUser: ChatAndUser) {
 
             binding.apply {
 
-                val date = chatAndUser.chat.timesent?.let { UtilityFunctions.formatMillisecondsToDate(it) }
-                val prevDate = previousChatAndUser?.chat?.timesent?.let { UtilityFunctions.formatMillisecondsToDate(it) }
+                val date =
+                    chatAndUser.chat.timesent?.let { UtilityFunctions.formatMillisecondsToDate(it) }
+                val prevDate = previousChatAndUser?.chat?.timesent?.let {
+                    UtilityFunctions.formatMillisecondsToDate(it)
+                }
 
                 textGchatMessageRight.text = chatAndUser.chat.message
                 textGchatUserDate.text = date?.split(",")?.first()
                 textGchatNameRight.text = chatAndUser.user.name
-                textGchatTimestampMe.text = chatAndUser.chat.timesent?.let { UtilityFunctions.formatMillisecondsToTime(it) }
+                textGchatTimestampMe.text =
+                    chatAndUser.chat.timesent?.let { UtilityFunctions.formatMillisecondsToTime(it) }
                 imageGchatProfileOther.apply {
-                    context.bindImage(chatAndUser.user.imageUri!!,this)
+                    context.bindImage(chatAndUser.user.imageUri!!, this)
                 }
 
                 layoutGchatContainerMe.setBackgroundColor(Color.parseColor(chatAndUser.user.color))
 
 
-                if (previousChatAndUser != null && previousChatAndUser.chat.userId == chatAndUser.chat.userId){
+                if (previousChatAndUser != null && previousChatAndUser.chat.userId == chatAndUser.chat.userId) {
                     textGchatNameRight.visibility = View.GONE
                     imageGchatProfileOther.visibility = View.GONE
-                }else{
+                } else {
                     textGchatNameRight.visibility = View.VISIBLE
                     imageGchatProfileOther.visibility = View.VISIBLE
                 }
@@ -183,5 +192,8 @@ import com.github.odaridavid.talkself.utils.UtilityFunctions
                 return oldItem == newItem
             }
         }
+
+        private const val VIEW_TYPE_MESSAGE_RIGHT = 1
+        private const val VIEW_TYPE_MESSAGE_LEFT = 2
     }
 }
