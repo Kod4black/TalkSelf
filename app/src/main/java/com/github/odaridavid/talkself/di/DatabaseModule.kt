@@ -2,10 +2,10 @@ package com.github.odaridavid.talkself.di
 
 import android.app.Application
 import androidx.room.Room
-import com.github.odaridavid.talkself.data.room.AppDatabase
-import com.github.odaridavid.talkself.data.room.ChatDao
-import com.github.odaridavid.talkself.data.room.ConversationDao
-import com.github.odaridavid.talkself.data.room.UserDao
+import com.github.odaridavid.talkself.data.local.AppDatabase
+import com.github.odaridavid.talkself.data.local.ChatDao
+import com.github.odaridavid.talkself.data.local.ConversationDao
+import com.github.odaridavid.talkself.data.local.UserDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
