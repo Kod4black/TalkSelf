@@ -2,12 +2,13 @@ package com.github.odaridavid.talkself.data.local.relations
 
 import androidx.room.Embedded
 import androidx.room.Relation
-import com.github.odaridavid.talkself.data.local.models.ChatEntity
-import com.github.odaridavid.talkself.data.local.models.UserEntity
+import com.github.odaridavid.talkself.data.local.messages.MessageEntity
+import com.github.odaridavid.talkself.data.local.user.UserEntity
 
-data class ChatAndUser(
+// TODO Decouple this relation
+data class MessageAndUser(
     @Embedded
-    var chatEntity: ChatEntity,
+    var messageEntity: MessageEntity,
     @Relation(
         parentColumn = "userId",
         entityColumn = "userId"

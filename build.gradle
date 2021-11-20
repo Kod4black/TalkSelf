@@ -1,40 +1,37 @@
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
     ext{
-        kotlin_version = "1.4.31"
-        hilt_version = "2.28-alpha"
+        kotlin_version = "1.5.20"
+        hilt_version = "2.38.1"
         kapt_hilt_version = "2.31.2-alpha"
         hilt_viewmodel_version = "1.0.0-alpha03"
-        room_version = "2.2.6"
+        room_version = "2.4.0-alpha01"
         nav_version = "2.3.5"
         work_version = "2.4.0"
         hilt_work_manager_version = "1.0.0-alpha02"
         hilt_androidx_processor_version = "1.0.0-alpha01"
-
     }
+
     repositories {
         google()
-        jcenter()
+        mavenCentral()
+        maven { url 'https://jitpack.io' }
     }
     dependencies {
 
-        classpath 'com.google.gms:google-services:4.3.8'
+        classpath 'com.google.gms:google-services:4.3.10'
         classpath 'com.android.tools.build:gradle:4.1.3'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "com.google.dagger:hilt-android-gradle-plugin:$hilt_version"
         classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$nav_version"
-        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.7.1'
-
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
+        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.8.0'
     }
 }
 
 allprojects {
     repositories {
         google()
-        jcenter()
         mavenCentral()
+        maven { url 'https://jitpack.io' }
     }
 }
 

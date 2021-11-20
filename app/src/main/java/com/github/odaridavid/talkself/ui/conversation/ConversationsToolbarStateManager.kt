@@ -1,15 +1,16 @@
 package com.github.odaridavid.talkself.ui.conversation
 
 import androidx.lifecycle.MutableLiveData
-import com.github.odaridavid.talkself.data.local.models.ConversationEntity
 import com.github.odaridavid.talkself.common.ToolbarState
+import com.github.odaridavid.talkself.ui.models.ConversationUiModel
 
-class ConversationsToolbarStateManager {
+internal class ConversationsToolbarStateManager {
 
     private val _toolbarState: MutableLiveData<ToolbarState> =
         MutableLiveData(ToolbarState.NormalViewState)
     private val _isMultiSelection: MutableLiveData<Boolean> = MutableLiveData(false)
-    private val _selectedConversations: MutableLiveData<ArrayList<ConversationEntity>> = MutableLiveData()
+    private val _selectedConversations: MutableLiveData<ArrayList<ConversationUiModel>> =
+        MutableLiveData()
 
     val toolbarState
         get() = _toolbarState
@@ -29,26 +30,21 @@ class ConversationsToolbarStateManager {
     fun isMultiSelectionStateActive(): Boolean =
         ToolbarState.MultiselectionState == _toolbarState.value
 
-    fun addOrRemoveConversationFromSelectedList(conversationEntity: ConversationEntity) {
-        var list = _selectedConversations.value
-        if (list == null) {
-            list = ArrayList()
+    fun addOrRemoveConversationFromSelectedList(conversationUiModel: ConversationUiModel) {
+        val list = _selectedConversations.value ?: ArrayList()
+        if (list.contains(conversationUiModel)) {
+            list.remove(conversationUiModel)
         } else {
-            if (list.contains(conversationEntity)) {
-                list.remove(conversationEntity)
-            } else {
-                list.add(conversationEntity)
-            }
-            _selectedConversations.value = list
+            list.add(conversationUiModel)
         }
+        _selectedConversations.value = list
     }
 
-    fun addAllConversationsToSelectedList(list: List<ConversationEntity>) {
-        _selectedConversations.value = list as ArrayList<ConversationEntity>
+    fun addAllConversationsToSelectedList(list: List<ConversationUiModel>) {
+        _selectedConversations.value = list as ArrayList<ConversationUiModel>
     }
 
     fun clearSelectedList() {
         _selectedConversations.value = ArrayList()
     }
-
 }

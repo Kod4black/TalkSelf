@@ -19,7 +19,6 @@ import codes.side.andcolorpicker.converter.getRInt
 import codes.side.andcolorpicker.converter.setFromColorInt
 import codes.side.andcolorpicker.group.PickerGroup
 import codes.side.andcolorpicker.group.registerPickers
-import codes.side.andcolorpicker.hsl.HSLColorPickerSeekBar
 import codes.side.andcolorpicker.model.IntegerHSLColor
 import codes.side.andcolorpicker.view.picker.ColorSeekBar
 import com.github.odaridavid.talkself.common.ColorUtils
@@ -140,9 +139,10 @@ class EditUserFragment : Fragment() {
                 )
             }
 
-            // Listen individual pickers or groups for changes
+            // TODO Abstract this third party logic somewhere else
             pickerGroup.addListener(
-                object : HSLColorPickerSeekBar.DefaultOnColorPickListener() {
+                object :
+                    ColorSeekBar.OnColorPickListener<ColorSeekBar<IntegerHSLColor>, IntegerHSLColor> {
                     override fun onColorChanged(
                         picker: ColorSeekBar<IntegerHSLColor>,
                         color: IntegerHSLColor,
@@ -162,6 +162,24 @@ class EditUserFragment : Fragment() {
                             // TODO Log to Firebase
                             requireContext().displayToast(e.message!!)
                         }
+                    }
+
+                    override fun onColorPicked(
+                        picker: ColorSeekBar<IntegerHSLColor>,
+                        color: IntegerHSLColor,
+                        value: Int,
+                        fromUser: Boolean
+                    ) {
+                        // Do Nothing
+                    }
+
+                    override fun onColorPicking(
+                        picker: ColorSeekBar<IntegerHSLColor>,
+                        color: IntegerHSLColor,
+                        value: Int,
+                        fromUser: Boolean
+                    ) {
+                        // Do Nothing
                     }
                 }
             )
@@ -207,7 +225,7 @@ class EditUserFragment : Fragment() {
 
     companion object {
 
-        // TODO Why are these here?
+        // TODO Why are these here?Cache them for better UX
         val memojis = listOf(
             "https://firebasestorage.googleapis.com/v0/b/talk-self.appspot.com/o/avatar12.png?alt=media&token=e404c051-cb3a-4352-becb-ab3b7d7d40c6",
             "https://firebasestorage.googleapis.com/v0/b/talk-self.appspot.com/o/avatar13.png?alt=media&token=26cefe77-ab3c-4560-b510-ae1a7db02b12",

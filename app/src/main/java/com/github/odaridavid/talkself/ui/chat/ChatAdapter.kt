@@ -9,12 +9,12 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.github.odaridavid.talkself.common.TimeUtils
 import com.github.odaridavid.talkself.common.bindImage
-import com.github.odaridavid.talkself.data.local.relations.ChatAndUser
+import com.github.odaridavid.talkself.data.local.relations.MessageAndUser
 import com.github.odaridavid.talkself.databinding.ItemChatLeftBinding
 import com.github.odaridavid.talkself.databinding.ItemChatRightBinding
 import com.github.odaridavid.talkself.ui.models.UserUiModel
 
-internal class ChatAdapter : ListAdapter<ChatAndUser, RecyclerView.ViewHolder>(ChatDiffUtil) {
+internal class ChatAdapter : ListAdapter<MessageAndUser, RecyclerView.ViewHolder>(ChatDiffUtil) {
 
     var userUiModel: UserUiModel? = null
 
@@ -57,33 +57,33 @@ internal class ChatAdapter : ListAdapter<ChatAndUser, RecyclerView.ViewHolder>(C
     private inner class LeftChatHolder(val binding: ItemChatLeftBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(previousChatAndUser: ChatAndUser?, chatAndUser: ChatAndUser) {
+        fun bind(previousMessageAndUser: MessageAndUser?, messageAndUser: MessageAndUser) {
 
             binding.apply {
 
                 val date =
-                    chatAndUser.chatEntity.timesent?.let { createdAt ->
+                    messageAndUser.messageEntity.timesent?.let { createdAt ->
                         TimeUtils.formatMillisecondsToDate(createdAt = createdAt)
                     }
-                val prevDate = previousChatAndUser?.chatEntity?.timesent?.let { createdAt ->
+                val prevDate = previousMessageAndUser?.messageEntity?.timesent?.let { createdAt ->
                     TimeUtils.formatMillisecondsToDate(createdAt = createdAt)
                 }
 
-                textGchatMessageOther.text = chatAndUser.chatEntity.message
+                textGchatMessageOther.text = messageAndUser.messageEntity.message
                 textGchatTimestampOther.text =
-                    chatAndUser.chatEntity.timesent?.let { createdAt ->
+                    messageAndUser.messageEntity.timesent?.let { createdAt ->
                         TimeUtils.formatMillisecondsToHrsAndMinutes(createdAt = createdAt)
                     }
                 textGchatDateOther.text = date?.split(",")?.first()
 
-                textGchatUserOther.text = chatAndUser.userEntity.name
-                layoutGchatContainerOther.setBackgroundColor(Color.parseColor(chatAndUser.userEntity.color))
+                textGchatUserOther.text = messageAndUser.userEntity.name
+                layoutGchatContainerOther.setBackgroundColor(Color.parseColor(messageAndUser.userEntity.color))
 
                 imageGchatProfileOther.apply {
-                    bindImage(context = context, imageUrl = chatAndUser.userEntity.imageUri!!)
+                    bindImage(context = context, imageUrl = messageAndUser.userEntity.imageUri!!)
                 }
 
-                if (previousChatAndUser != null && previousChatAndUser.chatEntity.userId == chatAndUser.chatEntity.userId) {
+                if (previousMessageAndUser != null && previousMessageAndUser.messageEntity.userId == messageAndUser.messageEntity.userId) {
                     textGchatUserOther.visibility = View.GONE
                     imageGchatProfileOther.visibility = View.GONE
 
@@ -95,7 +95,7 @@ internal class ChatAdapter : ListAdapter<ChatAndUser, RecyclerView.ViewHolder>(C
                 }
 
                 when {
-                    previousChatAndUser == null -> {
+                    previousMessageAndUser == null -> {
                         textGchatDateOther.visibility = View.VISIBLE
                         return
                     }
@@ -116,33 +116,33 @@ internal class ChatAdapter : ListAdapter<ChatAndUser, RecyclerView.ViewHolder>(C
     private inner class RightChatHolder(val binding: ItemChatRightBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(previousChatAndUser: ChatAndUser?, chatAndUser: ChatAndUser) {
+        fun bind(previousMessageAndUser: MessageAndUser?, messageAndUser: MessageAndUser) {
 
             binding.apply {
 
                 val date =
-                    chatAndUser.chatEntity.timesent?.let { createdAt ->
+                    messageAndUser.messageEntity.timesent?.let { createdAt ->
                         TimeUtils.formatMillisecondsToDate(createdAt = createdAt)
                     }
-                val prevDate = previousChatAndUser?.chatEntity?.timesent?.let { createdAt ->
+                val prevDate = previousMessageAndUser?.messageEntity?.timesent?.let { createdAt ->
                     TimeUtils.formatMillisecondsToDate(createdAt = createdAt)
                 }
 
-                textGchatMessageRight.text = chatAndUser.chatEntity.message
+                textGchatMessageRight.text = messageAndUser.messageEntity.message
                 textGchatUserDate.text = date?.split(",")?.first()
-                textGchatNameRight.text = chatAndUser.userEntity.name
+                textGchatNameRight.text = messageAndUser.userEntity.name
                 textGchatTimestampMe.text =
-                    chatAndUser.chatEntity.timesent?.let { createdAt ->
+                    messageAndUser.messageEntity.timesent?.let { createdAt ->
                         TimeUtils.formatMillisecondsToHrsAndMinutes(createdAt)
                     }
                 imageGchatProfileOther.apply {
-                    bindImage(context = context, imageUrl = chatAndUser.userEntity.imageUri!!)
+                    bindImage(context = context, imageUrl = messageAndUser.userEntity.imageUri!!)
                 }
 
-                layoutGchatContainerMe.setBackgroundColor(Color.parseColor(chatAndUser.userEntity.color))
+                layoutGchatContainerMe.setBackgroundColor(Color.parseColor(messageAndUser.userEntity.color))
 
 
-                if (previousChatAndUser != null && previousChatAndUser.chatEntity.userId == chatAndUser.chatEntity.userId) {
+                if (previousMessageAndUser != null && previousMessageAndUser.messageEntity.userId == messageAndUser.messageEntity.userId) {
                     textGchatNameRight.visibility = View.GONE
                     imageGchatProfileOther.visibility = View.GONE
                 } else {
@@ -151,7 +151,7 @@ internal class ChatAdapter : ListAdapter<ChatAndUser, RecyclerView.ViewHolder>(C
                 }
 
                 when {
-                    previousChatAndUser == null -> {
+                    previousMessageAndUser == null -> {
                         textGchatUserDate.visibility = View.VISIBLE
                         return
                     }
@@ -168,20 +168,20 @@ internal class ChatAdapter : ListAdapter<ChatAndUser, RecyclerView.ViewHolder>(C
 
     override fun getItemViewType(position: Int): Int {
         val chatAndUser = getItem(position)
-        return if (chatAndUser.chatEntity.userId == userUiModel?.userId) {
+        return if (chatAndUser.messageEntity.userId == userUiModel?.userId) {
             VIEW_TYPE_MESSAGE_RIGHT
         } else VIEW_TYPE_MESSAGE_LEFT
     }
 
-    fun getItemAt(position: Int): ChatAndUser = getItem(position)
+    fun getItemAt(position: Int): MessageAndUser = getItem(position)
 
     companion object {
-        val ChatDiffUtil = object : DiffUtil.ItemCallback<ChatAndUser>() {
-            override fun areItemsTheSame(oldItem: ChatAndUser, newItem: ChatAndUser): Boolean {
-                return oldItem.chatEntity.chatId == newItem.chatEntity.chatId && oldItem.chatEntity.userId == newItem.chatEntity.userId && oldItem.userEntity.userId == newItem.userEntity.userId
+        val ChatDiffUtil = object : DiffUtil.ItemCallback<MessageAndUser>() {
+            override fun areItemsTheSame(oldItem: MessageAndUser, newItem: MessageAndUser): Boolean {
+                return oldItem.messageEntity.chatId == newItem.messageEntity.chatId && oldItem.messageEntity.userId == newItem.messageEntity.userId && oldItem.userEntity.userId == newItem.userEntity.userId
             }
 
-            override fun areContentsTheSame(oldItem: ChatAndUser, newItem: ChatAndUser): Boolean {
+            override fun areContentsTheSame(oldItem: MessageAndUser, newItem: MessageAndUser): Boolean {
                 return oldItem == newItem
             }
         }

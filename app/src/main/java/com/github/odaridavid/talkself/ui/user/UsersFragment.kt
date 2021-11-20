@@ -11,7 +11,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import com.github.odaridavid.talkself.data.local.models.UserEntity
+import com.github.odaridavid.talkself.data.local.user.UserEntity
 import com.github.odaridavid.talkself.databinding.FragmentUsersBinding
 import com.github.odaridavid.talkself.ui.models.ConversationUiModel
 import dagger.hilt.android.AndroidEntryPoint

@@ -1,11 +1,11 @@
 package com.github.odaridavid.talkself.di
 
-import com.github.odaridavid.talkself.data.local.ChatDao
-import com.github.odaridavid.talkself.data.local.ConversationDao
-import com.github.odaridavid.talkself.data.local.UserDao
-import com.github.odaridavid.talkself.data.repository.MessagesRepository
-import com.github.odaridavid.talkself.data.repository.ConversationRepository
-import com.github.odaridavid.talkself.data.repository.UserRepository
+import com.github.odaridavid.talkself.data.local.messages.MessagesDao
+import com.github.odaridavid.talkself.data.local.conversation.ConversationDao
+import com.github.odaridavid.talkself.data.local.user.UserDao
+import com.github.odaridavid.talkself.data.MessagesRepository
+import com.github.odaridavid.talkself.data.ConversationRepository
+import com.github.odaridavid.talkself.data.UserRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -22,9 +22,9 @@ internal object RepositoryModule {
     @Provides
     @Singleton
     fun providesChatRepository(
-        chatDao: ChatDao
+        messagesDao: MessagesDao
     ): MessagesRepository =
-        MessagesRepository(chatDao = chatDao)
+        MessagesRepository(messagesDao = messagesDao)
 
     @Provides
     @Singleton

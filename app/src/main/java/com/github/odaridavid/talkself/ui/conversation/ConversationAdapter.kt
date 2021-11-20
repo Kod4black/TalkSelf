@@ -10,19 +10,21 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.github.odaridavid.talkself.common.TimeUtils
 import com.github.odaridavid.talkself.common.bindImage
-import com.github.odaridavid.talkself.data.local.models.ConversationEntity
-import com.github.odaridavid.talkself.data.local.models.UserEntity
+import com.github.odaridavid.talkself.data.local.conversation.toDomain
 import com.github.odaridavid.talkself.data.local.relations.ConversationAndUser
+import com.github.odaridavid.talkself.data.local.user.toDomain
 import com.github.odaridavid.talkself.databinding.ItemConvesationsBinding
+import com.github.odaridavid.talkself.domain.toUiModel
 import com.github.odaridavid.talkself.ui.models.ConversationUiModel
+import com.github.odaridavid.talkself.ui.models.UserUiModel
 
 internal class ConversationAdapter(
     // TODO Passing lifecycle owner to adapter ,look into it
     private val lifecycleOwner: LifecycleOwner,
     // TODO Look into this state thing
     private val stateManager: ConversationsToolbarStateManager,
-    private val onConversationClick: (ConversationEntity) -> Unit,
-    private val onConversationLongClick: (ConversationEntity) -> Unit
+    private val onConversationClick: (ConversationUiModel) -> Unit,
+    private val onConversationLongClick: (ConversationUiModel) -> Unit
 ) : ListAdapter<ConversationAndUser, ConversationAdapter.ViewHolder>(diffUtil) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -37,16 +39,16 @@ internal class ConversationAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val conversationAndUser = getItem(position)
 
-        // TODO Use UI models
-        holder.bindConversation(conversationAndUser.conversationEntity)
-        holder.bindUser(conversationAndUser.userEntity)
+        // TODO Use UI models directly
+        holder.bindConversation(conversationAndUser.conversationEntity?.toDomain()?.toUiModel())
+        holder.bindUser(conversationAndUser.userEntity?.toDomain()?.toUiModel())
 
         holder.itemView.setOnClickListener {
 
             // TODO Move navigation logic to view + navigation class/controller file
             if (stateManager.isMultiSelectionStateActive()) {
                 conversationAndUser.conversationEntity?.let { conversation ->
-                    onConversationClick.invoke(conversation)
+                    onConversationClick.invoke(conversation.toDomain().toUiModel())
                 }
             } else {
                 val actions = conversationAndUser.conversationEntity?.let { conversation ->
@@ -67,41 +69,41 @@ internal class ConversationAdapter(
 
         }
 
-        stateManager.selectedConversations.observe(lifecycleOwner, {
+        stateManager.selectedConversations.observe(lifecycleOwner) { conversationsUiModel ->
             when {
-                it.contains(conversationAndUser) -> {
+                conversationsUiModel.contains(conversationAndUser.conversationEntity?.toDomain()?.toUiModel()) -> {
                     holder.binding.imageViewIsChecked.isVisible = true
                 }
                 else -> {
                     holder.binding.imageViewIsChecked.isVisible = false
                 }
             }
-        })
-
+        }
     }
 
     inner class ViewHolder(
         val binding: ItemConvesationsBinding
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bindConversation(message: ConversationEntity?) {
+        fun bindConversation(conversationUiModel: ConversationUiModel?) {
             binding.apply {
-                textChatLastMessage.text = message?.lastMessage
+                textChatLastMessage.text = conversationUiModel?.lastMessage
                 conversationTime.text =
-                    TimeUtils.formatMillisecondsToDate(createdAt = message?.timeCreated!!)
+                    TimeUtils.formatMillisecondsToDate(createdAt = conversationUiModel?.timeCreated!!)
             }
         }
 
-        fun bindUser(userEntity: UserEntity?) {
+        fun bindUser(userUiModel: UserUiModel?) {
             binding.apply {
-                conversationLastMan.text = userEntity?.name
+                conversationLastMan.text = userUiModel?.name
                 imageGchatProfileOther.apply {
-                    bindImage(context = context, imageUrl = userEntity?.imageUri)
+                    bindImage(context = context, imageUrl = userUiModel?.imageUri)
                 }
             }
         }
     }
 
+    // todo fix this db entity in adapter
     fun getItemAt(position: Int): ConversationAndUser = getItem(position)
 
     companion object {

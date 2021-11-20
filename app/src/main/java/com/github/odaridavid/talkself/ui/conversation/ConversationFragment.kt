@@ -16,9 +16,9 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.github.odaridavid.talkself.R
 import com.github.odaridavid.talkself.common.*
-import com.github.odaridavid.talkself.data.local.models.ConversationEntity
-import com.github.odaridavid.talkself.data.local.models.toUiModel
+import com.github.odaridavid.talkself.data.local.conversation.toDomain
 import com.github.odaridavid.talkself.databinding.FragmentConversationsBinding
+import com.github.odaridavid.talkself.domain.toUiModel
 import com.github.odaridavid.talkself.ui.dialogFragments.DeleteDialogFragment
 import com.github.odaridavid.talkself.ui.models.ConversationUiModel
 import com.github.odaridavid.talkself.ui.models.UserUiModel
@@ -197,19 +197,15 @@ class ConversationFragment : Fragment() {
 
     //Either delete or refresh the recyclerview based on the action passed
     private fun actOnConversation(action: String, conversationUiModel: ConversationUiModel) {
-
         when (action) {
-
             DeleteDialogFragment.POSSITIVE_MESSAGE_BUTTON -> {
                 deleteConversation(conversationUiModel)
                 showSnackBar("Conversation deleted", conversationUiModel)
             }
-
             DeleteDialogFragment.NEGATIVE_MESSAGE_BUTTON -> {
                 conversationadapter.notifyDataSetChanged()
             }
         }
-
     }
 
     //Show a snackbar
@@ -267,7 +263,10 @@ class ConversationFragment : Fragment() {
                 override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                     val conversationAndUser =
                         conversationadapter.getItemAt(viewHolder.adapterPosition)
-                    showDeleteDialog(conversationAndUser.conversationEntity!!.toUiModel())
+                    // TODO Entity shouldn't have made it to the view
+                    showDeleteDialog(
+                        conversationAndUser.conversationEntity!!.toDomain().toUiModel()
+                    )
                 }
 
                 override fun onChildDraw(
@@ -321,7 +320,7 @@ class ConversationFragment : Fragment() {
      */
 
     @SuppressLint("SetTextI18n")
-    private fun bindUI() = executeOnMainThread{
+    private fun bindUI() = executeOnMainThread {
         //Launch our custom dialog Card to collect user input
         binding.fab.setOnClickListener {
             startCardTransform()
@@ -383,11 +382,11 @@ class ConversationFragment : Fragment() {
         })
 
         //Observe changes on the conversations from the viewModel
-        viewmodel.conversationAndUser.observe(viewLifecycleOwner, {
+        viewmodel.conversationAndUser.observe(viewLifecycleOwner) {
             if (it.isNotEmpty()) {
                 conversationadapter.submitList(it)
             }
-        })
+        }
 
         //Observe the state of the isMultiselection state Variable
         viewmodel.stateManager.isMultiSelection.observe(viewLifecycleOwner, {
@@ -426,15 +425,15 @@ class ConversationFragment : Fragment() {
         }
     }
 
-    private fun onClick(conversationEntity: ConversationEntity) {
+    private fun onClick(conversationUiModel: ConversationUiModel) {
         if (isMultiSelected()) {
-            viewmodel.stateManager.addOrRemoveConversationFromSelectedList(conversationEntity)
+            viewmodel.stateManager.addOrRemoveConversationFromSelectedList(conversationUiModel)
         }
     }
 
-    private fun onLongClick(conversationEntity: ConversationEntity) {
+    private fun onLongClick(conversationUiModel: ConversationUiModel) {
         viewmodel.stateManager.setToolbarState(ToolbarState.MultiselectionState)
-        viewmodel.stateManager.addOrRemoveConversationFromSelectedList(conversationEntity)
+        viewmodel.stateManager.addOrRemoveConversationFromSelectedList(conversationUiModel)
     }
 
     private fun isMultiSelected() = viewmodel.stateManager.isMultiSelectionStateActive()
@@ -448,7 +447,11 @@ class ConversationFragment : Fragment() {
                         requireContext().displayToast("Feature is under Development")
                     }
                     R.id.action_selectAll -> {
-                        viewmodel.stateManager.addAllConversationsToSelectedList(viewmodel.conversation.value!!)
+                        viewmodel
+                            .stateManager
+                            .addAllConversationsToSelectedList(
+                                viewmodel.conversation.value!!
+                            )
                     }
                     R.id.action_deselect_all -> {
                         viewmodel.stateManager.clearSelectedList()
@@ -461,6 +464,4 @@ class ConversationFragment : Fragment() {
             }
         }
     }
-
 }
-

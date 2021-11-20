@@ -1,11 +1,12 @@
 package com.github.odaridavid.talkself.ui.chat
 
 import androidx.lifecycle.*
-import com.github.odaridavid.talkself.data.local.models.ChatEntity
-import com.github.odaridavid.talkself.data.repository.MessagesRepository
-import com.github.odaridavid.talkself.data.repository.ConversationRepository
-import com.github.odaridavid.talkself.data.repository.UserRepository
+import com.github.odaridavid.talkself.data.ConversationRepository
+import com.github.odaridavid.talkself.data.MessagesRepository
+import com.github.odaridavid.talkself.data.UserRepository
+import com.github.odaridavid.talkself.data.local.messages.MessageEntity
 import com.github.odaridavid.talkself.ui.models.ConversationUiModel
+import com.github.odaridavid.talkself.ui.models.MessageUiModel
 import com.github.odaridavid.talkself.ui.models.UserUiModel
 import com.github.odaridavid.talkself.ui.models.toDomain
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -21,11 +22,12 @@ internal class ChatViewModel @Inject constructor(
     private val userRepository: UserRepository
 ) : ViewModel() {
 
-    // FIXME Mutable data source being exposed to the view from ViewModel
-    var currentuser = MutableLiveData<UserUiModel>()
+    private var _currentUser = MutableLiveData<UserUiModel>()
+    val currentUser: LiveData<UserUiModel>
+        get() = _currentUser
 
     fun getUsersInConversation(conversationId: Int): LiveData<List<UserUiModel>> =
-        userRepository.getUsersInConversation(conversationId).map { users->
+        userRepository.getUsersInConversation(conversationId).map { users ->
             users.map {
                 UserUiModel(
                     color = it.color,
@@ -37,24 +39,22 @@ internal class ChatViewModel @Inject constructor(
             }
         }.asLiveData()
 
-
-
     fun getMessagesInConversation(conversationId: Int) =
         messagesRepository.getMessagesInConversation(conversationId).asLiveData()
 
-
-    // FIXME Use different chat model for ui and data layer and create mappers
-    fun addMessage(chatEntity: ChatEntity) {
+    fun addMessage(messageUiModel: MessageUiModel) {
         viewModelScope.launch {
-            messagesRepository.addMessage(chatEntity)
+            val message = messageUiModel.toDomain()
+            messagesRepository.addMessage(message)
         }
     }
 
     // TODO Why not just update once a new message is added by observing the table/ makes sense for
     //  editing existing messages
-    fun updatechat(chatEntity: ChatEntity) {
+    fun updateMessage(messageUiModel: MessageUiModel) {
         viewModelScope.launch {
-            messagesRepository.updateMessage(chatEntity)
+            val message = messageUiModel.toDomain()
+            messagesRepository.updateMessage(message)
         }
     }
 
@@ -66,4 +66,7 @@ internal class ChatViewModel @Inject constructor(
         }
     }
 
+    fun updateUserUiModel(userUiModel: UserUiModel) {
+        _currentUser.value = userUiModel
+    }
 }
