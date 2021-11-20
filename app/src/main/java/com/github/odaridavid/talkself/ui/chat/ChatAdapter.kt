@@ -7,35 +7,33 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.github.odaridavid.talkself.common.UtilityFunctions
-import com.github.odaridavid.talkself.common.UtilityFunctions.Companion.bindImage
+import com.github.odaridavid.talkself.common.TimeUtils
+import com.github.odaridavid.talkself.common.bindImage
 import com.github.odaridavid.talkself.data.local.relations.ChatAndUser
 import com.github.odaridavid.talkself.databinding.ItemChatLeftBinding
 import com.github.odaridavid.talkself.databinding.ItemChatRightBinding
 import com.github.odaridavid.talkself.ui.models.UserUiModel
 
-internal class ChatAdapter :
-    ListAdapter<ChatAndUser, RecyclerView.ViewHolder>(ChatDiffUtil) {
+internal class ChatAdapter : ListAdapter<ChatAndUser, RecyclerView.ViewHolder>(ChatDiffUtil) {
 
     var userUiModel: UserUiModel? = null
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        val rightBinding =
-            ItemChatRightBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
         if (viewType == VIEW_TYPE_MESSAGE_RIGHT) {
-
-            return RightChatHolder(rightBinding)
-
-        } else if (viewType == VIEW_TYPE_MESSAGE_LEFT) {
-
-            val leftBinding =
-                ItemChatLeftBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-
-            return LeftChatHolder(leftBinding)
+            val rightBinding = ItemChatRightBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            )
+            RightChatHolder(rightBinding)
+        } else {
+            val leftBinding = ItemChatLeftBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            )
+            LeftChatHolder(leftBinding)
         }
-
-        return RightChatHolder(rightBinding)
-    }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val chatAndUser = getItem(position)
@@ -54,11 +52,9 @@ internal class ChatAdapter :
                 chatAndUser
             )
         }
-
-
     }
 
-    private class LeftChatHolder(val binding: ItemChatLeftBinding) :
+    private inner class LeftChatHolder(val binding: ItemChatLeftBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(previousChatAndUser: ChatAndUser?, chatAndUser: ChatAndUser) {
@@ -66,21 +62,17 @@ internal class ChatAdapter :
             binding.apply {
 
                 val date =
-                    chatAndUser.chatEntity.timesent?.let {
-                        UtilityFunctions.formatMillisecondsToDate(
-                            it
-                        )
+                    chatAndUser.chatEntity.timesent?.let { createdAt ->
+                        TimeUtils.formatMillisecondsToDate(createdAt = createdAt)
                     }
-                val prevDate = previousChatAndUser?.chatEntity?.timesent?.let {
-                    UtilityFunctions.formatMillisecondsToDate(it)
+                val prevDate = previousChatAndUser?.chatEntity?.timesent?.let { createdAt ->
+                    TimeUtils.formatMillisecondsToDate(createdAt = createdAt)
                 }
 
                 textGchatMessageOther.text = chatAndUser.chatEntity.message
                 textGchatTimestampOther.text =
-                    chatAndUser.chatEntity.timesent?.let {
-                        UtilityFunctions.formatMillisecondsToTime(
-                            it
-                        )
+                    chatAndUser.chatEntity.timesent?.let { createdAt ->
+                        TimeUtils.formatMillisecondsToHrsAndMinutes(createdAt = createdAt)
                     }
                 textGchatDateOther.text = date?.split(",")?.first()
 
@@ -88,7 +80,7 @@ internal class ChatAdapter :
                 layoutGchatContainerOther.setBackgroundColor(Color.parseColor(chatAndUser.userEntity.color))
 
                 imageGchatProfileOther.apply {
-                    context.bindImage(chatAndUser.userEntity.imageUri!!, this)
+                    bindImage(context = context, imageUrl = chatAndUser.userEntity.imageUri!!)
                 }
 
                 if (previousChatAndUser != null && previousChatAndUser.chatEntity.userId == chatAndUser.chatEntity.userId) {
@@ -121,7 +113,7 @@ internal class ChatAdapter :
 
     }
 
-    private class RightChatHolder(val binding: ItemChatRightBinding) :
+    private inner class RightChatHolder(val binding: ItemChatRightBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(previousChatAndUser: ChatAndUser?, chatAndUser: ChatAndUser) {
@@ -129,26 +121,22 @@ internal class ChatAdapter :
             binding.apply {
 
                 val date =
-                    chatAndUser.chatEntity.timesent?.let {
-                        UtilityFunctions.formatMillisecondsToDate(
-                            it
-                        )
+                    chatAndUser.chatEntity.timesent?.let { createdAt ->
+                        TimeUtils.formatMillisecondsToDate(createdAt = createdAt)
                     }
-                val prevDate = previousChatAndUser?.chatEntity?.timesent?.let {
-                    UtilityFunctions.formatMillisecondsToDate(it)
+                val prevDate = previousChatAndUser?.chatEntity?.timesent?.let { createdAt ->
+                    TimeUtils.formatMillisecondsToDate(createdAt = createdAt)
                 }
 
                 textGchatMessageRight.text = chatAndUser.chatEntity.message
                 textGchatUserDate.text = date?.split(",")?.first()
                 textGchatNameRight.text = chatAndUser.userEntity.name
                 textGchatTimestampMe.text =
-                    chatAndUser.chatEntity.timesent?.let {
-                        UtilityFunctions.formatMillisecondsToTime(
-                            it
-                        )
+                    chatAndUser.chatEntity.timesent?.let { createdAt ->
+                        TimeUtils.formatMillisecondsToHrsAndMinutes(createdAt)
                     }
                 imageGchatProfileOther.apply {
-                    context.bindImage(chatAndUser.userEntity.imageUri!!, this)
+                    bindImage(context = context, imageUrl = chatAndUser.userEntity.imageUri!!)
                 }
 
                 layoutGchatContainerMe.setBackgroundColor(Color.parseColor(chatAndUser.userEntity.color))
@@ -174,28 +162,18 @@ internal class ChatAdapter :
                         textGchatUserDate.visibility = View.VISIBLE
                     }
                 }
-
             }
-
         }
-
     }
-
 
     override fun getItemViewType(position: Int): Int {
         val chatAndUser = getItem(position)
         return if (chatAndUser.chatEntity.userId == userUiModel?.userId) {
-            // If the current user is the sender of the message
             VIEW_TYPE_MESSAGE_RIGHT
-        } else {
-            // If some other user sent the message
-            VIEW_TYPE_MESSAGE_LEFT
-        }
+        } else VIEW_TYPE_MESSAGE_LEFT
     }
 
-    fun getItemAt(position: Int): ChatAndUser {
-        return getItem(position)
-    }
+    fun getItemAt(position: Int): ChatAndUser = getItem(position)
 
     companion object {
         val ChatDiffUtil = object : DiffUtil.ItemCallback<ChatAndUser>() {

@@ -22,15 +22,14 @@ import codes.side.andcolorpicker.group.registerPickers
 import codes.side.andcolorpicker.hsl.HSLColorPickerSeekBar
 import codes.side.andcolorpicker.model.IntegerHSLColor
 import codes.side.andcolorpicker.view.picker.ColorSeekBar
+import com.github.odaridavid.talkself.common.ColorUtils
+import com.github.odaridavid.talkself.common.bindImage
+import com.github.odaridavid.talkself.common.displayToast
 import com.github.odaridavid.talkself.databinding.FragmentEditUserBinding
-import com.github.odaridavid.talkself.data.local.models.UserEntity
-import com.github.odaridavid.talkself.common.UtilityFunctions.Companion.bindImage
-import com.github.odaridavid.talkself.common.UtilityFunctions.Companion.getColor
-import com.github.odaridavid.talkself.common.UtilityFunctions.Companion.toast
 import com.github.odaridavid.talkself.ui.models.UserUiModel
 import dagger.hilt.android.AndroidEntryPoint
 
-
+// TODO Check on Fragment bindings should call onDestroyView and unbind
 @AndroidEntryPoint
 class EditUserFragment : Fragment() {
 
@@ -45,8 +44,6 @@ class EditUserFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
-        // Inflate the layout for this fragment
         binding = FragmentEditUserBinding.inflate(inflater, container, false)
 
         userUiModel = args.user
@@ -61,24 +58,21 @@ class EditUserFragment : Fragment() {
         viewmodel.updateImage(userUiModel.imageUri!!)
         viewmodel.updateColor(userUiModel.color!!)
 
-
-        viewmodel.name.observe(viewLifecycleOwner, {
+        viewmodel.name.observe(viewLifecycleOwner) {
             binding.textGchatUserOther.text = it
-        })
+        }
 
+        viewmodel.imageUrl.observe(viewLifecycleOwner) { imageUrl ->
+            binding.imageViewUserProfile.bindImage(context = requireContext(), imageUrl = imageUrl)
+            binding.imageGchatProfileOther.bindImage(
+                context = requireContext(),
+                imageUrl = imageUrl
+            )
+        }
 
-        viewmodel.image.observe(viewLifecycleOwner, {
-
-            requireContext().bindImage(it, binding.imageViewUserProfile)
-            requireContext().bindImage(it, binding.imageGchatProfileOther)
-
-        })
-
-        viewmodel.color.observe(viewLifecycleOwner, {
-
+        viewmodel.color.observe(viewLifecycleOwner) {
             binding.layoutGchatContainerOther.setBackgroundColor(Color.parseColor(it))
-
-        })
+        }
 
         addOnBackPressCallback()
 
@@ -102,18 +96,14 @@ class EditUserFragment : Fragment() {
     private fun bindDialogView(userUiModel: UserUiModel) {
 
         binding.apply {
-
-
             imageViewUserProfile.setOnClickListener {
-
                 transformationLayout.bindTargetView(myCardView)
                 transformationLayout.startTransform()
                 bindMemojiDialog()
-
             }
 
             textInputEditText.apply {
-
+                // TODO Create delegate for this
                 addTextChangedListener(object : TextWatcher {
                     override fun beforeTextChanged(
                         s: CharSequence?,
@@ -122,7 +112,6 @@ class EditUserFragment : Fragment() {
                         after: Int
                     ) {
                         //Nothing to do here
-
                     }
 
                     override fun onTextChanged(
@@ -139,19 +128,15 @@ class EditUserFragment : Fragment() {
                     }
 
                 })
-
                 setText(userUiModel.name)
                 textGchatUserOther.text = userUiModel.name
-
             }
-
 
             val pickerGroup = PickerGroup<IntegerHSLColor>().also {
                 it.registerPickers(
                     hueColorPickerSeekBar,
                     saturationColorPickerSeekBar,
-                    lightnessColorPickerSeekBar,
-//                    alphaColorPickerSeekBar
+                    lightnessColorPickerSeekBar
                 )
             }
 
@@ -165,20 +150,18 @@ class EditUserFragment : Fragment() {
                     ) {
 
                         try {
-
-                            val hexColor = getColor(
-                                color.getRInt(),
-                                color.getGInt(),
-                                color.getBInt(),
-                                color.alpha.toDouble()
+                            val hexColor = ColorUtils.getColor(
+                                red = color.getRInt(),
+                                green = color.getGInt(),
+                                blue = color.getBInt(),
+                                alpha = color.alpha.toDouble()
                             )
 
                             viewmodel.updateColor(hexColor)
-
                         } catch (e: Exception) {
-                            requireContext().toast(e.message!!)
+                            // TODO Log to Firebase
+                            requireContext().displayToast(e.message!!)
                         }
-
                     }
                 }
             )
@@ -194,25 +177,20 @@ class EditUserFragment : Fragment() {
 
             binding.buttonSave.setOnClickListener {
                 userUiModel.name = viewmodel.name.value
-                userUiModel.imageUri = viewmodel.image.value
+                userUiModel.imageUri = viewmodel.imageUrl.value
                 userUiModel.color = viewmodel.color.value!!
                 viewmodel.updateUser(userUiModel)
                 findNavController().navigateUp()
             }
-
         }
-
     }
 
-
+    // TODO Rename this function or refactor it
     private fun passResult(imageUrl: String) {
-
         binding.apply {
-
             viewmodel.updateImage(imageUrl)
             binding.transformationLayout.finishTransform()
             callback.isEnabled = true
-
         }
     }
 
@@ -229,6 +207,7 @@ class EditUserFragment : Fragment() {
 
     companion object {
 
+        // TODO Why are these here?
         val memojis = listOf(
             "https://firebasestorage.googleapis.com/v0/b/talk-self.appspot.com/o/avatar12.png?alt=media&token=e404c051-cb3a-4352-becb-ab3b7d7d40c6",
             "https://firebasestorage.googleapis.com/v0/b/talk-self.appspot.com/o/avatar13.png?alt=media&token=26cefe77-ab3c-4560-b510-ae1a7db02b12",
@@ -273,7 +252,5 @@ class EditUserFragment : Fragment() {
             "https://firebasestorage.googleapis.com/v0/b/talk-self.appspot.com/o/avatar8.png?alt=media&token=85f7e9ce-824a-4c88-ad98-240de3bc486b",
             "https://firebasestorage.googleapis.com/v0/b/talk-self.appspot.com/o/avatar9.png?alt=media&token=da217a09-0f4e-4a1e-8a38-aa4aa9d11a2d"
         )
-
     }
-
 }

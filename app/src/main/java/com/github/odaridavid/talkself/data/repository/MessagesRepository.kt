@@ -6,8 +6,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import javax.inject.Inject
 
 internal class MessagesRepository @Inject constructor(
-    private val chatDao: ChatDao,
-    private val dispatcher: CoroutineDispatcher
+    private val chatDao: ChatDao
 ) {
 
     fun updateMessage(chatEntity: ChatEntity) {

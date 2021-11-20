@@ -8,8 +8,8 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.github.odaridavid.talkself.common.UtilityFunctions
-import com.github.odaridavid.talkself.common.UtilityFunctions.Companion.bindImage
+import com.github.odaridavid.talkself.common.TimeUtils
+import com.github.odaridavid.talkself.common.bindImage
 import com.github.odaridavid.talkself.data.local.models.ConversationEntity
 import com.github.odaridavid.talkself.data.local.models.UserEntity
 import com.github.odaridavid.talkself.data.local.relations.ConversationAndUser
@@ -88,7 +88,7 @@ internal class ConversationAdapter(
             binding.apply {
                 textChatLastMessage.text = message?.lastMessage
                 conversationTime.text =
-                    UtilityFunctions.formatMillisecondsToDate(message?.timeCreated!!)
+                    TimeUtils.formatMillisecondsToDate(createdAt = message?.timeCreated!!)
             }
         }
 
@@ -96,7 +96,7 @@ internal class ConversationAdapter(
             binding.apply {
                 conversationLastMan.text = userEntity?.name
                 imageGchatProfileOther.apply {
-                    context.bindImage(userEntity?.imageUri, this)
+                    bindImage(context = context, imageUrl = userEntity?.imageUri)
                 }
             }
         }

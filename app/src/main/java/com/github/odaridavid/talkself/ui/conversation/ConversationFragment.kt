@@ -15,11 +15,7 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.github.odaridavid.talkself.R
-import com.github.odaridavid.talkself.common.Coroutines
-import com.github.odaridavid.talkself.common.ToolbarState
-import com.github.odaridavid.talkself.common.UtilityFunctions.Companion.action
-import com.github.odaridavid.talkself.common.UtilityFunctions.Companion.snack
-import com.github.odaridavid.talkself.common.UtilityFunctions.Companion.toast
+import com.github.odaridavid.talkself.common.*
 import com.github.odaridavid.talkself.data.local.models.ConversationEntity
 import com.github.odaridavid.talkself.data.local.models.toUiModel
 import com.github.odaridavid.talkself.databinding.FragmentConversationsBinding
@@ -120,7 +116,7 @@ class ConversationFragment : Fragment() {
 
     //Get the first username from the textInputEditText
     private fun getUserOneName(): String? {
-
+        // TODO Extract String to res
         return if (binding.dialog.textInputEditTextFirstUsernameView.text.toString().isEmpty()) {
             binding.dialog.textInputEditTextFirstUsernameView.error =
                 "Invalid Username.Should Contain Characters."
@@ -134,6 +130,7 @@ class ConversationFragment : Fragment() {
     //Get the first username from the textInputEditText
     private fun getUserTwoName(): String? {
 
+        // TODO Extract String to res
         return if (binding.dialog.textInputEditTextSecondUsernameView.text.toString().isEmpty()) {
             binding.dialog.textInputEditTextSecondUsernameView.error =
                 "Invalid Username.Should Contain Characters."
@@ -190,19 +187,6 @@ class ConversationFragment : Fragment() {
 
 
     fun showDeleteDialog(uiModel: ConversationUiModel) {
-        //Initialize the delete dialog fragment and show it
-//        /**
-//         * @param action is a sort of constant which determines the type of action to be perfomed on
-//         * @param actualConversationEntityObject which is passed in here either to just delete or refresh the recyclerview
-//         *
-//         * @see actOnConversation() function
-//         *
-//         */
-//        DeleteDialogFragment(actualConversationEntityObject) { action: String, conversationUiModel: ConversationUiModel ->
-//
-//            actOnConversation(action, conversationUiModel)
-//
-//        }.show(childFragmentManager, DeleteDialogFragment.TAG)
         DeleteDialogFragment.newInstance(
             conversationUiModel = uiModel
         ) { action, conversationUiModel ->
@@ -230,9 +214,8 @@ class ConversationFragment : Fragment() {
 
     //Show a snackbar
     private fun showSnackBar(message: String, conversationUiModel: ConversationUiModel) {
-
         //If the undo action is pressed the conversation is added back
-        requireView().snack(message) {
+        requireView().displaySnackBar(message) {
             action("Undo") { addConversation(conversationUiModel) }
         }
 
@@ -338,7 +321,7 @@ class ConversationFragment : Fragment() {
      */
 
     @SuppressLint("SetTextI18n")
-    private fun bindUI() = Coroutines.main {
+    private fun bindUI() = executeOnMainThread{
         //Launch our custom dialog Card to collect user input
         binding.fab.setOnClickListener {
             startCardTransform()
@@ -359,14 +342,12 @@ class ConversationFragment : Fragment() {
             finishCardTransform()
         }
 
-        fireUpObservers()
+        setUpObservers()
 
-
-        toolBarCommonStuff()
-
+        setupToolBarActions()
     }
 
-    private fun fireUpObservers() {
+    private fun setUpObservers() {
         //Observe toolbar state changes and react accordingly
         viewmodel.stateManager.toolbarState.observe(viewLifecycleOwner, { state ->
             when (state) {
@@ -417,7 +398,6 @@ class ConversationFragment : Fragment() {
     }
 
     private fun setSelectedToolbar() {
-
         binding.toolbar.apply {
             menu.clear()
             setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.colorGrey))
@@ -426,30 +406,24 @@ class ConversationFragment : Fragment() {
             setNavigationOnClickListener {
                 viewmodel.stateManager.setToolbarState(ToolbarState.NormalViewState)
             }
-//            binding.activityConvesationsTitle.visibility = View.GONE
             binding.activityConvesationsTitle.apply {
                 visibility = View.VISIBLE
                 setTextColor(ContextCompat.getColor(requireContext(), R.color.colorBlack))
                 textSize = 14F
             }
-
         }
-
     }
 
     private fun setNormalToolbar() {
-
         binding.toolbar.apply {
             navigationIcon = null
             setNavigationOnClickListener(null)
             menu.clear()
-//            inflateMenu(R.menu.conversation_normal_fragment)
             binding.activityConvesationsTitle.apply {
                 visibility = View.VISIBLE
                 textSize = 24F
             }
         }
-
     }
 
     private fun onClick(conversationEntity: ConversationEntity) {
@@ -465,36 +439,28 @@ class ConversationFragment : Fragment() {
 
     private fun isMultiSelected() = viewmodel.stateManager.isMultiSelectionStateActive()
 
-    private fun toolBarCommonStuff() {
-
+    private fun setupToolBarActions() {
         binding.toolbar.apply {
-
-
             setOnMenuItemClickListener { menuItem ->
                 when (menuItem.itemId) {
-
                     R.id.action_deleteAll -> {
-                        activity?.toast("Feature is under Development")
+                        // TODO Use Feature Flags and hide undone features ,Firebase A/B Testing
+                        requireContext().displayToast("Feature is under Development")
                     }
-
                     R.id.action_selectAll -> {
                         viewmodel.stateManager.addAllConversationsToSelectedList(viewmodel.conversation.value!!)
                     }
-
                     R.id.action_deselect_all -> {
                         viewmodel.stateManager.clearSelectedList()
                     }
-
                     R.id.settings -> {
                         findNavController().navigate(R.id.conversation_to_settings)
                     }
                 }
-
                 true
             }
         }
     }
-
 
 }
 
