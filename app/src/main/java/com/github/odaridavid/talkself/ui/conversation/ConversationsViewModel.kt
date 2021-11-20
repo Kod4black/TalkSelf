@@ -10,6 +10,7 @@ import com.github.odaridavid.talkself.ui.models.ConversationUiModel
 import com.github.odaridavid.talkself.ui.models.UserUiModel
 import com.github.odaridavid.talkself.ui.models.toDomain
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -27,16 +28,15 @@ internal class ConversationsViewModel @Inject constructor(
     val conversation = conversationRepository.getAllConversations().asLiveData()
     val conversationAndUser = conversationRepository.conversationsandusers.asLiveData()
 
-
     fun makeConversation(conversationUiModel: ConversationUiModel) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             val conversation = conversationUiModel.toDomain()
             conversationRepository.addConversation(conversation)
         }
     }
 
     fun deleteConversation(conversationUiModel: ConversationUiModel) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             val conversation = conversationUiModel.toDomain()
             conversationRepository.deleteConversation(conversation)
         }
@@ -44,7 +44,7 @@ internal class ConversationsViewModel @Inject constructor(
 
     // TODO Look into why a user is being added independent of a conversation
     fun addUser(userUiModel: UserUiModel) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             val user = userUiModel.toDomain()
             userRepository.addUser(user)
         }
