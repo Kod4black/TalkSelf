@@ -1,6 +1,7 @@
 package com.github.odaridavid.talkself.domain
 
-import com.github.odaridavid.talkself.data.local.models.UserEntity
+import com.github.odaridavid.talkself.data.local.user.UserEntity
+import com.github.odaridavid.talkself.ui.models.UserUiModel
 
 data class User(
     var name: String? = null,
@@ -11,5 +12,9 @@ data class User(
 )
 
 fun User.toDbEntity(): UserEntity = UserEntity(
+    name, conversationId, imageUri, color, userId
+)
+
+fun User.toUiModel(): UserUiModel = UserUiModel(
     name, conversationId, imageUri, color, userId
 )

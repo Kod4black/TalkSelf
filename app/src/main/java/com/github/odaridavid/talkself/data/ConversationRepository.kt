@@ -1,10 +1,11 @@
-package com.github.odaridavid.talkself.data.repository
+package com.github.odaridavid.talkself.data
 
-import com.github.odaridavid.talkself.data.local.ConversationDao
-import com.github.odaridavid.talkself.data.local.models.ConversationEntity
+import com.github.odaridavid.talkself.data.local.conversation.ConversationDao
+import com.github.odaridavid.talkself.data.local.conversation.toDomain
 import com.github.odaridavid.talkself.domain.Conversation
 import com.github.odaridavid.talkself.domain.toDbEntity
-import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 internal class ConversationRepository @Inject constructor(
@@ -26,7 +27,12 @@ internal class ConversationRepository @Inject constructor(
         conversationDao.deleteConversation(conversationEntity)
     }
 
-    fun getAllConversations() = conversationDao.getAllConversations()
+    fun getAllConversations(): Flow<List<Conversation>> =
+        conversationDao.getAllConversations().map { conversationEntities ->
+            conversationEntities.map { conversationEntity ->
+                conversationEntity.toDomain()
+            }
+        }
 
     // TODO Getting all conversations should be more than enough to invalidate this extra query
     val conversationsandusers = conversationDao.getAllConversationsAndUsers()

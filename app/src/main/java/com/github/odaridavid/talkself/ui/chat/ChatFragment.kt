@@ -13,13 +13,14 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.github.odaridavid.talkself.data.local.messages.toDomain
 import com.github.odaridavid.talkself.databinding.FragmentChatBinding
-import com.github.odaridavid.talkself.data.local.models.ChatEntity
+import com.github.odaridavid.talkself.domain.toUiModel
 import com.github.odaridavid.talkself.ui.models.ConversationUiModel
+import com.github.odaridavid.talkself.ui.models.MessageUiModel
 import com.github.odaridavid.talkself.ui.models.UserUiModel
 import dagger.hilt.android.AndroidEntryPoint
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
-
 
 @AndroidEntryPoint
 class ChatFragment : Fragment() {
@@ -29,12 +30,9 @@ class ChatFragment : Fragment() {
     private var userUiModel: UserUiModel? = null
     private lateinit var chatAdapter: ChatAdapter
     private var users = mutableListOf<UserUiModel>()
-
     private lateinit var binding: FragmentChatBinding
     private val args: ChatFragmentArgs by navArgs()
-
     private var shouldScroll = true
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -47,22 +45,22 @@ class ChatFragment : Fragment() {
         return binding.root
     }
 
-
     override fun onResume() {
         super.onResume()
         initRecyclerview()
         bindUI()
-        fireUpObservers()
+        setupObservers()
         setUpCustomItemTouchHelper()
-        toolBarCommonStuff()
+        setupNavigationToUserFragment()
     }
 
     @SuppressLint("SetTextI18n")
-    private fun fireUpObservers() {
+    private fun setupObservers() {
         //Fetch users from the database
-        viewmodel.getUsersInConversation(conversationUiModel?.conversationId!!)
-            .observe(viewLifecycleOwner, {
-
+        viewmodel
+            .getUsersInConversation(conversationUiModel?.conversationId!!)
+            .observe(viewLifecycleOwner) {
+                // TODO Make the view dumb and move any logic from here
                 //update the global variable of users we need this to switch the users
                 users = it as MutableList<UserUiModel>
 
@@ -71,36 +69,31 @@ class ChatFragment : Fragment() {
                 userUiModel = it[0]
                 chatAdapter.userUiModel = userUiModel
 
-
-                //Update the viewmodel also with the current user
-                viewmodel.currentuser.postValue(userUiModel)
+                viewmodel.updateUserUiModel(userUiModel as UserUiModel)
 
                 //Now we can fetch the chats
                 fetchChats()
-            })
+            }
 
         //Observe changes made to the current user
-        viewmodel.currentuser.observe(viewLifecycleOwner, {
+        viewmodel.currentUser.observe(viewLifecycleOwner) { userUiModel ->
+            // TODO Move strings to Res
             when {
-                it != null -> {
-                    binding.activityChatTitle.text = "Chatting as ${it.name}."
+                userUiModel != null -> {
+                    binding.activityChatTitle.text = "Chatting as ${userUiModel.name}"
                 }
                 else -> {
-                    binding.activityChatTitle.text = "New Chat."
+                    binding.activityChatTitle.text = "New Chat"
                 }
             }
-        })
+        }
     }
 
     private fun bindUI() {
-
         binding.apply {
-
-            // switches the current user
             floatingActionButtonexchange.setOnClickListener {
-                userUiModel = if (userUiModel == users[0]) users[1] else users[0]
-                viewmodel.currentuser.postValue(userUiModel)
-
+                userUiModel = swapCurrentUser()
+                viewmodel.updateUserUiModel(userUiModel = userUiModel as UserUiModel)
             }
 
             //navigate up
@@ -108,17 +101,15 @@ class ChatFragment : Fragment() {
                 it.findNavController().navigateUp()
             }
 
-            //send text
             sendTextButton.setOnClickListener {
                 sendText()
             }
-
         }
     }
 
+    private fun swapCurrentUser() = if (userUiModel == users[0]) users[1] else users[0]
 
     private fun initRecyclerview() {
-
         chatAdapter = ChatAdapter()
 
         val layout = LinearLayoutManager(context)
@@ -128,22 +119,19 @@ class ChatFragment : Fragment() {
             layoutManager = layout
             adapter = chatAdapter
         }
-
     }
 
     private fun fetchChats() {
         viewmodel.getMessagesInConversation(conversationUiModel!!.conversationId!!)
-            .observe(viewLifecycleOwner, {
+            .observe(viewLifecycleOwner) {
                 if (it.isNullOrEmpty()) {
                     //show the empty state
                     binding.layoutNomessage.visibility = View.VISIBLE
                     binding.textViewInfoChats.visibility = View.GONE
                 } else {
-
                     //hide empty state and display chats
                     binding.layoutNomessage.visibility = View.GONE
                     binding.textViewInfoChats.visibility = View.VISIBLE
-
 
                     chatAdapter.submitList(it)
 
@@ -152,40 +140,33 @@ class ChatFragment : Fragment() {
                     }
 
                     chatAdapter.notifyDataSetChanged()
-
                 }
-            })
+            }
     }
-
 
     private fun sendText() {
         if (binding.messageEditText.text.toString().trim().isNotBlank()) {
-            //get text
             val text = binding.messageEditText.text.toString()
-            // make a new chat
-            val chat = ChatEntity(
+
+            val messageUiModel = MessageUiModel(
                 userId = userUiModel?.userId,
                 username = userUiModel?.name,
                 message = text,
                 timesent = System.currentTimeMillis(),
                 conservationId = conversationUiModel?.conversationId
             )
-            //add it
-            viewmodel.addMessage(chat)
+            viewmodel.addMessage(messageUiModel)
 
-            //update the conversation
             updateConversation(text)
-            //clear edit text
+
             clearEditText()
 
-            //should scroll to bottom
             shouldScroll = true
         }
     }
 
     //Updates the details of this conversation we're having so we can display it on the previous page
     private fun updateConversation(text: String) {
-
         //we need last user, last message and the last time it was sent
         conversationUiModel?.userId = userUiModel?.userId
         conversationUiModel?.lastMessage = text
@@ -195,13 +176,12 @@ class ChatFragment : Fragment() {
         }
     }
 
-
     private fun clearEditText() {
         binding.messageEditText.setText("")
     }
 
     private fun scrollToLatestText() {
-
+        // TODO Look into this unknown functionality
         //Some funky behaviour here !!!
         binding.chatRecyclerView.smoothScrollToPosition(
             chatAdapter.itemCount + 3
@@ -209,7 +189,6 @@ class ChatFragment : Fragment() {
         shouldScroll = false
     }
 
-    // Just a custom item touch helper.
     private fun setUpCustomItemTouchHelper() {
         val itemTouchHelperCallback =
             object :
@@ -227,27 +206,28 @@ class ChatFragment : Fragment() {
 
                 override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
 
-                    val chat = chatAdapter.getItemAt(viewHolder.adapterPosition).chatEntity
+                    // TODO Use UI Model
+                    val messageEntity = chatAdapter.getItemAt(viewHolder.adapterPosition).messageEntity
 
+                    // TODO Break down this if and nested when
                     if (users.size == 2) {
                         when (direction) {
                             ItemTouchHelper.LEFT -> {
-                                chat.userId = users[1].userId
+                                messageEntity.userId = users[1].userId
                             }
                             ItemTouchHelper.RIGHT -> {
-                                chat.userId = users[0].userId
+                                messageEntity.userId = users[0].userId
                             }
                         }
                     } else {
                         when (direction) {
                             ItemTouchHelper.LEFT -> {
-                                chat.userId = users[1].userId
+                                messageEntity.userId = users[1].userId
                             }
                         }
                     }
 
-                    viewmodel.updatechat(chat)
-
+                    viewmodel.updateMessage(messageEntity.toDomain().toUiModel())
                 }
 
                 override fun onChildDraw(
@@ -289,16 +269,14 @@ class ChatFragment : Fragment() {
         itemTouchHelper.attachToRecyclerView(binding.chatRecyclerView)
     }
 
-    private fun toolBarCommonStuff() {
-
-        //navigate to edit users
+    private fun setupNavigationToUserFragment() {
         binding.editUsers.setOnClickListener {
-            //we need conversation id so we can use it to fetch users associated with this conversation.
             val action =
-                ChatFragmentDirections.chatToUsers(conversation = conversationUiModel!!, user = null)
+                ChatFragmentDirections.chatToUsers(
+                    conversation = conversationUiModel!!,
+                    user = null
+                )
             it.findNavController().navigate(action)
         }
     }
-
-
 }

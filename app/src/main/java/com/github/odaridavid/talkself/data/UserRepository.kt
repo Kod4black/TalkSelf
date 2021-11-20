@@ -1,6 +1,6 @@
-package com.github.odaridavid.talkself.data.repository
+package com.github.odaridavid.talkself.data
 
-import com.github.odaridavid.talkself.data.local.UserDao
+import com.github.odaridavid.talkself.data.local.user.UserDao
 import com.github.odaridavid.talkself.domain.User
 import com.github.odaridavid.talkself.domain.toDbEntity
 import com.github.odaridavid.talkself.ui.models.UserUiModel
@@ -15,13 +15,13 @@ internal class UserRepository @Inject constructor(
 
     fun getUsersInConversation(conversationId: Int): Flow<List<User>> =
         userDao.getUsers(conversationId).map { userEntities ->
-            userEntities.map {
+            userEntities.map { userEntity ->
                 User(
-                    name = it.name,
-                    conversationId = it.conversationId,
-                    imageUri = it.imageUri,
-                    color = it.color,
-                    userId = it.userId
+                    name = userEntity.name,
+                    conversationId = conversationId,
+                    imageUri = userEntity.imageUri,
+                    color = userEntity.color,
+                    userId = userEntity.userId
                 )
             }
         }

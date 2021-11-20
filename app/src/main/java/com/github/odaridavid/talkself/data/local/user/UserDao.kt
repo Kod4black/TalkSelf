@@ -1,11 +1,10 @@
-package com.github.odaridavid.talkself.data.local
+package com.github.odaridavid.talkself.data.local.user
 
 import androidx.room.Dao
 import androidx.room.Insert
-import androidx.room.OnConflictStrategy
 import androidx.room.Update
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.github.odaridavid.talkself.data.local.models.UserEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao

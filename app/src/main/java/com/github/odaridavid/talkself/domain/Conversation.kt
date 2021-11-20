@@ -1,6 +1,7 @@
 package com.github.odaridavid.talkself.domain
 
-import com.github.odaridavid.talkself.data.local.models.ConversationEntity
+import com.github.odaridavid.talkself.data.local.conversation.ConversationEntity
+import com.github.odaridavid.talkself.ui.models.ConversationUiModel
 
 data class Conversation(
     var conversationId: Int? = null,
@@ -11,6 +12,14 @@ data class Conversation(
 )
 
 fun Conversation.toDbEntity() = ConversationEntity(
+    conversationId = conversationId,
+    timeCreated = timeCreated,
+    userId = userId,
+    lastMessage = lastMessage,
+    lasttimemessage = lasttimemessage
+)
+
+fun Conversation.toUiModel() = ConversationUiModel(
     conversationId = conversationId,
     timeCreated = timeCreated,
     userId = userId,

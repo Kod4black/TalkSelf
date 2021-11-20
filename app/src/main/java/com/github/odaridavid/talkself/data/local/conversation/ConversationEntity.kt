@@ -1,8 +1,8 @@
-package com.github.odaridavid.talkself.data.local.models
+package com.github.odaridavid.talkself.data.local.conversation
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.github.odaridavid.talkself.ui.models.ConversationUiModel
+import com.github.odaridavid.talkself.domain.Conversation
 
 @Entity(tableName = "conversation")
 data class ConversationEntity(
@@ -14,6 +14,10 @@ data class ConversationEntity(
     var lasttimemessage: Long? = null,
 )
 
-fun ConversationEntity.toUiModel():ConversationUiModel = ConversationUiModel(
-    conversationId, timeCreated, userId, lastMessage, lasttimemessage
+fun ConversationEntity.toDomain(): Conversation = Conversation(
+    conversationId = conversationId,
+    timeCreated = timeCreated,
+    userId = userId,
+    lastMessage = lastMessage,
+    lasttimemessage = lasttimemessage
 )

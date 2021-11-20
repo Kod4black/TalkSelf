@@ -11,10 +11,11 @@
  * the License.
  *
  **/
-package com.github.odaridavid.talkself.data.local.models
+package com.github.odaridavid.talkself.data.local.user
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.github.odaridavid.talkself.domain.User
 
 @Entity(tableName = "user")
 data class UserEntity(
@@ -25,3 +26,5 @@ data class UserEntity(
     @PrimaryKey(autoGenerate = true)
     var userId: Int? = null,
 )
+
+fun UserEntity.toDomain(): User = User(name, conversationId, imageUri, color, userId)

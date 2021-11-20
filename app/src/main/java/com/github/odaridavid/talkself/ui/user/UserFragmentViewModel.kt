@@ -2,7 +2,7 @@ package com.github.odaridavid.talkself.ui.user
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
-import com.github.odaridavid.talkself.data.repository.UserRepository
+import com.github.odaridavid.talkself.data.UserRepository
 import com.github.odaridavid.talkself.ui.models.UserUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.map

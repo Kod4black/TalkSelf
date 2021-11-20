@@ -2,8 +2,8 @@ package com.github.odaridavid.talkself.data.local.relations
 
 import androidx.room.Embedded
 import androidx.room.Relation
-import com.github.odaridavid.talkself.data.local.models.ConversationEntity
-import com.github.odaridavid.talkself.data.local.models.UserEntity
+import com.github.odaridavid.talkself.data.local.conversation.ConversationEntity
+import com.github.odaridavid.talkself.data.local.user.UserEntity
 
 data class ConversationAndUser(
     @Embedded
