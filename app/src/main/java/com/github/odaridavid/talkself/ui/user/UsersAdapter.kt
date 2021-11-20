@@ -6,38 +6,37 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.github.odaridavid.talkself.common.UserProfileInteractions
-import com.github.odaridavid.talkself.common.UtilityFunctions.Companion.bindImage
+import com.github.odaridavid.talkself.common.bindImage
 import com.github.odaridavid.talkself.databinding.ItemUserBinding
 import com.github.odaridavid.talkself.ui.models.UserUiModel
 
-class UsersAdapter(
-    private val userProfileInteractions: UserProfileInteractions,
-) : ListAdapter<UserUiModel, UsersAdapter.ViewHolder>(diffUtil) {
+internal class UsersAdapter :
+    ListAdapter<UserUiModel, UsersAdapter.UserViewHolder>(diffUtil) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserViewHolder {
         val itemUserBinding =
             ItemUserBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ViewHolder(itemUserBinding)
+        return UserViewHolder(itemUserBinding)
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
         val user = getItem(position)
         holder.bind(user)
 
         holder.itemView.setOnClickListener {
+            // TODO Move Navigation Logic to view
             val action = UsersFragmentDirections.usersToEditUser(user)
             it.findNavController().navigate(action)
         }
     }
 
-    class ViewHolder(private val itemUserBinding: ItemUserBinding) :
+    class UserViewHolder(private val itemUserBinding: ItemUserBinding) :
         RecyclerView.ViewHolder(itemUserBinding.root) {
 
         fun bind(userEntity: UserUiModel) {
             itemUserBinding.textViewName.text = userEntity.name
             itemUserBinding.shapeableImageView.apply {
-                context.bindImage(userEntity.imageUri!!, this)
+                bindImage(imageUrl = userEntity.imageUri!!, context = context)
             }
         }
     }

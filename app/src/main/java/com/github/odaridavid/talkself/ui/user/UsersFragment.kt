@@ -11,15 +11,13 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import com.github.odaridavid.talkself.databinding.FragmentUsersBinding
 import com.github.odaridavid.talkself.data.local.models.UserEntity
-import com.github.odaridavid.talkself.common.UserProfileInteractions
+import com.github.odaridavid.talkself.databinding.FragmentUsersBinding
 import com.github.odaridavid.talkself.ui.models.ConversationUiModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class UsersFragment : Fragment(), UserProfileInteractions {
-
+class UsersFragment : Fragment() {
 
     private val viewmodel by viewModels<UserFragmentViewModel>()
     private lateinit var binding: FragmentUsersBinding
@@ -43,33 +41,30 @@ class UsersFragment : Fragment(), UserProfileInteractions {
     }
 
     private fun bindUI() {
-
         binding.apply {
-
             users.apply {
-                userAdapter = UsersAdapter(this@UsersFragment)
+                userAdapter = UsersAdapter()
                 adapter = userAdapter
-                layoutManager = StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL)
+                layoutManager = StaggeredGridLayoutManager(
+                    2,
+                    LinearLayoutManager.VERTICAL
+                )
             }
 
             imageViewback.setOnClickListener {
                 it.findNavController().navigateUp()
             }
-
         }
 
-        viewmodel.getUsersInConversation(conversationUiModel?.conversationId!!).observe(viewLifecycleOwner, {
-            userAdapter.submitList(it)
-        })
+        viewmodel
+            .getUsersInConversation(conversationUiModel?.conversationId!!)
+            .observe(viewLifecycleOwner) { users ->
+                userAdapter.submitList(users)
+            }
 
         setFragmentResultListener("requestKey") { _, bundle ->
             val result = bundle.getInt("bundleKey")
             userEntity.imageUri = result.toString()
         }
-
-    }
-
-    override fun onImageClick(userEntity: UserEntity) {
-        // to remove
     }
 }

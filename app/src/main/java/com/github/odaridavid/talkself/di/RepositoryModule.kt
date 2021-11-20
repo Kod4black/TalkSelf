@@ -22,10 +22,9 @@ internal object RepositoryModule {
     @Provides
     @Singleton
     fun providesChatRepository(
-        chatDao: ChatDao,
-        dispatcher: CoroutineDispatcher
+        chatDao: ChatDao
     ): MessagesRepository =
-        MessagesRepository(chatDao = chatDao, dispatcher = dispatcher)
+        MessagesRepository(chatDao = chatDao)
 
     @Provides
     @Singleton

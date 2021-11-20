@@ -1,11 +1,10 @@
 package com.github.odaridavid.talkself.ui.edituser
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.github.odaridavid.talkself.data.local.models.UserEntity
 import com.github.odaridavid.talkself.data.repository.UserRepository
-import com.github.odaridavid.talkself.common.UtilityFunctions.Companion.notifyObserver
 import com.github.odaridavid.talkself.ui.models.UserUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -16,25 +15,32 @@ internal class EditUserViewModel @Inject constructor(
     private val userRepository: UserRepository
 ) : ViewModel() {
 
-    var user = MutableLiveData<UserEntity>()
+    private var _user = MutableLiveData<UserUiModel>()
+    val user: LiveData<UserUiModel>
+        get() = _user
 
-    var name = MutableLiveData<String>()
-    var image = MutableLiveData<String>()
-    var color = MutableLiveData<String>()
+    private var _name = MutableLiveData<String>()
+    val name: LiveData<String>
+        get() = _name
+
+    private var _imageUrl = MutableLiveData<String>()
+    val imageUrl: LiveData<String>
+        get() = _imageUrl
+
+    private var _color = MutableLiveData<String>()
+    val color: LiveData<String>
+        get() = _color
 
     fun updateName(string: String) {
-        name.value = string
-        name.notifyObserver()
+        _name.value = string
     }
 
     fun updateImage(string: String) {
-        image.value = string
-        image.notifyObserver()
+        _imageUrl.value = string
     }
 
     fun updateColor(string: String) {
-        color.value = string
-        color.notifyObserver()
+        _color.value = string
     }
 
     fun updateUser(userUiModel: UserUiModel) {
@@ -42,5 +48,4 @@ internal class EditUserViewModel @Inject constructor(
             userRepository.updateUser(userUiModel)
         }
     }
-
 }
