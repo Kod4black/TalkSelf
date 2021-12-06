@@ -6,7 +6,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.fragments.edituser.EditUserFragment">
+        tools:context=".ui.edituser.EditUserFragment">
 
         <TextView
             android:id="@+id/textView8"
