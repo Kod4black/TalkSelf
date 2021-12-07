@@ -12,7 +12,7 @@ import com.github.odaridavid.talkself.data.local.user.UserEntity
 @Database(
     entities = [MessageEntity::class, ConversationEntity::class, UserEntity::class],
     version = 14,
-    exportSchema = true
+    exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
     abstract fun messagesDao(): MessagesDao
