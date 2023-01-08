@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
@@ -43,7 +44,10 @@ class UsersFragment : Fragment() {
     private fun bindUI() {
         binding.apply {
             users.apply {
-                userAdapter = UsersAdapter()
+                userAdapter = UsersAdapter{ user ->
+                    val action = UsersFragmentDirections.usersToEditUser(user)
+                    findNavController().navigate(action)
+                }
                 adapter = userAdapter
                 layoutManager = StaggeredGridLayoutManager(
                     2,
@@ -52,7 +56,7 @@ class UsersFragment : Fragment() {
             }
 
             imageViewback.setOnClickListener {
-                it.findNavController().navigateUp()
+                findNavController().navigateUp()
             }
         }
 

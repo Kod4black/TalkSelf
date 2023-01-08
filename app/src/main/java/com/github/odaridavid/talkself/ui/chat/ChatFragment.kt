@@ -13,6 +13,7 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.github.odaridavid.talkself.R
 import com.github.odaridavid.talkself.data.local.messages.toDomain
 import com.github.odaridavid.talkself.databinding.FragmentChatBinding
 import com.github.odaridavid.talkself.domain.toUiModel
@@ -77,13 +78,12 @@ class ChatFragment : Fragment() {
 
         //Observe changes made to the current user
         viewmodel.currentUser.observe(viewLifecycleOwner) { userUiModel ->
-            // TODO Move strings to Res
             when {
                 userUiModel != null -> {
-                    binding.activityChatTitle.text = "Chatting as ${userUiModel.name}"
+                    binding.activityChatTitle.text = getString(R.string.chat_chatting_as,userUiModel.name)
                 }
                 else -> {
-                    binding.activityChatTitle.text = "New Chat"
+                    binding.activityChatTitle.text = getString(R.string.chat_new_chat)
                 }
             }
         }
@@ -125,11 +125,9 @@ class ChatFragment : Fragment() {
         viewmodel.getMessagesInConversation(conversationUiModel!!.conversationId!!)
             .observe(viewLifecycleOwner) {
                 if (it.isNullOrEmpty()) {
-                    //show the empty state
                     binding.layoutNomessage.visibility = View.VISIBLE
                     binding.textViewInfoChats.visibility = View.GONE
                 } else {
-                    //hide empty state and display chats
                     binding.layoutNomessage.visibility = View.GONE
                     binding.textViewInfoChats.visibility = View.VISIBLE
 
