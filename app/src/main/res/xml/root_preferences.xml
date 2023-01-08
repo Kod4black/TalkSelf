@@ -4,7 +4,7 @@
     <PreferenceCategory app:title="@string/theme_header">
 
         <SwitchPreferenceCompat
-            app:key="theme"
+            app:key="@string/pref_key_theme"
             app:defaultValue="true"
             app:title="@string/theme_title" />
 

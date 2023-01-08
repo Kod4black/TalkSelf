@@ -2,7 +2,6 @@ package com.github.odaridavid.talkself.ui.user
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -10,33 +9,36 @@ import com.github.odaridavid.talkself.common.bindImage
 import com.github.odaridavid.talkself.databinding.ItemUserBinding
 import com.github.odaridavid.talkself.ui.models.UserUiModel
 
-internal class UsersAdapter :
-    ListAdapter<UserUiModel, UsersAdapter.UserViewHolder>(diffUtil) {
+internal class UsersAdapter(
+    private val onClickOnUserIcon: (UserUiModel) -> Unit
+) : ListAdapter<UserUiModel, UsersAdapter.UserViewHolder>(diffUtil) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserViewHolder {
-        val itemUserBinding =
-            ItemUserBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val itemUserBinding = ItemUserBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false
+        )
         return UserViewHolder(itemUserBinding)
     }
 
     override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
-        val user = getItem(position)
-        holder.bind(user)
+        val userUiModel = getItem(position)
+        holder.bind(userUiModel = userUiModel)
 
         holder.itemView.setOnClickListener {
-            // TODO Move Navigation Logic to view
-            val action = UsersFragmentDirections.usersToEditUser(user)
-            it.findNavController().navigate(action)
+            onClickOnUserIcon(userUiModel)
         }
     }
 
-    class UserViewHolder(private val itemUserBinding: ItemUserBinding) :
-        RecyclerView.ViewHolder(itemUserBinding.root) {
+    class UserViewHolder(
+        private val itemUserBinding: ItemUserBinding
+    ) : RecyclerView.ViewHolder(itemUserBinding.root) {
 
-        fun bind(userEntity: UserUiModel) {
-            itemUserBinding.textViewName.text = userEntity.name
+        fun bind(userUiModel: UserUiModel) {
+            itemUserBinding.textViewName.text = userUiModel.name
             itemUserBinding.shapeableImageView.apply {
-                bindImage(imageUrl = userEntity.imageUri!!, context = context)
+                bindImage(imageUrl = userUiModel.imageUri!!, context = context)
             }
         }
     }

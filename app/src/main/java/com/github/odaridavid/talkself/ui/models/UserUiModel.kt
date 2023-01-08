@@ -2,6 +2,7 @@ package com.github.odaridavid.talkself.ui.models
 
 import android.os.Parcelable
 import com.github.odaridavid.talkself.data.local.user.UserEntity
+//import com.github.odaridavid.talkself.data.local.user.UserEntity
 import com.github.odaridavid.talkself.domain.User
 import kotlinx.parcelize.Parcelize
 

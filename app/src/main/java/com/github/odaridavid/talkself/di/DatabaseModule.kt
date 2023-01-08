@@ -24,7 +24,6 @@ object DatabaseModule {
             .addMigrations(MIGRATION_13_14)
             .build()
 
-
     @Provides
     @Singleton
     fun providesMessagesDao(appDatabase: AppDatabase): MessagesDao =

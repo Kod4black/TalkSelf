@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Talk Self</string>
+    <string name="app_name" translatable="false">Talk Self</string>
     <string name="you">You</string>
     <string name="title_create_usernames">Create Usernames</string>
     <string name="create">Create</string>
@@ -34,4 +34,21 @@
     <string name="attachment_title">Download incoming attachments</string>
     <string name="attachment_summary_on">Automatically download attachments for incoming emails
     </string>
+
+    <!--Delete Dialog-->
+    <string name="delete_dialog_title">Confirm Delete</string>
+    <string name="delete_dialog_message">Are you sure you want to delete this?</string>
+    <string name="delete_positive_button_title">Yes</string>
+    <string name="delete_negative_button_title">No</string>
+
+    <string name="message_conversation_deleted">Conversation Deleted</string>
+
+    <string name="error_invalid_username">Invalid Username.Should Contain Characters</string>
+
+    <!--Preferences-->
+    <string name="pref_key_theme" translatable="false">theme</string>
+
+    <!-- Chat screen -->
+    <string name="chat_chatting_as">Chatting as %1$s</string>
+    <string name="chat_new_chat">New Chat</string>
 </resources>
