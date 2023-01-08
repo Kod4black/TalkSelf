@@ -6,6 +6,7 @@ import androidx.room.Delete
 import androidx.room.Query
 import androidx.room.Update
 import androidx.room.OnConflictStrategy
+import androidx.room.Transaction
 import com.github.odaridavid.talkself.data.local.relations.ConversationAndUser
 import kotlinx.coroutines.flow.Flow
 
@@ -24,6 +25,7 @@ interface ConversationDao {
     @Delete
     fun deleteConversation(conversationEntity: ConversationEntity)
 
+    @Transaction
     @Query("SELECT * FROM conversation order by timeCreated asc")
     fun getAllConversationsAndUsers(): Flow<List<ConversationAndUser>>
 }

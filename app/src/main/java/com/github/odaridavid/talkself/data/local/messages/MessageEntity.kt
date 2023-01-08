@@ -12,9 +12,9 @@ data class MessageEntity(
     var username: String? = null,
     var message: String? = null,
     var timesent: Long? = null,
-    var conservationId: Int? = null,
+    var conversationId: Int? = null,
 )
 
 fun MessageEntity.toDomain():Message = Message(
-    chatId, userId, username, message, timesent, conservationId
+    chatId, userId, username, message, timesent, conversationId
 )

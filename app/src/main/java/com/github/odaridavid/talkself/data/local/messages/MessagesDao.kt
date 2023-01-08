@@ -1,10 +1,6 @@
 package com.github.odaridavid.talkself.data.local.messages
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Update
-import androidx.room.Query
+import androidx.room.*
 import com.github.odaridavid.talkself.data.local.relations.MessageAndUser
 import kotlinx.coroutines.flow.Flow
 
@@ -14,10 +10,11 @@ interface MessagesDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addMessage(messageEntity: MessageEntity)
 
-    @Query("SELECT * FROM messages WHERE conservationid=:conversationId order by timeSent asc")
+    @Transaction
+    @Query("SELECT * FROM messages WHERE conversationId=:conversationId order by timeSent asc")
     fun getConversationMessages(conversationId: Int): Flow<List<MessageAndUser>>
 
-    @Query("Delete  FROM messages WHERE conservationid=:conversationId")
+    @Query("Delete  FROM messages WHERE conversationId=:conversationId")
     fun deleteMessages(conversationId: Int)
 
     @Update
