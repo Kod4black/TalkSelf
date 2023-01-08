@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.core.content.ContextCompat
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
@@ -25,7 +24,6 @@ import com.github.odaridavid.talkself.ui.models.UserUiModel
 import dagger.hilt.android.AndroidEntryPoint
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 import java.util.*
-
 
 @AndroidEntryPoint
 class ConversationFragment : Fragment() {
@@ -52,14 +50,8 @@ class ConversationFragment : Fragment() {
     ): View {
 
         binding = FragmentConversationsBinding.inflate(inflater, container, false)
-
-        //Set up recyclerAdapter
         setUpAdapter()
-
-        //setup the recyclerview's itemtouchHelper
         setUpCustomItemTouchHelper()
-
-        //Handle onbackpresses
         addOnBackPressCallback()
 
         bindUI()
@@ -71,8 +63,6 @@ class ConversationFragment : Fragment() {
         //Create a new conversation using a randrom id
         val conversation =
             ConversationUiModel(conversationId = Random().nextInt(), System.currentTimeMillis())
-
-        //Get username strings from the InputEditTextviews
         val usernameOne = getUserOneName()
         val usernameTwo = getUserTwoName()
 
@@ -81,7 +71,7 @@ class ConversationFragment : Fragment() {
             return
         }
 
-        //Create user objects from the two usernames and associate them with the created conversation Id through th constructor
+        // TODO Move this elsewhere
         val user1 = UserUiModel(
             name = usernameOne,
             conversationId = conversation.conversationId,
@@ -94,8 +84,6 @@ class ConversationFragment : Fragment() {
             color = "#ff2e2e2e",
             imageUri = ""
         )
-
-        //Call the function to add these objects to the database
         makeConversation(user1, user2, conversation)
 
         //Clean the UI
@@ -114,12 +102,10 @@ class ConversationFragment : Fragment() {
         binding.dialog.textInputEditTextFirstUsernameView.text?.clear()
     }
 
-    //Get the first username from the textInputEditText
     private fun getUserOneName(): String? {
-        // TODO Extract String to res
         return if (binding.dialog.textInputEditTextFirstUsernameView.text.toString().isEmpty()) {
             binding.dialog.textInputEditTextFirstUsernameView.error =
-                "Invalid Username.Should Contain Characters."
+                requireContext().getString(R.string.error_invalid_username)
             null
         } else {
             binding.dialog.textInputEditTextFirstUsernameView.text.toString()
@@ -127,13 +113,10 @@ class ConversationFragment : Fragment() {
 
     }
 
-    //Get the first username from the textInputEditText
     private fun getUserTwoName(): String? {
-
-        // TODO Extract String to res
         return if (binding.dialog.textInputEditTextSecondUsernameView.text.toString().isEmpty()) {
             binding.dialog.textInputEditTextSecondUsernameView.error =
-                "Invalid Username.Should Contain Characters."
+                requireContext().getString(R.string.error_invalid_username)
             null
         } else {
             binding.dialog.textInputEditTextSecondUsernameView.text.toString()
@@ -145,7 +128,7 @@ class ConversationFragment : Fragment() {
     private fun startCardTransform() {
         binding.transformationLayout.startTransform()
         binding.backgroundView.apply {
-            isVisible = true
+            visibility = View.VISIBLE
         }
         callback.isEnabled = true
     }
@@ -154,7 +137,7 @@ class ConversationFragment : Fragment() {
     private fun finishCardTransform() {
         binding.transformationLayout.finishTransform()
         binding.backgroundView.apply {
-            isVisible = false
+            visibility = View.GONE
         }
         callback.isEnabled = false
     }
@@ -189,32 +172,12 @@ class ConversationFragment : Fragment() {
     fun showDeleteDialog(uiModel: ConversationUiModel) {
         DeleteDialogFragment.newInstance(
             conversationUiModel = uiModel
-        ) { action, conversationUiModel ->
-            actOnConversation(action, conversationUiModel)
+        ) { conversationUiModel ->
+            deleteConversation(conversationUiModel)
+            requireView().displaySnackBar("Conversation deleted") {
+                action("Undo") { addConversation(conversationUiModel) }
+            }
         }.show(childFragmentManager, DeleteDialogFragment.TAG)
-    }
-
-
-    //Either delete or refresh the recyclerview based on the action passed
-    private fun actOnConversation(action: String, conversationUiModel: ConversationUiModel) {
-        when (action) {
-            DeleteDialogFragment.POSSITIVE_MESSAGE_BUTTON -> {
-                deleteConversation(conversationUiModel)
-                showSnackBar("Conversation deleted", conversationUiModel)
-            }
-            DeleteDialogFragment.NEGATIVE_MESSAGE_BUTTON -> {
-                conversationadapter.notifyDataSetChanged()
-            }
-        }
-    }
-
-    //Show a snackbar
-    private fun showSnackBar(message: String, conversationUiModel: ConversationUiModel) {
-        //If the undo action is pressed the conversation is added back
-        requireView().displaySnackBar(message) {
-            action("Undo") { addConversation(conversationUiModel) }
-        }
-
     }
 
     private fun deleteConversation(conversationUiModel: ConversationUiModel) {
@@ -238,7 +201,6 @@ class ConversationFragment : Fragment() {
         addUser(userEntity1)
         addUser(userEntity2)
     }
-
 
     private fun addOnBackPressCallback() {
         requireActivity().onBackPressedDispatcher.addCallback(requireActivity(), callback)

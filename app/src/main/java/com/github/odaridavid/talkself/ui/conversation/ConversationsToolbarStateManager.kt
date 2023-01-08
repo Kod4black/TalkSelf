@@ -9,7 +9,7 @@ internal class ConversationsToolbarStateManager {
     private val _toolbarState: MutableLiveData<ToolbarState> =
         MutableLiveData(ToolbarState.NormalViewState)
     private val _isMultiSelection: MutableLiveData<Boolean> = MutableLiveData(false)
-    private val _selectedConversations: MutableLiveData<ArrayList<ConversationUiModel>> =
+    private val _selectedConversations: MutableLiveData<MutableList<ConversationUiModel>> =
         MutableLiveData()
 
     val toolbarState
@@ -31,7 +31,7 @@ internal class ConversationsToolbarStateManager {
         ToolbarState.MultiselectionState == _toolbarState.value
 
     fun addOrRemoveConversationFromSelectedList(conversationUiModel: ConversationUiModel) {
-        val list = _selectedConversations.value ?: ArrayList()
+        val list = _selectedConversations.value ?: mutableListOf()
         if (list.contains(conversationUiModel)) {
             list.remove(conversationUiModel)
         } else {
@@ -41,7 +41,7 @@ internal class ConversationsToolbarStateManager {
     }
 
     fun addAllConversationsToSelectedList(list: List<ConversationUiModel>) {
-        _selectedConversations.value = list as ArrayList<ConversationUiModel>
+        _selectedConversations.value = list as MutableList<ConversationUiModel>
     }
 
     fun clearSelectedList() {

@@ -9,11 +9,25 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="../../../../layout/custom_preview.xml" value="0.23796296296296296" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.1546875" />
+        <entry key="app/src/main/res/layout/dialog_input_usernames.xml" value="0.1546875" />
+        <entry key="app/src/main/res/layout/fragment_conversations.xml" value="0.1546875" />
+        <entry key="app/src/main/res/layout/fragment_edit_user.xml" value="0.1546875" />
+        <entry key="app/src/main/res/layout/fragment_users.xml" value="0.1546875" />
+        <entry key="app/src/main/res/layout/item_chat_left.xml" value="0.1546875" />
+        <entry key="app/src/main/res/layout/item_chat_right.xml" value="0.1546875" />
+        <entry key="app/src/main/res/layout/item_convesations.xml" value="0.1546875" />
+        <entry key="app/src/main/res/layout/item_icon_menu.xml" value="0.1546875" />
+        <entry key="app/src/main/res/layout/item_memoji.xml" value="0.1546875" />
+        <entry key="app/src/main/res/layout/item_user.xml" value="0.1546875" />
+        <entry key="app/src/main/res/layout/layout_nomessage.xml" value="0.1546875" />
+        <entry key="app/src/main/res/layout/settings_activity.xml" value="0.1546875" />
+        <entry key="app/src/main/res/menu/conversation_normal_fragment.xml" value="0.1546875" />
       </map>
     </option>
   </component>
   <component name="MarkdownNavigator.ProfileManager" plain-text-search-scope="Project Files" />
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">
