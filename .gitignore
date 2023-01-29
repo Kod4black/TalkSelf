@@ -1,6 +1,7 @@
 *.iml
 .gradle
 /local.properties
+.idea
 /.idea/caches
 /.idea/libraries
 /.idea/modules.xml
@@ -13,3 +14,18 @@
 .externalNativeBuild
 .cxx
 *.keystore
+/.idea/*
+
+publishingInfo.txt
+local.properties
+
+
+app/app.iml
+daraja/daraja.iml
+
+#Fastlane
+fastlane/report.xml
+fastlane/README.md
+
+#Build Script
+buildSrc/build
