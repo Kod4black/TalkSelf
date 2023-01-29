@@ -332,7 +332,7 @@ class ConversationFragment : Fragment() {
         })
 
         //Observe selected conversations and react to the toolbartitle accordingly
-        viewmodel.stateManager.selectedConversations.observe(viewLifecycleOwner, {
+        viewmodel.stateManager.selectedConversations.observe(viewLifecycleOwner) {
             if (isMultiSelected()) {
                 binding.activityConvesationsTitle.text = "${it.size} selected"
                 if (it.size == 0) {
@@ -341,21 +341,19 @@ class ConversationFragment : Fragment() {
             } else {
                 binding.activityConvesationsTitle.text = "Your Conversations"
             }
-        })
+        }
 
         //Observe changes on the conversations from the viewModel
         viewmodel.conversationAndUser.observe(viewLifecycleOwner) {
-            if (it.isNotEmpty()) {
                 conversationadapter.submitList(it)
-            }
         }
 
         //Observe the state of the isMultiselection state Variable
-        viewmodel.stateManager.isMultiSelection.observe(viewLifecycleOwner, {
+        viewmodel.stateManager.isMultiSelection.observe(viewLifecycleOwner) {
             if (!it) {
                 conversationadapter.notifyDataSetChanged()
             }
-        })
+        }
     }
 
     private fun setSelectedToolbar() {
