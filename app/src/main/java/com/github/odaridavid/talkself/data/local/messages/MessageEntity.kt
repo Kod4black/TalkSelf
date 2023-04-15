@@ -2,7 +2,7 @@ package com.github.odaridavid.talkself.data.local.messages
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.github.odaridavid.talkself.domain.Message
+import com.github.odaridavid.talkself.domain.models.Message
 
 @Entity(tableName = "messages")
 data class MessageEntity(
@@ -15,6 +15,6 @@ data class MessageEntity(
     var conversationId: Int? = null,
 )
 
-fun MessageEntity.toDomain():Message = Message(
+fun MessageEntity.toDomain(): Message = Message(
     chatId, userId, username, message, timesent, conversationId
 )

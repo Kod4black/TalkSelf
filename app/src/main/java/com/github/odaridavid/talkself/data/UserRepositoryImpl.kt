@@ -1,19 +1,20 @@
 package com.github.odaridavid.talkself.data
 
 import com.github.odaridavid.talkself.data.local.user.UserDao
-import com.github.odaridavid.talkself.domain.User
-import com.github.odaridavid.talkself.domain.toDbEntity
+import com.github.odaridavid.talkself.domain.models.User
+import com.github.odaridavid.talkself.domain.models.toDbEntity
+import com.github.odaridavid.talkself.domain.repository.UserRepository
 import com.github.odaridavid.talkself.ui.models.UserUiModel
 import com.github.odaridavid.talkself.ui.models.toDbEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-internal class UserRepository @Inject constructor(
+internal class UserRepositoryImpl(
     private val userDao: UserDao
-) {
+) : UserRepository{
 
-    fun getUsersInConversation(conversationId: Int): Flow<List<User>> =
+   override fun getUsersInConversation(conversationId: Int): Flow<List<User>> =
         userDao.getUsers(conversationId).map { userEntities ->
             userEntities.map { userEntity ->
                 User(
@@ -26,12 +27,12 @@ internal class UserRepository @Inject constructor(
             }
         }
 
-    fun addUser(user: User) {
+    override fun addUser(user: User) {
         val userEntity = user.toDbEntity()
         userDao.addUser(userEntity)
     }
 
-    suspend fun updateUser(userUiModel: UserUiModel) {
+    override suspend fun updateUser(userUiModel: UserUiModel) {
         val userEntity = userUiModel.toDbEntity()
         userDao.updateUser(userEntity)
     }

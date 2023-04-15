@@ -3,9 +3,12 @@ package com.github.odaridavid.talkself.di
 import com.github.odaridavid.talkself.data.local.messages.MessagesDao
 import com.github.odaridavid.talkself.data.local.conversation.ConversationDao
 import com.github.odaridavid.talkself.data.local.user.UserDao
-import com.github.odaridavid.talkself.data.MessagesRepository
-import com.github.odaridavid.talkself.data.ConversationRepository
-import com.github.odaridavid.talkself.data.UserRepository
+import com.github.odaridavid.talkself.data.ConversationRepositoryImpl
+import com.github.odaridavid.talkself.data.MessagesRepositoryImpl
+import com.github.odaridavid.talkself.data.UserRepositoryImpl
+import com.github.odaridavid.talkself.domain.repository.ConversationRepository
+import com.github.odaridavid.talkself.domain.repository.MessagesRepository
+import com.github.odaridavid.talkself.domain.repository.UserRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -24,21 +27,21 @@ internal object RepositoryModule {
     fun providesChatRepository(
         messagesDao: MessagesDao
     ): MessagesRepository =
-        MessagesRepository(messagesDao = messagesDao)
+        MessagesRepositoryImpl(messagesDao = messagesDao)
 
     @Provides
     @Singleton
     fun providesConversationRepository(
         conversationDao: ConversationDao
     ): ConversationRepository =
-        ConversationRepository(conversationDao = conversationDao)
+        ConversationRepositoryImpl(conversationDao = conversationDao)
 
     @Provides
     @Singleton
     fun providesUserRepository(
         userDao: UserDao
     ): UserRepository =
-        UserRepository(userDao = userDao)
+        UserRepositoryImpl(userDao = userDao)
 
     @Provides
     @Singleton

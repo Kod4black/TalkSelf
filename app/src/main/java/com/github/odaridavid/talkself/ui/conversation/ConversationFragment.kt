@@ -17,7 +17,7 @@ import com.github.odaridavid.talkself.R
 import com.github.odaridavid.talkself.common.*
 import com.github.odaridavid.talkself.data.local.conversation.toDomain
 import com.github.odaridavid.talkself.databinding.FragmentConversationsBinding
-import com.github.odaridavid.talkself.domain.toUiModel
+import com.github.odaridavid.talkself.domain.models.toUiModel
 import com.github.odaridavid.talkself.ui.dialogFragments.DeleteDialogFragment
 import com.github.odaridavid.talkself.ui.models.ConversationUiModel
 import com.github.odaridavid.talkself.ui.models.UserUiModel

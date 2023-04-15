@@ -15,7 +15,7 @@ package com.github.odaridavid.talkself.data.local.user
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.github.odaridavid.talkself.domain.User
+import com.github.odaridavid.talkself.domain.models.User
 
 @Entity(tableName = "user")
 data class UserEntity(
