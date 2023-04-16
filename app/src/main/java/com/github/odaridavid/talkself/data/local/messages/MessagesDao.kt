@@ -15,8 +15,8 @@ interface MessagesDao {
     fun getConversationMessages(conversationId: Int): Flow<List<MessageAndUser>>
 
     @Query("Delete  FROM messages WHERE conversationId=:conversationId")
-    fun deleteMessages(conversationId: Int)
+    suspend fun deleteMessages(conversationId: Int)
 
     @Update
-    fun updateMessage(messageEntity: MessageEntity)
+    suspend fun updateMessage(messageEntity: MessageEntity)
 }

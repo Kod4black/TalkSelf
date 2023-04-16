@@ -1,4 +1,4 @@
-package com.github.odaridavid.talkself.domain
+package com.github.odaridavid.talkself.domain.models
 
 import com.github.odaridavid.talkself.data.local.user.UserEntity
 import com.github.odaridavid.talkself.ui.models.UserUiModel

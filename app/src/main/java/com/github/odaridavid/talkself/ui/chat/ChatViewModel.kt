@@ -1,10 +1,9 @@
 package com.github.odaridavid.talkself.ui.chat
 
 import androidx.lifecycle.*
-import com.github.odaridavid.talkself.data.ConversationRepository
-import com.github.odaridavid.talkself.data.MessagesRepository
-import com.github.odaridavid.talkself.data.UserRepository
-import com.github.odaridavid.talkself.data.local.messages.MessageEntity
+import com.github.odaridavid.talkself.domain.repository.ConversationRepository
+import com.github.odaridavid.talkself.domain.repository.MessagesRepository
+import com.github.odaridavid.talkself.domain.repository.UserRepository
 import com.github.odaridavid.talkself.ui.models.ConversationUiModel
 import com.github.odaridavid.talkself.ui.models.MessageUiModel
 import com.github.odaridavid.talkself.ui.models.UserUiModel
@@ -18,7 +17,7 @@ import javax.inject.Inject
 @HiltViewModel
 internal class ChatViewModel @Inject constructor(
     private val messagesRepository: MessagesRepository,
-    private val conversationRepository: ConversationRepository,
+    private val conversationRepositoryImpl: ConversationRepository,
     private val userRepository: UserRepository
 ) : ViewModel() {
 
@@ -60,9 +59,9 @@ internal class ChatViewModel @Inject constructor(
 
     // TODO Look into why do we need to update a conversation when a message is added,if its for preview purposes a different approach could be used
     fun updateConversation(conversationUiModel: ConversationUiModel) {
-        viewModelScope.launch {
+        viewModelScope.launch() {
             val conversation = conversationUiModel.toDomain()
-            conversationRepository.updateConversation(conversation)
+            conversationRepositoryImpl.updateConversation(conversation)
         }
     }
 

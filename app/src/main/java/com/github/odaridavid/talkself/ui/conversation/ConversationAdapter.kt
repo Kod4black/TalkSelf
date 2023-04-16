@@ -14,7 +14,7 @@ import com.github.odaridavid.talkself.data.local.conversation.toDomain
 import com.github.odaridavid.talkself.data.local.relations.ConversationAndUser
 import com.github.odaridavid.talkself.data.local.user.toDomain
 import com.github.odaridavid.talkself.databinding.ItemConvesationsBinding
-import com.github.odaridavid.talkself.domain.toUiModel
+import com.github.odaridavid.talkself.domain.models.toUiModel
 import com.github.odaridavid.talkself.ui.models.ConversationUiModel
 import com.github.odaridavid.talkself.ui.models.UserUiModel
 

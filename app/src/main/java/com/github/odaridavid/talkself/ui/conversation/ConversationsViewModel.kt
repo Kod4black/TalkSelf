@@ -3,9 +3,9 @@ package com.github.odaridavid.talkself.ui.conversation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
-import com.github.odaridavid.talkself.data.ConversationRepository
-import com.github.odaridavid.talkself.data.UserRepository
-import com.github.odaridavid.talkself.domain.toUiModel
+import com.github.odaridavid.talkself.domain.models.toUiModel
+import com.github.odaridavid.talkself.domain.repository.ConversationRepository
+import com.github.odaridavid.talkself.domain.repository.UserRepository
 import com.github.odaridavid.talkself.ui.models.ConversationUiModel
 import com.github.odaridavid.talkself.ui.models.UserUiModel
 import com.github.odaridavid.talkself.ui.models.toDomain
@@ -17,7 +17,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 internal class ConversationsViewModel @Inject constructor(
-    private val conversationRepository: ConversationRepository,
+    private val conversationRepositoryImpl: ConversationRepository,
     private val userRepository: UserRepository
 ) : ViewModel() {
 
@@ -25,24 +25,24 @@ internal class ConversationsViewModel @Inject constructor(
     val stateManager
         get() = _stateManager
 
-    val conversation = conversationRepository.getAllConversations().map { conversation ->
+    val conversation = conversationRepositoryImpl.getAllConversations().map { conversation ->
         conversation.map { it.toUiModel() }
     }.asLiveData()
 
     //TODO Don't use db entities
-    val conversationAndUser = conversationRepository.conversationsandusers.asLiveData()
+    val conversationAndUser = conversationRepositoryImpl.conversationsandusers.asLiveData()
 
     fun makeConversation(conversationUiModel: ConversationUiModel) {
         viewModelScope.launch(Dispatchers.IO) {
             val conversation = conversationUiModel.toDomain()
-            conversationRepository.addConversation(conversation)
+            conversationRepositoryImpl.addConversation(conversation)
         }
     }
 
     fun deleteConversation(conversationUiModel: ConversationUiModel) {
         viewModelScope.launch(Dispatchers.IO) {
             val conversation = conversationUiModel.toDomain()
-            conversationRepository.deleteConversation(conversation)
+            conversationRepositoryImpl.deleteConversation(conversation)
         }
     }
 

@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.github.odaridavid.talkself.R
 import com.github.odaridavid.talkself.data.local.messages.toDomain
 import com.github.odaridavid.talkself.databinding.FragmentChatBinding
-import com.github.odaridavid.talkself.domain.toUiModel
+import com.github.odaridavid.talkself.domain.models.toUiModel
 import com.github.odaridavid.talkself.ui.models.ConversationUiModel
 import com.github.odaridavid.talkself.ui.models.MessageUiModel
 import com.github.odaridavid.talkself.ui.models.UserUiModel

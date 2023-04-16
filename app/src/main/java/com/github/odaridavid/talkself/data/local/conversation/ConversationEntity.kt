@@ -2,7 +2,7 @@ package com.github.odaridavid.talkself.data.local.conversation
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.github.odaridavid.talkself.domain.Conversation
+import com.github.odaridavid.talkself.domain.models.Conversation
 
 @Entity(tableName = "conversation")
 data class ConversationEntity(

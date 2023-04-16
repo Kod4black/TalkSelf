@@ -1,7 +1,7 @@
 package com.github.odaridavid.talkself.ui.models
 
 import android.os.Parcelable
-import com.github.odaridavid.talkself.domain.Conversation
+import com.github.odaridavid.talkself.domain.models.Conversation
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
